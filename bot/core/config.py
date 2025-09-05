@@ -23,6 +23,9 @@ class Settings(BaseSettings):
     # OpenAI Configuration
     openai_api_key: str = Field(..., description="OpenAI API key")
     
+    # RapidAPI Configuration
+    rapidapi_key: Optional[str] = Field(None, description="RapidAPI key for NSFW content")
+    
     # Database Configuration
     database_url: str = Field("sqlite:///./bot.db", description="Database URL")
     
