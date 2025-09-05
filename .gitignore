@@ -188,3 +188,4 @@ Thumbs.db
 # Backup files
 *.bak
 *.backup.idea/
+.idea/
