@@ -189,3 +189,5 @@ Thumbs.db
 *.bak
 *.backup.idea/
 .idea/
+.env
+bot.db
