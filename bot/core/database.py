@@ -88,6 +88,8 @@ class DatabaseManager:
         from ..services.image_service import ImageRequest, ImageCollection
         from ..services.todo_service import TodoList, TodoTask
         from ..services.timezone_service import UserTimezone, Reminder
+        from ..services.crypto_service import CryptoBet, UserBalance, CryptoPrice
+        from ..services.voting_service import Poll, PollVote
         
         async with self.engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)

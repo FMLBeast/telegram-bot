@@ -69,7 +69,7 @@ async def start_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
 
 
 async def menu_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Handle the /menu command with fresh buttons."""
+    """Handle the /menu command with comprehensive feature menu."""
     if not update.message or not update.effective_user:
         return
     
@@ -77,8 +77,16 @@ async def menu_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     logger.info("Menu command received", user_id=user.id, username=user.username)
     
     menu_text = (
-        f"📋 **Main Menu** - {user.first_name or user.username}\n\n"
-        "Choose an option below:"
+        f"📋 **Complete Feature Menu** - {user.first_name or user.username}\n\n"
+        "🎯 **All Available Features:**\n"
+        "• 🧠 AI Chat & Image Generation\n"
+        "• 🎰 Casino & Gambling Games\n"  
+        "• 💰 Crypto Trading & Betting\n"
+        "• 🗳️ Polls & Voting System\n"
+        "• 📝 Todo & Task Management\n"
+        "• 🔞 NSFW Content (18+)\n"
+        "• 🎲 Game Calculators\n\n"
+        "Choose a category below:"
     )
     
     keyboard = [
@@ -87,16 +95,20 @@ async def menu_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
             InlineKeyboardButton("⚙️ Settings", callback_data="settings"),
         ],
         [
-            InlineKeyboardButton("🧠 Ask AI", callback_data="ai_chat"),
-            InlineKeyboardButton("🎨 Generate Image", callback_data="generate_image"),
+            InlineKeyboardButton("🧠 AI & Images", callback_data="ai_menu"),
+            InlineKeyboardButton("🎰 Casino & Games", callback_data="casino_menu"),
         ],
         [
-            InlineKeyboardButton("🎲 Mines Calculator", callback_data="mines_info"),
-            InlineKeyboardButton("💰 B2B Calculator", callback_data="b2b_info"),
+            InlineKeyboardButton("💰 Crypto & Trading", callback_data="crypto_menu"),
+            InlineKeyboardButton("🗳️ Polls & Voting", callback_data="voting_menu"),
         ],
         [
-            InlineKeyboardButton("💱 Crypto Convert", callback_data="crypto_info"),
-            InlineKeyboardButton("📝 Todo List", callback_data="todo_info"),
+            InlineKeyboardButton("📝 Todo & Tasks", callback_data="todo_menu"),
+            InlineKeyboardButton("🔞 NSFW Content", callback_data="nsfw_menu"),
+        ],
+        [
+            InlineKeyboardButton("🎲 Game Calculators", callback_data="calc_menu"),
+            InlineKeyboardButton("📊 Quick Stats", callback_data="stats_menu"),
         ],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
@@ -117,49 +129,51 @@ async def help_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     logger.info("Help command received", user_id=user.id, username=user.username)
     
     help_text = (
-        "🆘 <b>Bot Commands Help</b>\n\n"
+        "🆘 <b>Complete Bot Commands Guide</b>\n\n"
         "<b>🤖 Basic Commands:</b>\n"
         "/start - Start the bot\n"
-        "/help - Show this help message\n"
-        "/settings - Configure bot settings\n"
-        "/status - Check bot status\n\n"
+        "/menu - Show main menu\n"
+        "/help - Show this help message\n\n"
         
         "<b>🧠 AI Commands:</b>\n"
-        "/ask [question] - Ask AI a question\n"
-        "/chat - Start AI conversation\n"
-        "/translate [text] - Translate text\n"
-        "/analyze [text] - Analyze text sentiment\n\n"
+        "/ask_gpt [question] - Ask AI a question\n"
+        "Just message me - AI will respond!\n\n"
         
         "<b>🎨 Image Commands:</b>\n"
-        "/generate [prompt] - Generate image from text\n"
-        "/edit - Edit an image (reply to image)\n"
-        "/variation - Create image variations\n\n"
+        "/draw_me [prompt] - Generate AI image\n"
+        "/create [prompt] - Generate AI image (alias)\n"
+        "/draw_multiple [prompt] - Generate multiple images\n\n"
         
-        "<b>📝 Productivity:</b>\n"
-        "/todo [task] - Add a todo item\n"
-        "/todos - List all todos\n"
-        "/remind [time] [message] - Set reminder\n"
-        "/note [text] - Save a note\n\n"
+        "<b>🎰 Casino & Gambling:</b>\n"
+        "/casino - Enter the casino (dice, slots, blackjack)\n"
+        "/bet [game] - Quick betting games\n\n"
         
-        "<b>🎲 Gambling Tools:</b>\n"
-        "/mines [multiplier] - Find mines/diamonds for target multiplier\n"
-        "/mines [mines] [diamonds] - Calculate multiplier and odds\n"
-        "/b2b [base_bet] [multiplier] [increase%] - Betting progression calculator\n\n"
+        "<b>💰 Crypto & Trading:</b>\n"
+        "/price [symbol] - Get crypto price\n"
+        "/bet [symbol] [up/down] [amount] - Bet on crypto\n"
+        "/balance - Check crypto betting balance\n"
+        "/convert [amount] [from] [to] - Convert currencies\n\n"
         
-        "<b>💰 Crypto Tools:</b>\n"
-        "/crypto [amount] [from] [to] - Convert crypto currencies\n"
-        "/price [symbol] - Get crypto price\n\n"
+        "<b>🗳️ Polls & Voting:</b>\n"
+        "/poll \"Question\" \"Option1\" \"Option2\" - Create poll\n"
+        "/polls - List active polls\n"
+        "/vote [poll_id] [option] - Cast vote\n\n"
         
-        "<b>📊 Analytics:</b>\n"
-        "/stats - Show usage statistics\n"
-        "/activity - Show activity report\n\n"
+        "<b>📝 Todo & Tasks:</b>\n"
+        "/add_todo [task] - Add todo item\n"
+        "/list_todos - Show all todos\n"
+        "/complete_todo [id] - Mark complete\n\n"
         
-        "<b>⚙️ Admin Commands:</b>\n"
-        "/admin - Admin panel (admin only)\n"
-        "/broadcast [message] - Broadcast message\n"
-        "/users - List all users\n\n"
+        "<b>🎲 Game Calculators:</b>\n"
+        "/mines [multiplier] or [mines] [diamonds] - Mines calculator\n"
+        "/b2b [base] [mult] [inc%] - Betting progression\n\n"
         
-        "💡 <i>Tip: You can also just send me a message and I'll respond with AI!</i>"
+        "<b>🔞 NSFW Content (18+):</b>\n"
+        "/random_boobs - Random adult content\n"
+        "/show_me [name] - Search adult performer\n"
+        "/gimme [type] - Specific adult content\n\n"
+        
+        "💡 <i>Use /menu for interactive navigation!</i>"
     )
     
     keyboard = [

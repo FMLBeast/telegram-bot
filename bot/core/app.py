@@ -21,8 +21,10 @@ from .exceptions import ConfigurationError
 from ..handlers import (
     start_handler,
     help_handler,
+    menu_handler,
     error_handler,
     message_handler,
+    ask_gpt_handler,
     callback_handler,
     # Admin handlers
     grant_access_handler,
@@ -73,6 +75,23 @@ from ..handlers.mines import (
 from ..handlers.b2b import (
     b2b_calculator_handler,
     handle_b2b_callback,
+)
+from ..handlers.nsfw import (
+    random_boobs_handler,
+    show_me_handler,
+    gimme_handler,
+    handle_nsfw_callback,
+)
+from ..handlers.gambling import (
+    casino_handler,
+    bet_handler,
+    handle_gambling_callback,
+)
+from ..handlers.voting import (
+    create_poll_handler,
+    list_polls_handler,
+    vote_handler,
+    handle_voting_callback,
 )
 from ..services.openai_service import OpenAIService
 from ..services.auth_service import auth_service
@@ -152,6 +171,9 @@ class TelegramBotApp(LoggerMixin):
         # Basic command handlers
         self.application.add_handler(CommandHandler("start", start_handler))
         self.application.add_handler(CommandHandler("help", help_handler))
+        self.application.add_handler(CommandHandler("menu", menu_handler))
+        self.application.add_handler(CommandHandler("ask_gpt", ask_gpt_handler))
+        self.application.add_handler(CommandHandler("ask", ask_gpt_handler))
         
         # Admin command handlers
         self.application.add_handler(CommandHandler("grant_access", grant_access_handler))
@@ -217,6 +239,20 @@ class TelegramBotApp(LoggerMixin):
         self.application.add_handler(CommandHandler("b2b", b2b_calculator_handler))
         self.application.add_handler(CommandHandler("business", b2b_calculator_handler))  # Alias
         
+        # NSFW content handlers
+        self.application.add_handler(CommandHandler("random_boobs", random_boobs_handler))
+        self.application.add_handler(CommandHandler("show_me", show_me_handler))
+        self.application.add_handler(CommandHandler("gimme", gimme_handler))
+        
+        # Gambling handlers
+        self.application.add_handler(CommandHandler("casino", casino_handler))
+        self.application.add_handler(CommandHandler("bet", bet_handler))
+        
+        # Voting handlers
+        self.application.add_handler(CommandHandler("poll", create_poll_handler))
+        self.application.add_handler(CommandHandler("polls", list_polls_handler))
+        self.application.add_handler(CommandHandler("vote", vote_handler))
+        
         # Message handlers
         self.application.add_handler(
             MessageHandler(filters.TEXT & ~filters.COMMAND, message_handler)
@@ -229,6 +265,9 @@ class TelegramBotApp(LoggerMixin):
         self.application.add_handler(CallbackQueryHandler(handle_crypto_callback, pattern=r"^(crypto_|bet_|price_|convert_)"))
         self.application.add_handler(CallbackQueryHandler(handle_mines_callback, pattern=r"^mines_"))
         self.application.add_handler(CallbackQueryHandler(handle_b2b_callback, pattern=r"^b2b_"))
+        self.application.add_handler(CallbackQueryHandler(handle_nsfw_callback, pattern=r"^(fav_|add_collection_|random_boobs_|gimme_another_)"))
+        self.application.add_handler(CallbackQueryHandler(handle_gambling_callback, pattern=r"^(casino_|bet_|dice_|slots_|coin_|lucky_|blackjack_|roulette_)"))
+        self.application.add_handler(CallbackQueryHandler(handle_voting_callback, pattern=r"^(vote_|refresh_poll_|close_poll_|results_poll_|show_poll_)"))
         self.application.add_handler(CallbackQueryHandler(callback_handler))
         
         self.logger.info("All handlers registered")

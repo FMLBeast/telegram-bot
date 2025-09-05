@@ -523,7 +523,8 @@ class CryptoService(LoggerMixin):
                 "CAD": 1.36,
                 "CHF": 0.88,
                 "CNY": 7.24,
-                "INR": 83.12
+                "INR": 83.12,
+                "PHP": 56.85  # Philippine Peso
             }
             
             if to_symbol in fiat_currencies:
@@ -587,6 +588,72 @@ class CryptoService(LoggerMixin):
             self.logger.error("Error converting crypto", from_symbol=from_symbol, to_symbol=to_symbol, 
                             amount=amount, error=str(e), exc_info=True)
             return None
+
+    async def format_conversion_response(
+        self, 
+        conversion_data: Dict[str, Any], 
+        chat_id: Optional[int] = None
+    ) -> str:
+        """Format conversion response with optional PHP auto-conversion."""
+        if not conversion_data:
+            return "❌ Conversion failed"
+        
+        from_symbol = conversion_data["from_symbol"]
+        to_symbol = conversion_data["to_symbol"]
+        from_amount = conversion_data["from_amount"]
+        converted_amount = conversion_data["converted_amount"]
+        
+        def format_number(number: float) -> str:
+            """Format number with appropriate decimal places."""
+            if abs(number) < 0.01:
+                return f"{number:.8f}"
+            elif abs(number) < 1:
+                return f"{number:.4f}"
+            else:
+                return f"{number:,.2f}"
+        
+        response = (
+            f"💱 **Currency Conversion**\n\n"
+            f"**From:** `{format_number(from_amount)} {from_symbol}`\n"
+            f"**To:** `{format_number(converted_amount)} {to_symbol}`"
+        )
+        
+        # Add USD value if converting between non-USD currencies
+        if from_symbol != "USD" and to_symbol != "USD":
+            # Calculate USD value
+            from_price_data = await self.get_crypto_price(from_symbol) if from_symbol in self.supported_coins else None
+            if from_price_data:
+                usd_value = from_price_data["price"] * from_amount
+            else:
+                # Fiat to fiat conversion via USD
+                fiat_rates = {
+                    "EUR": 0.92, "GBP": 0.79, "JPY": 149.50, "AUD": 1.53,
+                    "CAD": 1.36, "CHF": 0.88, "CNY": 7.24, "INR": 83.12, "PHP": 56.85
+                }
+                if from_symbol in fiat_rates:
+                    usd_value = from_amount / fiat_rates[from_symbol]
+                else:
+                    usd_value = from_amount  # Assume USD if unknown
+            
+            response += f"\n**USD Value:** `${format_number(usd_value)}`"
+            
+            # PHP auto-conversion for specific chat
+            if chat_id == -1002153368935:
+                php_value = usd_value * 56.85  # USD to PHP rate
+                response += f"\n**PHP Value:** `₱{format_number(php_value)}`"
+        
+        return response
+
+    async def enhanced_convert(
+        self, 
+        amount: float, 
+        from_symbol: str, 
+        to_symbol: str = "USD", 
+        chat_id: Optional[int] = None
+    ) -> Optional[str]:
+        """Enhanced crypto conversion with formatted response and PHP auto-conversion."""
+        conversion_data = await self.convert_crypto(from_symbol, to_symbol, amount)
+        return await self.format_conversion_response(conversion_data, chat_id)
 
 
 # Global crypto service instance

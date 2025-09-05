@@ -1,0 +1,232 @@
+{
+    "casinos": [
+        {
+            "name": "BC.GAME",
+            "description": "Leading crypto casino with extensive VIP system",
+            "website": "https://bc.game",
+            "tiers": [
+                {
+                    "name": "Bronze",
+                    "level_range": "VIP 2-7",
+                    "levels": [
+                        {"level_name": "VIP 2", "bonus_amount": 0.04, "xp_requirement": 100},
+                        {"level_name": "VIP 3", "bonus_amount": 0.05, "xp_requirement": 200},
+                        {"level_name": "VIP 4", "bonus_amount": 0.10, "xp_requirement": 1000},
+                        {"level_name": "VIP 5", "bonus_amount": 0.20, "xp_requirement": 2000},
+                        {"level_name": "VIP 6", "bonus_amount": 0.30, "xp_requirement": 3000},
+                        {"level_name": "VIP 7", "bonus_amount": 0.35, "xp_requirement": 4000}
+                    ]
+                },
+                {
+                    "name": "Silver",
+                    "level_range": "VIP 8-21",
+                    "levels": [
+                        {"level_name": "VIP 8", "bonus_amount": 0.7, "xp_requirement": 5000},
+                        {"level_name": "VIP 9", "bonus_amount": 0.8, "xp_requirement": 7000},
+                        {"level_name": "VIP 10", "bonus_amount": 0.9, "xp_requirement": 9000},
+                        {"level_name": "VIP 11", "bonus_amount": 1.0, "xp_requirement": 11000},
+                        {"level_name": "VIP 12", "bonus_amount": 1.1, "xp_requirement": 13000},
+                        {"level_name": "VIP 13", "bonus_amount": 1.2, "xp_requirement": 15000},
+                        {"level_name": "VIP 14", "bonus_amount": 1.3, "xp_requirement": 17000},
+                        {"level_name": "VIP 15", "bonus_amount": 1.4, "xp_requirement": 21000},
+                        {"level_name": "VIP 16", "bonus_amount": 1.5, "xp_requirement": 25000},
+                        {"level_name": "VIP 17", "bonus_amount": 1.6, "xp_requirement": 29000},
+                        {"level_name": "VIP 18", "bonus_amount": 1.7, "xp_requirement": 33000},
+                        {"level_name": "VIP 19", "bonus_amount": 1.8, "xp_requirement": 37000},
+                        {"level_name": "VIP 20", "bonus_amount": 1.9, "xp_requirement": 41000},
+                        {"level_name": "VIP 21", "bonus_amount": 2.0, "xp_requirement": 45000}
+                    ]
+                },
+                {
+                    "name": "Gold",
+                    "level_range": "VIP 22-37",
+                    "levels": [
+                        {"level_name": "VIP 22", "bonus_amount": 3.0, "xp_requirement": 49000},
+                        {"level_name": "VIP 23", "bonus_amount": 4.0, "xp_requirement": 59000},
+                        {"level_name": "VIP 24", "bonus_amount": 5.0, "xp_requirement": 69000},
+                        {"level_name": "VIP 25", "bonus_amount": 6.0, "xp_requirement": 79000},
+                        {"level_name": "VIP 26", "bonus_amount": 7.0, "xp_requirement": 89000},
+                        {"level_name": "VIP 27", "bonus_amount": 8.0, "xp_requirement": 99000},
+                        {"level_name": "VIP 28", "bonus_amount": 9.0, "xp_requirement": 109000},
+                        {"level_name": "VIP 29", "bonus_amount": 10.0, "xp_requirement": 119000},
+                        {"level_name": "VIP 30", "bonus_amount": 12.0, "xp_requirement": 129000},
+                        {"level_name": "VIP 31", "bonus_amount": 14.0, "xp_requirement": 153000},
+                        {"level_name": "VIP 32", "bonus_amount": 16.0, "xp_requirement": 177000},
+                        {"level_name": "VIP 33", "bonus_amount": 18.0, "xp_requirement": 201000},
+                        {"level_name": "VIP 34", "bonus_amount": 20.0, "xp_requirement": 225000},
+                        {"level_name": "VIP 35", "bonus_amount": 22.0, "xp_requirement": 249000},
+                        {"level_name": "VIP 36", "bonus_amount": 24.0, "xp_requirement": 273000},
+                        {"level_name": "VIP 37", "bonus_amount": 26.0, "xp_requirement": 297000}
+                    ]
+                },
+                {
+                    "name": "Platinum I",
+                    "level_range": "VIP 38-55",
+                    "levels": [
+                        {"level_name": "VIP 38", "bonus_amount": 30.0, "xp_requirement": 321000},
+                        {"level_name": "VIP 39", "bonus_amount": 35.0, "xp_requirement": 377000},
+                        {"level_name": "VIP 40", "bonus_amount": 40.0, "xp_requirement": 433000},
+                        {"level_name": "VIP 41", "bonus_amount": 50.0, "xp_requirement": 489000},
+                        {"level_name": "VIP 42", "bonus_amount": 60.0, "xp_requirement": 545000},
+                        {"level_name": "VIP 43", "bonus_amount": 70.0, "xp_requirement": 601000},
+                        {"level_name": "VIP 44", "bonus_amount": 80.0, "xp_requirement": 657000},
+                        {"level_name": "VIP 45", "bonus_amount": 90.0, "xp_requirement": 713000},
+                        {"level_name": "VIP 46", "bonus_amount": 100.0, "xp_requirement": 769000},
+                        {"level_name": "VIP 47", "bonus_amount": 110.0, "xp_requirement": 897000},
+                        {"level_name": "VIP 48", "bonus_amount": 120.0, "xp_requirement": 1025000},
+                        {"level_name": "VIP 49", "bonus_amount": 130.0, "xp_requirement": 1153000},
+                        {"level_name": "VIP 50", "bonus_amount": 140.0, "xp_requirement": 1281000},
+                        {"level_name": "VIP 51", "bonus_amount": 150.0, "xp_requirement": 1409000},
+                        {"level_name": "VIP 52", "bonus_amount": 160.0, "xp_requirement": 1537000},
+                        {"level_name": "VIP 53", "bonus_amount": 170.0, "xp_requirement": 1665000},
+                        {"level_name": "VIP 54", "bonus_amount": 180.0, "xp_requirement": 1793000},
+                        {"level_name": "VIP 55", "bonus_amount": 190.0, "xp_requirement": 2081000}
+                    ]
+                },
+                {
+                    "name": "Platinum II",
+                    "level_range": "VIP 56-69",
+                    "levels": [
+                        {"level_name": "VIP 56", "bonus_amount": 200.0, "xp_requirement": 2369000},
+                        {"level_name": "VIP 57", "bonus_amount": 220.0, "xp_requirement": 2657000},
+                        {"level_name": "VIP 58", "bonus_amount": 240.0, "xp_requirement": 2945000},
+                        {"level_name": "VIP 59", "bonus_amount": 260.0, "xp_requirement": 3233000},
+                        {"level_name": "VIP 60", "bonus_amount": 280.0, "xp_requirement": 3521000},
+                        {"level_name": "VIP 61", "bonus_amount": 300.0, "xp_requirement": 3809000},
+                        {"level_name": "VIP 62", "bonus_amount": 350.0, "xp_requirement": 4097000},
+                        {"level_name": "VIP 63", "bonus_amount": 400.0, "xp_requirement": 4737000},
+                        {"level_name": "VIP 64", "bonus_amount": 450.0, "xp_requirement": 5377000},
+                        {"level_name": "VIP 65", "bonus_amount": 500.0, "xp_requirement": 6017000},
+                        {"level_name": "VIP 66", "bonus_amount": 550.0, "xp_requirement": 6657000},
+                        {"level_name": "VIP 67", "bonus_amount": 600.0, "xp_requirement": 7297000},
+                        {"level_name": "VIP 68", "bonus_amount": 700.0, "xp_requirement": 7937000},
+                        {"level_name": "VIP 69", "bonus_amount": 800.0, "xp_requirement": 8577000}
+                    ]
+                },
+                {
+                    "name": "Diamond I",
+                    "level_range": "SVIP 1-15",
+                    "levels": [
+                        {"level_name": "SVIP 1", "bonus_amount": 1200.0, "xp_requirement": 9217000},
+                        {"level_name": "SVIP 2", "bonus_amount": 1300.0, "xp_requirement": 10625000},
+                        {"level_name": "SVIP 3", "bonus_amount": 1400.0, "xp_requirement": 12033000},
+                        {"level_name": "SVIP 4", "bonus_amount": 1500.0, "xp_requirement": 13441000},
+                        {"level_name": "SVIP 5", "bonus_amount": 1600.0, "xp_requirement": 14849000},
+                        {"level_name": "SVIP 6", "bonus_amount": 1700.0, "xp_requirement": 16257000},
+                        {"level_name": "SVIP 7", "bonus_amount": 1800.0, "xp_requirement": 17665000},
+                        {"level_name": "SVIP 8", "bonus_amount": 2000.0, "xp_requirement": 19073000},
+                        {"level_name": "SVIP 9", "bonus_amount": 2200.0, "xp_requirement": 20481000},
+                        {"level_name": "SVIP 10", "bonus_amount": 2300.0, "xp_requirement": 23553000},
+                        {"level_name": "SVIP 11", "bonus_amount": 2500.0, "xp_requirement": 26625000},
+                        {"level_name": "SVIP 12", "bonus_amount": 2600.0, "xp_requirement": 29697000},
+                        {"level_name": "SVIP 13", "bonus_amount": 2700.0, "xp_requirement": 32769000},
+                        {"level_name": "SVIP 14", "bonus_amount": 2800.0, "xp_requirement": 35841000},
+                        {"level_name": "SVIP 15", "bonus_amount": 3000.0, "xp_requirement": 38913000}
+                    ]
+                },
+                {
+                    "name": "Diamond II",
+                    "level_range": "SVIP 16-37",
+                    "levels": [
+                        {"level_name": "SVIP 16", "bonus_amount": 3200.0, "xp_requirement": 41985000},
+                        {"level_name": "SVIP 17", "bonus_amount": 3600.0, "xp_requirement": 45057000},
+                        {"level_name": "SVIP 18", "bonus_amount": 4000.0, "xp_requirement": 51713000},
+                        {"level_name": "SVIP 19", "bonus_amount": 4500.0, "xp_requirement": 58369000},
+                        {"level_name": "SVIP 20", "bonus_amount": 5000.0, "xp_requirement": 65025000},
+                        {"level_name": "SVIP 21", "bonus_amount": 5500.0, "xp_requirement": 71681000},
+                        {"level_name": "SVIP 22", "bonus_amount": 6000.0, "xp_requirement": 78337000},
+                        {"level_name": "SVIP 23", "bonus_amount": 7000.0, "xp_requirement": 84993000},
+                        {"level_name": "SVIP 24", "bonus_amount": 8000.0, "xp_requirement": 91649000},
+                        {"level_name": "SVIP 25", "bonus_amount": 9000.0, "xp_requirement": 98305000},
+                        {"level_name": "SVIP 26", "bonus_amount": 10000.0, "xp_requirement": 112641000},
+                        {"level_name": "SVIP 27", "bonus_amount": 11000.0, "xp_requirement": 126977000},
+                        {"level_name": "SVIP 28", "bonus_amount": 12000.0, "xp_requirement": 141313000},
+                        {"level_name": "SVIP 29", "bonus_amount": 13000.0, "xp_requirement": 155649000},
+                        {"level_name": "SVIP 30", "bonus_amount": 15000.0, "xp_requirement": 169985000},
+                        {"level_name": "SVIP 31", "bonus_amount": 18000.0, "xp_requirement": 184321000},
+                        {"level_name": "SVIP 32", "bonus_amount": 20000.0, "xp_requirement": 198657000},
+                        {"level_name": "SVIP 33", "bonus_amount": 23000.0, "xp_requirement": 212993000},
+                        {"level_name": "SVIP 34", "bonus_amount": 26000.0, "xp_requirement": 243713000},
+                        {"level_name": "SVIP 35", "bonus_amount": 28000.0, "xp_requirement": 274433000},
+                        {"level_name": "SVIP 36", "bonus_amount": 31000.0, "xp_requirement": 305153000},
+                        {"level_name": "SVIP 37", "bonus_amount": 35000.0, "xp_requirement": 335873000}
+                    ]
+                }
+            ],
+            "features": [
+                {
+                    "name": "Weekly Cashback",
+                    "description": "Get cashback on your weekly wagers",
+                    "requirements": "VIP 22+",
+                    "calculation_formula": "wager * 0.01 * 0.05"
+                },
+                {
+                    "name": "Tips",
+                    "description": "Show appreciation for other players by sending them tips.",
+                    "requirements": null,
+                    "calculation_formula": null
+                },
+                {
+                    "name": "VIP Spin",
+                    "description": "Starting from VIP level 8, you will receive an extra lucky spin with each level-up.",
+                    "requirements": "VIP 8+",
+                    "calculation_formula": null
+                },
+                {
+                    "name": "Recharge",
+                    "description": "Activate your Recharge and claim bonuses based on your VIP level.",
+                    "requirements": "VIP 22+",
+                    "calculation_formula": null
+                },
+                {
+                    "name": "Weekly Cashback",
+                    "description": "Receive your weekly bonus based on your wager amount.",
+                    "requirements": "VIP 22+",
+                    "calculation_formula": "wager * 0.01 * 0.05"
+                },
+                {
+                    "name": "Monthly Cashback",
+                    "description": "Receive your monthly bonus based on your wager amount.",
+                    "requirements": "VIP 22+",
+                    "calculation_formula": "wager * 0.01 * 0.03"
+                },
+                {
+                    "name": "Sports Weekly Bonus",
+                    "description": "Additional rewards and benefits for sports bettors.",
+                    "requirements": "VIP 22+",
+                    "calculation_formula": null
+                }
+            ],
+            "general_information": [
+                {
+                    "key": "EXCLUSIVE VIP BENEFITS",
+                    "value": "Join our VIP Club now and get ready to be showered with gifts, giveaways, and amazing features! Experience the thrill of higher cash back and exclusive rewards that are sure to leave you amazed."
+                },
+                {
+                    "key": "NO-FEE WITHDRAWAL FOR CRYPTOCURRENCY",
+                    "value": "Unlock the No-fee withdrawal for Cryptocurrency perks at VIP 38 and withdraw your winnings with ease and no additional charges."
+                },
+                {
+                    "key": "REWARDING LUCKY SPIN",
+                    "value": "Spin the wheel and receive bigger prizes with our exciting Lucky Spin as you level up."
+                },
+                {
+                    "key": "DEDICATED VIP HOST",
+                    "value": "Unlock the No-fee withdrawal perks at VIP 38 and enjoy your VIP host’s personalized attention and exclusive benefits."
+                },
+                {
+                    "key": "AMAZING LEVEL UP BONUS",
+                    "value": "A surprise reward awaits and gets unlocked multiple times as you level up."
+                },
+                {
+                    "key": "FUN TIPS & RAINING",
+                    "value": "Show appreciation with Tips, or get lucky with Coin Drops for a chance to win rewards."
+                },
+                {
+                    "key": "Sports Weekly Bonus",
+                    "value": "In addition to our existing Weekly Bonus for VIP level 22+ players, we are now introducing the BC Sports Club weekly bonus as an additional perk for sports bettors. The new Sport bonus is specific only to Sport Wager and is calculated based on the player's wagering amount from Saturday to Friday, and distributed automatically every Saturday. With the introduction of the BC Sports Club bonuses, our VIP level 22+ players can now enjoy even more rewards and a thrilling sports betting experience! BC Sports Club offers a range of weekend bonuses based on your weekly wager amount in our Sportsbook. Wager $500 or more from Saturday to Friday and receive a $5 Weekend Bonus! Wager $2,500 or more and receive a $30 Weekend Bonus! Wager $5,000 or more and receive a $70 Weekend Bonus! Wager $10,000 or more and receive a $150 Weekend Bonus! These bonuses apply to all markets and odds in our Sportsbook, giving you more opportunities to win big! The weekly wager is calculated from the previous Saturday 00:00hrs to Friday 23:59hrs (UTC)."
+                }
+            ]
+        }
+    ]
+}

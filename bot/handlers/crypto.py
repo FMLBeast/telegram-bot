@@ -577,123 +577,48 @@ async def handle_crypto_callback(update: Update, context: ContextTypes.DEFAULT_T
 
 @auth_check
 async def crypto_convert_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Convert between cryptocurrencies and fiat currencies."""
-    
+    """Handle crypto conversion requests with PHP auto-conversion."""
     if not update.message or not update.effective_user:
         return
     
     user_id = update.effective_user.id
+    chat_id = update.effective_chat.id
     
-    if not context.args or len(context.args) < 3:
+    if len(context.args) not in [2, 3]:
         await update.message.reply_text(
-            "💱 **Crypto Converter**\n\n"
-            "Usage: `/convert <amount> <from> <to>`\n\n"
-            "**Examples:**\n"
-            "• `/convert 1 BTC USD` - Convert 1 BTC to USD\n"
-            "• `/convert 100 USD BTC` - Convert $100 to BTC\n"
-            "• `/convert 1 BTC ETH` - Convert 1 BTC to ETH\n"
-            "• `/convert 1000 EUR BTC` - Convert €1000 to BTC\n\n"
-            "**Supported Cryptocurrencies:**\n"
-            "BTC, ETH, BNB, ADA, DOT, LINK, LTC, BCH, XRP, DOGE\n\n"
-            "**Supported Fiat Currencies:**\n"
-            "USD, EUR, GBP, JPY, AUD, CAD, CHF, CNY, INR",
-            parse_mode="Markdown"
+            "ℹ️ **Usage:**\n" +
+            "• `/convert <amount> <from_symbol>` (converts to USD)\n" +
+            "• `/convert <amount> <from_symbol> <to_symbol>`\n\n" +
+            "_Examples:_\n" +
+            "• `/convert 100 BTC`\n" +
+            "• `/convert 1.5 ETH BTC`\n" +
+            "• `/convert 1000 USD EUR`",
+            parse_mode='Markdown'
         )
         return
     
     try:
         amount = float(context.args[0])
         from_symbol = context.args[1].upper()
-        to_symbol = context.args[2].upper()
+        to_symbol = context.args[2].upper() if len(context.args) == 3 else 'USD'
         
         if amount <= 0:
-            await update.message.reply_text("❌ Amount must be greater than zero.")
+            await update.message.reply_text("❌ Amount must be positive")
             return
         
-        # Perform conversion
-        conversion_result = await crypto_service.convert_crypto(from_symbol, to_symbol, amount)
+        logger.info("Crypto conversion request", user_id=user_id, amount=amount, 
+                   from_symbol=from_symbol, to_symbol=to_symbol, chat_id=chat_id)
         
-        if not conversion_result:
-            await update.message.reply_text(
-                f"❌ Unable to convert `{from_symbol}` to `{to_symbol}`.\n\n"
-                f"Please check that both symbols are supported.",
-                parse_mode="Markdown"
-            )
-            return
+        # Use enhanced conversion with PHP auto-conversion
+        response = await crypto_service.enhanced_convert(amount, from_symbol, to_symbol, chat_id)
         
-        # Format the result
-        from_amount = conversion_result["from_amount"]
-        converted_amount = conversion_result["converted_amount"]
-        from_price = conversion_result["from_price"]
-        to_price = conversion_result["to_price"]
-        
-        # Format amounts based on currency type
-        if conversion_result["is_fiat"]:
-            if from_symbol in ["USD", "EUR", "GBP", "AUD", "CAD", "CHF"]:
-                from_display = format_currency(from_amount)
-            elif from_symbol in ["JPY", "CNY", "INR"]:
-                from_display = f"{from_amount:,.0f} {from_symbol}"
-            else:
-                from_display = f"{from_amount:,.8f} {from_symbol}"
-            
-            if to_symbol in ["USD", "EUR", "GBP", "AUD", "CAD", "CHF"]:
-                to_display = format_currency(converted_amount)
-            elif to_symbol in ["JPY", "CNY", "INR"]:
-                to_display = f"{converted_amount:,.0f} {to_symbol}"
-            else:
-                to_display = f"{converted_amount:,.8f} {to_symbol}"
+        if response:
+            await update.message.reply_text(response, parse_mode="Markdown")
         else:
-            # Crypto to crypto
-            from_display = f"{from_amount:,.8f} {from_symbol}"
-            to_display = f"{converted_amount:,.8f} {to_symbol}"
-        
-        # Create conversion message
-        conversion_rate = converted_amount / from_amount
-        
-        message = (
-            f"💱 **Crypto Conversion**\n\n"
-            f"📊 **{from_display}**\n"
-            f"🔄 **= {to_display}**\n\n"
-            f"📈 **Current Prices:**\n"
-            f"• {from_symbol}: {format_price(from_price, from_symbol)}\n"
-            f"• {to_symbol}: {format_price(to_price, to_symbol) if not conversion_result['is_fiat'] else f'{to_price:.4f}'}\n\n"
-            f"⚡ **Conversion Rate:**\n"
-            f"1 {from_symbol} = {conversion_rate:,.8f} {to_symbol}"
-        )
-        
-        # Add conversion buttons for quick operations
-        popular_pairs = [
-            ("BTC", "USD"), ("ETH", "USD"), ("BNB", "USD"),
-            ("BTC", "EUR"), ("ETH", "EUR"), ("USD", "BTC")
-        ]
-        
-        keyboard = []
-        for i in range(0, len(popular_pairs), 2):
-            row = []
-            for j in range(2):
-                if i + j < len(popular_pairs):
-                    from_curr, to_curr = popular_pairs[i + j]
-                    row.append(InlineKeyboardButton(
-                        f"{from_curr}→{to_curr}", 
-                        callback_data=f"convert_1_{from_curr}_{to_curr}"
-                    ))
-            keyboard.append(row)
-        
-        reply_markup = InlineKeyboardMarkup(keyboard)
-        
-        await update.message.reply_text(
-            message,
-            reply_markup=reply_markup,
-            parse_mode="Markdown"
-        )
-        
-        logger.info("Crypto conversion", user_id=user_id, from_symbol=from_symbol, 
-                   to_symbol=to_symbol, amount=amount, converted_amount=converted_amount)
-        
+            await update.message.reply_text("❌ Unable to convert. Check symbol names and try again.")
+            
     except ValueError:
-        await update.message.reply_text("❌ Please provide a valid numeric amount.")
+        await update.message.reply_text("❌ Please provide a valid amount.", parse_mode='Markdown')
     except Exception as e:
-        logger.error("Error converting crypto", user_id=user_id, error=str(e), exc_info=True)
-        await update.message.reply_text(
-            "❌ An error occurred while converting. Please try again."
-        )
+        logger.error("Error in crypto conversion", user_id=user_id, error=str(e), exc_info=True)
+        await update.message.reply_text("❌ Error fetching prices. Please try again.", parse_mode='Markdown')

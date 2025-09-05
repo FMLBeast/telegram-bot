@@ -1,7 +1,7 @@
 """Bot handlers."""
 
-from .commands import start_handler, help_handler
-from .messages import message_handler
+from .commands import start_handler, help_handler, menu_handler
+from .messages import message_handler, ask_gpt_handler
 from .callbacks import callback_handler
 from .errors import error_handler
 from .admin import (
@@ -56,12 +56,31 @@ from .b2b import (
     b2b_calculator_handler,
     handle_b2b_callback,
 )
+from .nsfw import (
+    random_boobs_handler,
+    show_me_handler,
+    gimme_handler,
+    handle_nsfw_callback,
+)
+from .gambling import (
+    casino_handler,
+    bet_handler,
+    handle_gambling_callback,
+)
+from .voting import (
+    create_poll_handler,
+    list_polls_handler,
+    vote_handler,
+    handle_voting_callback,
+)
 
 __all__ = [
     # Basic handlers
     "start_handler",
     "help_handler",
+    "menu_handler",
     "message_handler",
+    "ask_gpt_handler",
     "callback_handler",
     "error_handler",
     # Admin handlers
@@ -109,4 +128,18 @@ __all__ = [
     # B2B handlers
     "b2b_calculator_handler",
     "handle_b2b_callback",
+    # NSFW handlers
+    "random_boobs_handler",
+    "show_me_handler",
+    "gimme_handler",
+    "handle_nsfw_callback",
+    # Gambling handlers
+    "casino_handler",
+    "bet_handler",
+    "handle_gambling_callback",
+    # Voting handlers
+    "create_poll_handler",
+    "list_polls_handler",
+    "vote_handler",
+    "handle_voting_callback",
 ]

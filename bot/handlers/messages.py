@@ -15,7 +15,7 @@ rate_limiter = RateLimiter()
 
 
 async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Handle incoming text messages."""
+    """Handle incoming text messages - only for logging and keyword triggers."""
     if not update.message or not update.effective_user or not update.message.text:
         return
     
@@ -28,13 +28,6 @@ async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
         username=user.username,
         message_length=len(message_text)
     )
-    
-    # Check rate limiting
-    if not await rate_limiter.check_rate_limit(user.id):
-        await update.message.reply_text(
-            "⚠️ You're sending messages too quickly. Please slow down a bit!"
-        )
-        return
     
     # Register or update user
     await user_service.create_or_update_user(
@@ -51,6 +44,51 @@ async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
         message_text=message_text,
     )
     
+    # Handle keyword triggers (like in original bot)
+    await handle_keyword_triggers(update, context, message_text)
+
+
+async def handle_keyword_triggers(update: Update, context: ContextTypes.DEFAULT_TYPE, message_text: str) -> None:
+    """Handle specific keyword triggers from original bot."""
+    message_lower = message_text.lower()
+    
+    # Check for specific keywords that should trigger responses
+    keyword_responses = {
+        "wen coco": "🥥 Next Coco times: 9:45, 15:45, 21:45, 3:45",
+        "wen rish": "💰 Keep grinding! Wealth comes to those who persist!",
+        "wen tits": "🔞 Random tiddies requested...",
+    }
+    
+    for keyword, response in keyword_responses.items():
+        if keyword in message_lower:
+            await update.message.reply_text(response)
+            return
+
+
+async def ask_gpt_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Handle /ask_gpt command for direct AI queries."""
+    if not update.message or not update.effective_user:
+        return
+    
+    user = update.effective_user
+    query = ' '.join(context.args) if context.args else ""
+    
+    if not query:
+        await update.message.reply_text(
+            "Please provide a query to ask. Usage: `/ask_gpt <your question>`",
+            parse_mode="Markdown"
+        )
+        return
+    
+    # Check rate limiting
+    if not await rate_limiter.check_rate_limit(user.id):
+        await update.message.reply_text(
+            "⚠️ You're sending messages too quickly. Please slow down a bit!"
+        )
+        return
+    
+    logger.info("GPT query", user_id=user.id, query=query)
+    
     try:
         # Show typing indicator
         await context.bot.send_chat_action(
@@ -58,12 +96,18 @@ async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
             action="typing"
         )
         
+        await update.message.reply_text(f"🤖 Asking GPT-4: {query[:50]}...")
+        
         # Generate AI response
         response = await openai_service.generate_response(
-            message=message_text,
+            message=query,
             user_id=user.id,
             username=user.username or user.first_name or str(user.id)
         )
+        
+        # Ensure response fits within Telegram's limit
+        if len(response) > 4096:
+            response = response[:4093] + "..."
         
         # Send response
         await update.message.reply_text(
