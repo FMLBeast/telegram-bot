@@ -73,6 +73,30 @@ from .voting import (
     vote_handler,
     handle_voting_callback,
 )
+from .activity import (
+    night_owls_handler,
+    most_active_users_handler,
+    my_activity_handler,
+    handle_activity_callback,
+)
+from .mood import (
+    mood_analysis_handler,
+    mood_trends_handler,
+    handle_mood_callback,
+)
+from .synonyms import (
+    add_synonym_handler,
+    synonym_of_day_handler,
+    search_synonyms_handler,
+    synonym_stats_handler,
+    handle_synonym_callback,
+)
+from .utilities import (
+    mention_all_handler,
+    shuffle_users_handler,
+    random_user_picker_handler,
+    handle_utility_callback,
+)
 
 __all__ = [
     # Basic handlers
@@ -142,4 +166,24 @@ __all__ = [
     "list_polls_handler",
     "vote_handler",
     "handle_voting_callback",
+    # Activity handlers
+    "night_owls_handler",
+    "most_active_users_handler",
+    "my_activity_handler",
+    "handle_activity_callback",
+    # Mood handlers
+    "mood_analysis_handler",
+    "mood_trends_handler",
+    "handle_mood_callback",
+    # Synonym handlers
+    "add_synonym_handler",
+    "synonym_of_day_handler",
+    "search_synonyms_handler",
+    "synonym_stats_handler",
+    "handle_synonym_callback",
+    # Utility handlers
+    "mention_all_handler",
+    "shuffle_users_handler",
+    "random_user_picker_handler",
+    "handle_utility_callback",
 ]

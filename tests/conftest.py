@@ -10,6 +10,9 @@ from bot.core.config import Settings
 from bot.core.database import DatabaseManager, Base
 from bot.services.openai_service import OpenAIService
 from bot.services.user_service import UserService
+from bot.services.activity_service import ActivityService
+from bot.services.mood_service import MoodService
+from bot.services.synonym_service import SynonymService
 
 
 @pytest.fixture(scope="session")
@@ -102,6 +105,43 @@ async def user_service(test_db):
     service = UserService()
     service.db_manager = test_db
     return service
+
+
+@pytest.fixture
+async def activity_service(test_db):
+    """Create activity service with test database."""
+    service = ActivityService()
+    service.db_manager = test_db
+    return service
+
+
+@pytest.fixture
+async def mood_service(mock_openai_service, test_db):
+    """Create mood service with test database and mock OpenAI service."""
+    service = MoodService()
+    service.openai_service = mock_openai_service
+    service.db_manager = test_db
+    return service
+
+
+@pytest.fixture
+def synonym_service():
+    """Create synonym service with temporary data file."""
+    import tempfile
+    import os
+    
+    temp_file = tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False)
+    temp_file.write('{}')
+    temp_file.close()
+    
+    service = SynonymService()
+    service.data_file = temp_file.name
+    
+    yield service
+    
+    # Cleanup
+    if os.path.exists(temp_file.name):
+        os.unlink(temp_file.name)
 
 
 # Auto-use fixtures for common mocks

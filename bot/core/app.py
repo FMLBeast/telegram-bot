@@ -93,6 +93,30 @@ from ..handlers.voting import (
     vote_handler,
     handle_voting_callback,
 )
+from ..handlers.activity import (
+    night_owls_handler,
+    most_active_users_handler,
+    my_activity_handler,
+    handle_activity_callback,
+)
+from ..handlers.mood import (
+    mood_analysis_handler,
+    mood_trends_handler,
+    handle_mood_callback,
+)
+from ..handlers.synonyms import (
+    add_synonym_handler,
+    synonym_of_day_handler,
+    search_synonyms_handler,
+    synonym_stats_handler,
+    handle_synonym_callback,
+)
+from ..handlers.utilities import (
+    mention_all_handler,
+    shuffle_users_handler,
+    random_user_picker_handler,
+    handle_utility_callback,
+)
 from ..services.openai_service import OpenAIService
 from ..services.auth_service import auth_service
 from ..services.image_service import image_service
@@ -253,6 +277,27 @@ class TelegramBotApp(LoggerMixin):
         self.application.add_handler(CommandHandler("polls", list_polls_handler))
         self.application.add_handler(CommandHandler("vote", vote_handler))
         
+        # Activity tracking handlers
+        self.application.add_handler(CommandHandler("night_owls", night_owls_handler))
+        self.application.add_handler(CommandHandler("most_active_users", most_active_users_handler))
+        self.application.add_handler(CommandHandler("my_activity", my_activity_handler))
+        
+        # Mood analysis handlers
+        self.application.add_handler(CommandHandler("hows", mood_analysis_handler))
+        self.application.add_handler(CommandHandler("mood", mood_analysis_handler))  # Alias
+        self.application.add_handler(CommandHandler("mood_trends", mood_trends_handler))
+        
+        # Synonym management handlers
+        self.application.add_handler(CommandHandler("add_synonym", add_synonym_handler))
+        self.application.add_handler(CommandHandler("synonym_of_day", synonym_of_day_handler))
+        self.application.add_handler(CommandHandler("search_synonyms", search_synonyms_handler))
+        self.application.add_handler(CommandHandler("synonym_stats", synonym_stats_handler))
+        
+        # User utility handlers
+        self.application.add_handler(CommandHandler("all", mention_all_handler))
+        self.application.add_handler(CommandHandler("shuffle_userlist", shuffle_users_handler))
+        self.application.add_handler(CommandHandler("random_user", random_user_picker_handler))
+        
         # Message handlers
         self.application.add_handler(
             MessageHandler(filters.TEXT & ~filters.COMMAND, message_handler)
@@ -268,6 +313,10 @@ class TelegramBotApp(LoggerMixin):
         self.application.add_handler(CallbackQueryHandler(handle_nsfw_callback, pattern=r"^(fav_|add_collection_|random_boobs_|gimme_another_)"))
         self.application.add_handler(CallbackQueryHandler(handle_gambling_callback, pattern=r"^(casino_|bet_|dice_|slots_|coin_|lucky_|blackjack_|roulette_)"))
         self.application.add_handler(CallbackQueryHandler(handle_voting_callback, pattern=r"^(vote_|refresh_poll_|close_poll_|results_poll_|show_poll_)"))
+        self.application.add_handler(CallbackQueryHandler(handle_activity_callback, pattern=r"^(night_owls|active_users|activity_|user_activity_)"))
+        self.application.add_handler(CallbackQueryHandler(handle_mood_callback, pattern=r"^(mood_|hows_)"))
+        self.application.add_handler(CallbackQueryHandler(handle_synonym_callback, pattern=r"^(synonym_|search_synonyms|add_synonym_)"))
+        self.application.add_handler(CallbackQueryHandler(handle_utility_callback, pattern=r"^(shuffle_|random_user_|mention_all|chat_member_)"))
         self.application.add_handler(CallbackQueryHandler(callback_handler))
         
         self.logger.info("All handlers registered")
