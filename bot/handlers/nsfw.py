@@ -275,10 +275,10 @@ async def fetch_random_adult_content(keywords: str = "") -> Optional[Dict[str, A
             await asyncio.sleep(0.5)
             return random.choice(mock_images)
         
-        # RapidAPI integration for adult content
+        # RapidAPI integration for adult content  
         headers = {
             "X-RapidAPI-Key": settings.rapidapi_key,
-            "X-RapidAPI-Host": "nsfw-images1.p.rapidapi.com"
+            "X-RapidAPI-Host": "nsfw-images.p.rapidapi.com"
         }
         
         async with aiohttp.ClientSession() as session:
@@ -1042,8 +1042,15 @@ async def create_porn_handler(update: Update, context: ContextTypes.DEFAULT_TYPE
             "x-rapidapi-host": "ai-porn-nsfw-generator.p.rapidapi.com"
         }
         
+        if not settings.rapidapi_key:
+            await loading_message.edit_text(
+                "❌ RapidAPI key not configured for AI image generation.",
+                parse_mode="HTML"
+            )
+            return
+
         async with aiohttp.ClientSession() as session:
-            async with session.get(url, headers=headers, params=querystring) as response:
+            async with session.get(url, headers=headers, params=querystring, timeout=aiohttp.ClientTimeout(total=45)) as response:
                 if response.status == 200:
                     data = await response.json()
                     image_url = data.get("image")
@@ -1087,6 +1094,11 @@ async def create_porn_handler(update: Update, context: ContextTypes.DEFAULT_TYPE
                             "❌ Failed to generate image. The API didn't return a valid image URL.",
                             parse_mode="HTML"
                         )
+                elif response.status == 403:
+                    await loading_message.edit_text(
+                        "❌ API authentication failed. RapidAPI key may not be subscribed to ai-porn-nsfw-generator.p.rapidapi.com endpoint.",
+                        parse_mode="HTML"
+                    )
                 else:
                     await loading_message.edit_text(
                         f"❌ API request failed with status {response.status}. Please try again later.",

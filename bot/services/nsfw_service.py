@@ -19,31 +19,66 @@ class NsfwService:
         """Initialize the NSFW service."""
         self.rapidapi_key = settings.rapidapi_key
         self.base_timeout = 15
-        logger.info("NSFW service initialized")
+        self._api_verified = False
+        
+        if self.rapidapi_key:
+            logger.info("NSFW service initialized with RapidAPI key")
+        else:
+            logger.warning("NSFW service initialized without RapidAPI key - will use fallback content")
+    
+    async def initialize_and_verify(self):
+        """Initialize and verify API access on startup."""
+        if self._api_verified or not self.rapidapi_key:
+            return
+            
+        try:
+            verification_results = await self.verify_api_access()
+            
+            if verification_results.get("video_api"):
+                logger.info("✅ Video API (quality-porn.p.rapidapi.com) is accessible")
+            else:
+                error_msg = verification_results.get("video_api_error", "Unknown error")
+                logger.warning(f"❌ Video API (quality-porn.p.rapidapi.com) is not accessible: {error_msg}")
+                
+            if verification_results.get("image_api"):
+                logger.info("✅ Image API (girls-nude-image.p.rapidapi.com) is accessible")
+            else:
+                error_msg = verification_results.get("image_api_error", "Unknown error")
+                logger.warning(f"❌ Image API (girls-nude-image.p.rapidapi.com) is not accessible: {error_msg}")
+            
+            # Log overall status
+            working_apis = sum([verification_results.get("video_api", False), verification_results.get("image_api", False)])
+            if working_apis == 0:
+                logger.error("⚠️  No NSFW APIs are working. Bot will use fallback content only.")
+            elif working_apis == 1:
+                logger.warning("⚠️  Only 1 out of 2 NSFW APIs are working. Some features may use fallback content.")
+            else:
+                logger.info("✅ All NSFW APIs are working correctly")
+                
+            self._api_verified = True
+            
+        except Exception as e:
+            logger.error(f"Error during API verification: {str(e)}", exc_info=True)
     
     async def get_random_video(self, category: Optional[str] = None) -> Optional[Dict[str, Any]]:
         """Get a random NSFW video from RapidAPI."""
         if not self.rapidapi_key:
             logger.warning("RapidAPI key not configured for NSFW video service")
-            return None
+            return await self._get_fallback_video(category)
         
         try:
             headers = {
                 "X-RapidAPI-Key": self.rapidapi_key,
-                "X-RapidAPI-Host": "nsfw-api.p.rapidapi.com"
+                "X-RapidAPI-Host": "quality-porn.p.rapidapi.com"
             }
             
-            # Try different endpoints for better variety
+            # Use working quality-porn API endpoint
             endpoints = [
-                "https://nsfw-api.p.rapidapi.com/random",
-                "https://nsfw-api.p.rapidapi.com/videos/random",
-                "https://nsfw-api.p.rapidapi.com/content/random"
+                "https://quality-porn.p.rapidapi.com/search"
             ]
             
-            url = random.choice(endpoints)
-            params = {}
-            if category:
-                params["category"] = category
+            url = endpoints[0]  # Use the single working endpoint
+            params = {"query": category or "hot"}  # quality-porn API expects 'query' parameter
             
             async with aiohttp.ClientSession() as session:
                 async with session.get(
@@ -56,30 +91,35 @@ class NsfwService:
                     if response.status == 200:
                         data = await response.json()
                         
-                        # Normalize response structure
-                        if isinstance(data, list) and data:
-                            data = data[0]
-                        
-                        if isinstance(data, dict):
-                            video_url = (
-                                data.get('video_url') or 
-                                data.get('url') or 
-                                data.get('link') or 
-                                data.get('mp4')
-                            )
-                            
-                            if video_url:
-                                return {
-                                    'url': video_url,
-                                    'title': data.get('title', 'Random Video'),
-                                    'category': data.get('category', category or 'general'),
-                                    'duration': data.get('duration'),
-                                    'thumbnail': data.get('thumbnail'),
-                                    'source': 'RapidAPI NSFW',
-                                    'fetched_at': datetime.utcnow().isoformat()
-                                }
-                    
-                    logger.warning(f"NSFW video API returned status {response.status}")
+                        # Handle quality-porn API response format
+                        if isinstance(data, dict) and 'data' in data:
+                            videos = data.get('data', [])
+                            if isinstance(videos, list) and videos:
+                                video = random.choice(videos)  # Pick random video from results
+                                
+                                video_url = (
+                                    video.get('video_url') or 
+                                    video.get('url') or 
+                                    video.get('link') or 
+                                    video.get('video') or
+                                    video.get('embed_url')
+                                )
+                                
+                                if video_url:
+                                    return {
+                                        'url': video_url,
+                                        'title': video.get('title', 'Random Video'),
+                                        'category': video.get('category', category or 'general'),
+                                        'duration': video.get('duration'),
+                                        'thumbnail': video.get('thumbnail') or video.get('image'),
+                                        'source': 'RapidAPI Quality Porn',
+                                        'fetched_at': datetime.utcnow().isoformat()
+                                    }
+                    elif response.status == 403:
+                        logger.error(f"NSFW video API authentication failed (403). RapidAPI key may not be subscribed to quality-porn.p.rapidapi.com endpoint")
+                        return await self._get_fallback_video(category)
+                    else:
+                        logger.warning(f"NSFW video API returned status {response.status}")
                     
         except asyncio.TimeoutError:
             logger.error("Timeout fetching random video from RapidAPI")
@@ -93,41 +133,70 @@ class NsfwService:
         """Get NSFW image by category from RapidAPI."""
         if not self.rapidapi_key:
             logger.warning("RapidAPI key not configured for NSFW image service")
-            return None
+            return await self._get_fallback_image(category)
         
         try:
             headers = {
-                "X-RapidAPI-Key": self.rapidapi_key,
-                "X-RapidAPI-Host": "nsfw-images.p.rapidapi.com"
+                "x-rapidapi-key": self.rapidapi_key,
+                "x-rapidapi-host": "girls-nude-image.p.rapidapi.com"
             }
             
-            # Try different image endpoints
+            # Map categories to available types on the working API
+            category_mapping = {
+                'amateur': 'boobs',
+                'anal': 'ass', 
+                'asian': 'boobs',
+                'babe': 'boobs',
+                'bbw': 'boobs',
+                'big-ass': 'ass',
+                'big-tits': 'boobs',
+                'blonde': 'boobs',
+                'blowjob': 'boobs',
+                'brunette': 'boobs',
+                'creampie': 'boobs',
+                'cumshot': 'boobs',
+                'fetish': 'boobs',
+                'hardcore': 'boobs',
+                'latina': 'boobs',
+                'lesbian': 'boobs',
+                'milf': 'boobs',
+                'pornstar': 'boobs',
+                'redhead': 'boobs',
+                'teen': 'boobs',
+                'threesome': 'boobs',
+                'vintage': 'boobs',
+                'boobs': 'boobs',
+                'ass': 'ass'
+            }
+            
+            # Use the mapped category or default to 'boobs'
+            api_category = category_mapping.get(category.lower(), 'boobs')
+            
+            # Try the working endpoint
             endpoints = [
-                f"https://nsfw-images.p.rapidapi.com/{category}",
-                f"https://nsfw-images.p.rapidapi.com/category/{category}",
-                f"https://nsfw-images.p.rapidapi.com/random/{category}"
+                "https://girls-nude-image.p.rapidapi.com/"
             ]
             
             for url in endpoints:
                 try:
+                    params = {"type": api_category}
+                    
                     async with aiohttp.ClientSession() as session:
                         async with session.get(
                             url, 
                             headers=headers,
+                            params=params,
                             timeout=aiohttp.ClientTimeout(total=self.base_timeout)
                         ) as response:
                             
                             if response.status == 200:
                                 data = await response.json()
                                 
-                                # Normalize response structure
-                                if isinstance(data, list) and data:
-                                    data = data[0]
-                                
+                                # Handle the response from girls-nude-image API
                                 if isinstance(data, dict):
                                     image_url = (
-                                        data.get('image_url') or 
                                         data.get('url') or 
+                                        data.get('image_url') or 
                                         data.get('link') or 
                                         data.get('image')
                                     )
@@ -137,11 +206,16 @@ class NsfwService:
                                             'url': image_url,
                                             'category': category,
                                             'title': data.get('title', f'{category.title()} Image'),
-                                            'source': 'RapidAPI NSFW Images',
+                                            'source': 'RapidAPI Girls Nude Image',
                                             'fetched_at': datetime.utcnow().isoformat(),
                                             'width': data.get('width'),
                                             'height': data.get('height')
                                         }
+                            elif response.status == 403:
+                                logger.error(f"NSFW image API authentication failed (403) for category '{category}'. RapidAPI key may not be subscribed to girls-nude-image.p.rapidapi.com endpoint")
+                                break  # No point trying other endpoints with same auth issue
+                            else:
+                                logger.warning(f"NSFW image API returned status {response.status} for category '{category}'")
                             
                 except Exception as e:
                     logger.debug(f"Failed endpoint {url}: {str(e)}")
@@ -223,6 +297,56 @@ class NsfwService:
             'hardcore', 'latina', 'lesbian', 'milf', 'pornstar', 'redhead',
             'teen', 'threesome', 'vintage'
         ]
+    
+    async def verify_api_access(self) -> Dict[str, bool]:
+        """Verify API access for different endpoints."""
+        if not self.rapidapi_key:
+            return {"video_api": False, "image_api": False, "reason": "No API key configured"}
+        
+        results = {"video_api": False, "image_api": False}
+        
+        # Test video API (quality-porn)
+        try:
+            headers = {
+                "X-RapidAPI-Key": self.rapidapi_key,
+                "X-RapidAPI-Host": "quality-porn.p.rapidapi.com"
+            }
+            
+            async with aiohttp.ClientSession() as session:
+                async with session.get(
+                    "https://quality-porn.p.rapidapi.com/search",
+                    headers=headers,
+                    params={"query": "test"},
+                    timeout=aiohttp.ClientTimeout(total=10)
+                ) as response:
+                    results["video_api"] = response.status == 200
+                    if response.status == 403:
+                        results["video_api_error"] = "Authentication failed - API key may not be subscribed to quality-porn.p.rapidapi.com"
+        except Exception as e:
+            results["video_api_error"] = str(e)
+        
+        # Test image API (girls-nude-image)
+        try:
+            headers = {
+                "x-rapidapi-key": self.rapidapi_key,
+                "x-rapidapi-host": "girls-nude-image.p.rapidapi.com"
+            }
+            
+            async with aiohttp.ClientSession() as session:
+                async with session.get(
+                    "https://girls-nude-image.p.rapidapi.com/",
+                    headers=headers,
+                    params={"type": "boobs"},
+                    timeout=aiohttp.ClientTimeout(total=10)
+                ) as response:
+                    results["image_api"] = response.status == 200
+                    if response.status == 403:
+                        results["image_api_error"] = "Authentication failed - API key may not be subscribed to girls-nude-image.p.rapidapi.com"
+        except Exception as e:
+            results["image_api_error"] = str(e)
+        
+        logger.info(f"API access verification completed: {results}")
+        return results
 
 
 # Global service instance
