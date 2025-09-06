@@ -127,51 +127,62 @@ async def show_me_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
 
 @auth_check
 async def gimme_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Handle /gimme <type> command for specific content types."""
+    """Handle /gimme <query> command for porn video search."""
     if not update.message or not update.effective_user:
         return
     
     user_id = update.effective_user.id
-    content_type = ' '.join(context.args) if context.args else ""
+    search_query = ' '.join(context.args) if context.args else "hot"
     
-    if not content_type:
-        available_types = ["boobs", "ass", "pussy", "milf", "teen", "big tits", "anal"]
-        await update.message.reply_text(
-            f"Please specify content type. Usage: `/gimme <type>`\n\n"
-            f"Available types: {', '.join(available_types)}",
-            parse_mode="Markdown"
-        )
-        return
-    
-    logger.info("Gimme request", user_id=user_id, content_type=content_type)
+    logger.info("Gimme video search request", user_id=user_id, query=search_query)
     
     try:
-        await update.message.reply_text(f"🔍 Fetching {content_type} content...")
+        await update.message.reply_text(f"🔍 Searching for videos: '{search_query}'...")
         
-        # Simulate API call for specific content type
-        image_data = await fetch_specific_content(content_type)
+        # Search for porn videos using RapidAPI
+        videos = await search_porn_videos(search_query)
         
-        if image_data:
+        if videos and len(videos) > 0:
+            # Select a random video from results
+            video = random.choice(videos)
+            
+            # Create response message with video info
+            caption = f"🔞 **{video.get('title', 'Video')}**\n"
+            caption += f"⏱️ Duration: {video.get('duration', 'Unknown')}\n"
+            caption += f"👁️ Views: {video.get('views', 'N/A')}\n"
+            caption += f"🔗 [Watch Video]({video.get('video_link', '#')})"
+            
             keyboard = [
                 [
-                    InlineKeyboardButton("❤️ Favorite", callback_data=f"fav_{image_data.get('id', 'unknown')}"),
-                    InlineKeyboardButton("🔄 Another", callback_data=f"gimme_another_{content_type}"),
+                    InlineKeyboardButton("🔗 Watch", url=video.get('video_link', '#')),
+                    InlineKeyboardButton("🔄 Another", callback_data=f"gimme_another_{search_query}"),
                 ]
             ]
             reply_markup = InlineKeyboardMarkup(keyboard)
             
-            await context.bot.send_photo(
-                chat_id=update.effective_chat.id,
-                photo=image_data['url'],
-                caption=f"🔞 {content_type.title()} content",
-                reply_markup=reply_markup
-            )
+            # Send thumbnail if available
+            thumbnail_url = video.get('thumbnail')
+            if thumbnail_url:
+                await context.bot.send_photo(
+                    chat_id=update.effective_chat.id,
+                    photo=thumbnail_url,
+                    caption=caption,
+                    reply_markup=reply_markup,
+                    parse_mode="Markdown"
+                )
+            else:
+                await update.message.reply_text(
+                    caption,
+                    reply_markup=reply_markup,
+                    parse_mode="Markdown",
+                    disable_web_page_preview=False
+                )
         else:
-            await update.message.reply_text(f"❌ No {content_type} content found. Try again later.")
+            await update.message.reply_text(f"❌ No videos found for '{search_query}'. Try a different search term.")
             
     except Exception as e:
-        logger.error("Error fetching specific content", user_id=user_id, content_type=content_type, error=str(e), exc_info=True)
-        await update.message.reply_text("❌ Error fetching content. Please try again.")
+        logger.error("Error searching videos", user_id=user_id, query=search_query, error=str(e), exc_info=True)
+        await update.message.reply_text("❌ Error searching for videos. Please try again.")
 
 
 async def fetch_random_adult_content(keywords: str = "") -> Optional[Dict[str, Any]]:
@@ -289,6 +300,56 @@ async def fetch_specific_content(content_type: str) -> Optional[Dict[str, Any]]:
         
     except Exception as e:
         logger.error("Error fetching specific content", content_type=content_type, error=str(e), exc_info=True)
+        return None
+
+
+async def search_porn_videos(query: str = "hot") -> Optional[List[Dict[str, Any]]]:
+    """Search for porn videos using RapidAPI."""
+    try:
+        if not settings.rapidapi_key or settings.rapidapi_key == "your_rapidapi_key_here":
+            # Fallback to mock data if no API key
+            logger.warning("No RapidAPI key configured, using mock video data")
+            return [
+                {
+                    "title": "Sample Video 1",
+                    "thumbnail": "https://picsum.photos/300/200?random=1",
+                    "video_link": "https://example.com/video1",
+                    "duration": "10min",
+                    "views": "1.2M98%"
+                }
+            ]
+        
+        # RapidAPI integration for porn video search
+        headers = {
+            "x-rapidapi-key": settings.rapidapi_key,
+            "x-rapidapi-host": "porn-xnxx-api.p.rapidapi.com",
+            "Content-Type": "application/json"
+        }
+        
+        payload = {"q": query}
+        
+        async with aiohttp.ClientSession() as session:
+            try:
+                url = "https://porn-xnxx-api.p.rapidapi.com/search"
+                
+                async with session.post(url, json=payload, headers=headers, timeout=15) as response:
+                    if response.status == 200:
+                        data = await response.json()
+                        if data and isinstance(data, list) and len(data) > 0:
+                            logger.info(f"Found {len(data)} videos for query: {query}")
+                            return data
+                        else:
+                            logger.warning("No videos found in API response", query=query)
+                            return None
+                    else:
+                        logger.warning("API request failed", status=response.status, query=query)
+                        return None
+            except Exception as api_error:
+                logger.warning("RapidAPI video search request failed", query=query, error=str(api_error))
+                return None
+        
+    except Exception as e:
+        logger.error("Error searching porn videos", query=query, error=str(e), exc_info=True)
         return None
 
 
@@ -528,24 +589,47 @@ async def nsfw_callback_handler(update: Update, context: ContextTypes.DEFAULT_TY
                 await query.answer("❌ Failed to fetch new content", show_alert=True)
                 
         elif callback_data.startswith("gimme_another_"):
-            content_type = callback_data.replace("gimme_another_", "")
-            image_data = await fetch_specific_content(content_type)
+            search_query = callback_data.replace("gimme_another_", "")
             
-            if image_data:
+            await query.answer("🔍 Searching for another video...")
+            
+            # Search for another video with same query
+            videos = await search_porn_videos(search_query)
+            
+            if videos and len(videos) > 0:
+                # Select a random video from results
+                video = random.choice(videos)
+                
+                # Create response message with video info
+                caption = f"🔞 **{video.get('title', 'Video')}**\n"
+                caption += f"⏱️ Duration: {video.get('duration', 'Unknown')}\n"
+                caption += f"👁️ Views: {video.get('views', 'N/A')}\n"
+                caption += f"🔗 [Watch Video]({video.get('video_link', '#')})"
+                
                 keyboard = [
                     [
-                        InlineKeyboardButton("❤️ Favorite", callback_data=f"fav_{image_data.get('id', 'unknown')}"),
-                        InlineKeyboardButton("🔄 Another", callback_data=f"gimme_another_{content_type}"),
+                        InlineKeyboardButton("🔗 Watch", url=video.get('video_link', '#')),
+                        InlineKeyboardButton("🔄 Another", callback_data=f"gimme_another_{search_query}"),
                     ]
                 ]
                 reply_markup = InlineKeyboardMarkup(keyboard)
                 
-                await query.edit_message_media(
-                    media=InputMediaPhoto(media=image_data['url'], caption=f"🔞 {content_type.title()} content"),
-                    reply_markup=reply_markup
-                )
+                # Update with new video thumbnail
+                thumbnail_url = video.get('thumbnail')
+                if thumbnail_url:
+                    await query.edit_message_media(
+                        media=InputMediaPhoto(media=thumbnail_url, caption=caption, parse_mode="Markdown"),
+                        reply_markup=reply_markup
+                    )
+                else:
+                    await query.edit_message_text(
+                        caption,
+                        reply_markup=reply_markup,
+                        parse_mode="Markdown",
+                        disable_web_page_preview=False
+                    )
             else:
-                await query.answer("❌ Failed to fetch new content", show_alert=True)
+                await query.answer("❌ No more videos found for this search", show_alert=True)
                 
         elif callback_data.startswith("fav_"):
             image_id = callback_data.replace("fav_", "")
@@ -734,3 +818,116 @@ async def fetch_image_handler(update: Update, context: ContextTypes.DEFAULT_TYPE
             "❌ An error occurred while fetching the image. Please try again later.",
             parse_mode="HTML"
         )
+
+
+@auth_check
+async def create_porn_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Handle /create_porn command - generate AI porn image from prompt."""
+    try:
+        # Check if prompt is provided
+        if not context.args:
+            await update.message.reply_text(
+                "🎨 <b>AI Porn Generator</b>\n\n"
+                "💡 <b>Usage:</b> /create_porn [prompt]\n"
+                "📝 <b>Example:</b> /create_porn a beautiful woman on the beach\n\n"
+                "⚠️ <b>Note:</b> This generates NSFW content using AI. Use responsibly.",
+                parse_mode="HTML"
+            )
+            return
+        
+        prompt = " ".join(context.args).strip()
+        
+        # Validate prompt length
+        if len(prompt) > 500:
+            await update.message.reply_text(
+                "❌ Prompt is too long! Please keep it under 500 characters.",
+                parse_mode="HTML"
+            )
+            return
+            
+        # Log the request
+        user_id = update.effective_user.id
+        logger.info(f"AI porn generation request from user {user_id}, prompt: {prompt}")
+        
+        # Send loading message  
+        loading_message = await update.message.reply_text(
+            f"🎨 Generating AI image from prompt: <code>{prompt}</code>\n\n"
+            "⏳ This may take 10-30 seconds...",
+            parse_mode="HTML"
+        )
+        
+        # Generate image using RapidAPI
+        import aiohttp
+        url = "https://ai-porn-nsfw-generator.p.rapidapi.com/"
+        querystring = {"prompt": prompt}
+        headers = {
+            "x-rapidapi-key": settings.rapidapi_key,
+            "x-rapidapi-host": "ai-porn-nsfw-generator.p.rapidapi.com"
+        }
+        
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url, headers=headers, params=querystring) as response:
+                if response.status == 200:
+                    data = await response.json()
+                    image_url = data.get("image")
+                    
+                    if image_url:
+                        # Create response caption
+                        caption = (
+                            f"🎨 <b>AI Generated Image</b>\n\n"
+                            f"💭 <b>Prompt:</b> {prompt}\n"
+                            f"🤖 Generated by AI\n\n"
+                            f"❤️ Enjoy responsibly!"
+                        )
+                        
+                        # Create inline keyboard
+                        keyboard = [
+                            [
+                                InlineKeyboardButton("🎨 Generate Another", callback_data="ai_generate_another"),
+                                InlineKeyboardButton("🏠 Main Menu", callback_data="start")
+                            ]
+                        ]
+                        reply_markup = InlineKeyboardMarkup(keyboard)
+                        
+                        # Send the generated image
+                        await context.bot.send_photo(
+                            chat_id=update.effective_chat.id,
+                            photo=image_url,
+                            caption=truncate_caption(caption),
+                            parse_mode="HTML",
+                            reply_markup=reply_markup
+                        )
+                        
+                        # Delete loading message
+                        await loading_message.delete()
+                        
+                        # Log successful generation
+                        logger.info(f"AI porn image generated successfully for user {user_id}")
+                        await user_service.log_command_usage(user_id, "create_porn", prompt=prompt)
+                        
+                    else:
+                        await loading_message.edit_text(
+                            "❌ Failed to generate image. The API didn't return a valid image URL.",
+                            parse_mode="HTML"
+                        )
+                else:
+                    await loading_message.edit_text(
+                        f"❌ API request failed with status {response.status}. Please try again later.",
+                        parse_mode="HTML"
+                    )
+                    
+    except Exception as e:
+        logger.error(f"Error in create_porn_handler: {str(e)}", exc_info=True)
+        
+        # Try to edit the loading message if it exists
+        try:
+            await loading_message.edit_text(
+                "❌ An error occurred while generating the image. Please try again later.",
+                parse_mode="HTML"
+            )
+        except:
+            # If loading message doesn't exist, send a new message
+            await update.message.reply_text(
+                "❌ An error occurred while generating the image. Please try again later.",
+                parse_mode="HTML"
+            )

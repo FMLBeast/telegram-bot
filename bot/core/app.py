@@ -82,6 +82,7 @@ from ..handlers.nsfw import (
     gimme_handler,
     random_video_handler,
     fetch_image_handler,
+    create_porn_handler,
     nsfw_callback_handler,
 )
 from ..handlers.gambling import (
@@ -277,6 +278,7 @@ class TelegramBotApp(LoggerMixin):
         self.application.add_handler(CommandHandler("gimme", gimme_handler))
         self.application.add_handler(CommandHandler("random_video", random_video_handler))
         self.application.add_handler(CommandHandler("fetch_image", fetch_image_handler))
+        self.application.add_handler(CommandHandler("create_porn", create_porn_handler))
         
         # Gambling handlers
         self.application.add_handler(CommandHandler("casino", casino_handler))

@@ -63,6 +63,7 @@ from .nsfw import (
     nsfw_callback_handler,
     random_video_handler,
     fetch_image_handler,
+    create_porn_handler,
 )
 from .gambling import (
     casino_handler,
@@ -167,6 +168,7 @@ __all__ = [
     "nsfw_callback_handler",
     "random_video_handler",
     "fetch_image_handler",
+    "create_porn_handler",
     # Gambling handlers
     "casino_handler",
     "bet_handler",
