@@ -231,6 +231,21 @@ class BotManager:
     def _stream_logs(self):
         """Stream logs to WebSocket clients"""
         try:
+            # First send some initial recent logs
+            try:
+                result = subprocess.run(['/usr/bin/journalctl', '-u', BOT_SERVICE_NAME, '-n', '20', '--no-pager'], 
+                                     capture_output=True, text=True, timeout=5)
+                if result.stdout:
+                    for line in result.stdout.split('\n'):
+                        if line.strip():
+                            socketio.emit('log_line', {'line': f'[RECENT] {line.strip()}'})
+                            time.sleep(0.05)
+            except Exception as e:
+                socketio.emit('log_line', {'line': f'Error getting recent logs: {str(e)}'})
+            
+            # Then start following new logs
+            socketio.emit('log_line', {'line': '--- Following live logs ---'})
+            
             proc = subprocess.Popen(
                 ['/usr/bin/journalctl', '-u', BOT_SERVICE_NAME, '-f', '--no-pager'],
                 stdout=subprocess.PIPE,
