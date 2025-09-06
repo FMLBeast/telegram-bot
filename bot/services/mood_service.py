@@ -101,8 +101,8 @@ class MoodService:
                         Message.user_id == user_id,
                         Message.created_at >= start_date,
                         Message.created_at <= end_date,
-                        Message.message_text.isnot(None),
-                        Message.message_text != ''
+                        Message.text.isnot(None),
+                        Message.text != ''
                     )
                 ).order_by(desc(Message.created_at)).limit(max_messages)
                 
@@ -114,7 +114,7 @@ class MoodService:
                 
                 for message in result.scalars():
                     messages.append({
-                        'text': message.message_text,
+                        'text': message.text,
                         'created_at': message.created_at,
                         'chat_id': message.chat_id
                     })
@@ -217,13 +217,13 @@ class MoodService:
                 
                 # Get messages for this period
                 async with db_manager.get_session() as session:
-                    query = select(Message.message_text).where(
+                    query = select(Message.text).where(
                         and_(
                             Message.user_id == user_id,
                             Message.created_at >= start_date,
                             Message.created_at < sample_date,
-                            Message.message_text.isnot(None),
-                            Message.message_text != ''
+                            Message.text.isnot(None),
+                            Message.text != ''
                         )
                     ).limit(10)
                     

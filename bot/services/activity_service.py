@@ -31,9 +31,10 @@ class ActivityService:
             async with db_manager.get_session() as session:
                 # Create message record
                 message = Message(
+                    telegram_message_id=0,  # Default for tracking purposes
                     user_id=user_id,
                     chat_id=chat_id,
-                    message_text=message_text[:1000],  # Truncate to prevent bloat
+                    text=message_text[:1000],  # Truncate to prevent bloat
                     message_type=message_type,
                     created_at=datetime.utcnow()
                 )
@@ -65,7 +66,7 @@ class ActivityService:
                     User.first_name,
                     func.count(Message.id).label('night_messages')
                 ).select_from(
-                    Message.__table__.join(User.__table__)
+                    Message.__table__.join(User.__table__, Message.user_id == User.telegram_id)
                 ).where(
                     and_(
                         Message.created_at >= start_date,
@@ -125,9 +126,9 @@ class ActivityService:
                     User.username,
                     User.first_name,
                     func.count(Message.id).label('message_count'),
-                    func.avg(func.length(Message.message_text)).label('avg_message_length')
+                    func.avg(func.length(Message.text)).label('avg_message_length')
                 ).select_from(
-                    Message.__table__.join(User.__table__)
+                    Message.__table__.join(User.__table__, Message.user_id == User.telegram_id)
                 ).where(
                     and_(
                         Message.created_at >= start_date,

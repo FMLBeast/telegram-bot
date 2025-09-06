@@ -3,6 +3,7 @@
 import pytest
 from datetime import datetime, timedelta
 import time
+from unittest.mock import patch
 
 from bot.utils.validators import (
     validate_user_input, 
@@ -149,10 +150,13 @@ class TestFormatters:
     
     def test_format_relative_time_future(self):
         """Test relative time formatting for future times."""
-        now = datetime.utcnow()
-        future_time = now + timedelta(hours=3)
-        result = format_relative_time(future_time)
-        assert "in 3 hours" == result
+        with patch('bot.utils.formatters.datetime') as mock_datetime:
+            now = datetime(2023, 1, 1, 12, 0, 0)
+            mock_datetime.utcnow.return_value = now
+            
+            future_time = now + timedelta(hours=3)
+            result = format_relative_time(future_time)
+            assert "in 3 hours" == result
     
     def test_format_file_size(self):
         """Test file size formatting."""

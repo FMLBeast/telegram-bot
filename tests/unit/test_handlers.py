@@ -39,75 +39,69 @@ async def test_help_handler(mock_telegram_update, mock_telegram_context):
     
     # Check that the reply contains help text
     reply_args = mock_telegram_update.message.reply_text.call_args
-    assert "Commands Help" in reply_args[0][0]
+    assert "Complete Bot Commands Guide" in reply_args[0][0]
 
 
 @pytest.mark.asyncio
 async def test_message_handler_success(mock_telegram_update, mock_telegram_context):
-    """Test message handler with successful AI response."""
+    """Test message handler basic functionality."""
     
-    with patch('bot.handlers.messages.rate_limiter') as mock_rate_limiter, \
-         patch('bot.handlers.messages.user_service') as mock_user_service, \
-         patch('bot.handlers.messages.openai_service') as mock_openai_service:
+    with patch('bot.handlers.messages.user_service') as mock_user_service:
         
         # Setup mocks
-        mock_rate_limiter.check_rate_limit = AsyncMock(return_value=True)
         mock_user_service.create_or_update_user = AsyncMock()
         mock_user_service.log_message = AsyncMock()
-        mock_openai_service.generate_response = AsyncMock(return_value="AI response")
         
         await message_handler(mock_telegram_update, mock_telegram_context)
         
-        # Verify all services were called
-        mock_rate_limiter.check_rate_limit.assert_called_once()
+        # Verify user and message services were called
         mock_user_service.create_or_update_user.assert_called_once()
         mock_user_service.log_message.assert_called_once()
-        mock_openai_service.generate_response.assert_called_once()
         
-        # Verify typing action was sent
-        mock_telegram_context.bot.send_chat_action.assert_called_once()
-        
-        # Verify reply was sent
-        mock_telegram_update.message.reply_text.assert_called_once_with(
-            "AI response",
-            parse_mode="Markdown",
-            disable_web_page_preview=True,
-        )
+        # Message handler doesn't send replies by default (only for keywords)
+        # Since test message is "Hello, World!" it should not trigger keyword responses
 
 
 @pytest.mark.asyncio
-async def test_message_handler_rate_limited(mock_telegram_update, mock_telegram_context):
-    """Test message handler with rate limiting."""
+async def test_message_handler_keyword_trigger(mock_telegram_update, mock_telegram_context):
+    """Test message handler with keyword trigger."""
     
-    with patch('bot.handlers.messages.rate_limiter') as mock_rate_limiter:
-        mock_rate_limiter.check_rate_limit = AsyncMock(return_value=False)
+    # Setup message with keyword
+    mock_telegram_update.message.text = "wen coco"
+    
+    with patch('bot.handlers.messages.user_service') as mock_user_service:
+        mock_user_service.create_or_update_user = AsyncMock()
+        mock_user_service.log_message = AsyncMock()
         
         await message_handler(mock_telegram_update, mock_telegram_context)
         
-        # Verify rate limit message was sent
+        # Verify keyword response was sent
         reply_args = mock_telegram_update.message.reply_text.call_args
-        assert "too quickly" in reply_args[0][0]
+        assert "Next Coco times" in reply_args[0][0]
 
 
-@pytest.mark.asyncio
-async def test_message_handler_ai_error(mock_telegram_update, mock_telegram_context):
-    """Test message handler with AI service error."""
+@pytest.mark.asyncio 
+async def test_ask_gpt_handler_with_error(mock_telegram_update, mock_telegram_context):
+    """Test ask_gpt_handler with AI service error."""
+    
+    from bot.handlers.messages import ask_gpt_handler
+    
+    # Setup context with args
+    mock_telegram_context.args = ["test", "question"]
     
     with patch('bot.handlers.messages.rate_limiter') as mock_rate_limiter, \
-         patch('bot.handlers.messages.user_service') as mock_user_service, \
          patch('bot.handlers.messages.openai_service') as mock_openai_service:
         
         # Setup mocks
         mock_rate_limiter.check_rate_limit = AsyncMock(return_value=True)
-        mock_user_service.create_or_update_user = AsyncMock()
-        mock_user_service.log_message = AsyncMock()
         mock_openai_service.generate_response = AsyncMock(side_effect=Exception("AI Error"))
         
-        await message_handler(mock_telegram_update, mock_telegram_context)
+        await ask_gpt_handler(mock_telegram_update, mock_telegram_context)
         
-        # Verify error message was sent
-        reply_args = mock_telegram_update.message.reply_text.call_args
-        assert "encountered an error" in reply_args[0][0]
+        # Verify error message was sent (should be the last call)
+        reply_calls = mock_telegram_update.message.reply_text.call_args_list
+        error_call = reply_calls[-1]
+        assert "encountered an error" in error_call[0][0]
 
 
 @pytest.mark.asyncio

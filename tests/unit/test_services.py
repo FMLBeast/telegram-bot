@@ -51,9 +51,14 @@ class TestOpenAIService:
     async def test_generate_response_rate_limit(self, openai_service):
         """Test response generation with rate limit error."""
         
+        # Create proper RateLimitError with message and response
+        mock_response = MagicMock()
+        mock_response.status_code = 429
+        rate_error = openai.RateLimitError(message="Rate limit exceeded", response=mock_response, body=None)
+        
         with patch.object(openai_service.client.chat.completions, 'create',
                          new_callable=AsyncMock, 
-                         side_effect=openai.RateLimitError("Rate limited", None, None)):
+                         side_effect=rate_error):
             
             result = await openai_service.generate_response(
                 message="Hello",
@@ -67,9 +72,14 @@ class TestOpenAIService:
     async def test_generate_response_auth_error(self, openai_service):
         """Test response generation with authentication error."""
         
+        # Create proper AuthenticationError with message and response  
+        mock_response = MagicMock()
+        mock_response.status_code = 401
+        auth_error = openai.AuthenticationError(message="Invalid API key", response=mock_response, body=None)
+        
         with patch.object(openai_service.client.chat.completions, 'create',
                          new_callable=AsyncMock,
-                         side_effect=openai.AuthenticationError("Auth failed", None, None)):
+                         side_effect=auth_error):
             
             result = await openai_service.generate_response(
                 message="Hello",
@@ -318,44 +328,86 @@ class TestActivityService:
     async def test_track_message(self, activity_service):
         """Test message tracking."""
         
-        # Mock database operations
-        with patch.object(activity_service, '_store_activity') as mock_store:
+        # Mock database manager
+        with patch('bot.services.activity_service.db_manager') as mock_db:
+            mock_session = AsyncMock()
+            mock_db.get_session.return_value.__aenter__.return_value = mock_session
+            mock_db.get_session.return_value.__aexit__.return_value = None
+            
             await activity_service.track_message(
                 user_id=123,
                 chat_id=456,
-                message_type="text",
-                timestamp=datetime.now()
+                message_text="test message",
+                message_type="text"
             )
             
-            mock_store.assert_called_once()
+            # Verify session was used
+            mock_session.add.assert_called_once()
+            mock_session.commit.assert_called_once()
     
     @pytest.mark.asyncio
     async def test_get_night_owls(self, activity_service):
         """Test getting night owls."""
         
         # Mock database query
-        mock_results = [
-            {'user_id': 123, 'message_count': 50, 'username': 'testuser'},
-            {'user_id': 124, 'message_count': 30, 'username': 'testuser2'}
-        ]
-        
-        with patch.object(activity_service, '_query_night_activity', return_value=mock_results):
+        with patch('bot.services.activity_service.db_manager') as mock_db:
+            mock_session = AsyncMock()
+            mock_db.get_session.return_value.__aenter__.return_value = mock_session
+            mock_db.get_session.return_value.__aexit__.return_value = None
+            
+            # Mock query result - need to make it iterable for row iteration
+            mock_row1 = MagicMock()
+            mock_row1.telegram_id = 123
+            mock_row1.night_messages = 50
+            mock_row1.username = 'testuser'
+            mock_row1.first_name = 'Test User'
+            
+            mock_row2 = MagicMock()
+            mock_row2.telegram_id = 124
+            mock_row2.night_messages = 30
+            mock_row2.username = 'testuser2'
+            mock_row2.first_name = 'Test User 2'
+            
+            mock_result = MagicMock()
+            mock_result.__iter__ = MagicMock(return_value=iter([mock_row1, mock_row2]))
+            mock_session.execute.return_value = mock_result
+            
             result = await activity_service.get_night_owls(chat_id=456)
             
             assert len(result) == 2
             assert result[0]['user_id'] == 123
-            assert result[0]['message_count'] == 50
+            assert result[0]['night_messages'] == 50
+            assert result[0]['username'] == 'testuser'
     
     @pytest.mark.asyncio
     async def test_get_most_active_users(self, activity_service):
         """Test getting most active users."""
         
-        mock_results = [
-            {'user_id': 123, 'message_count': 100, 'username': 'testuser'},
-            {'user_id': 124, 'message_count': 80, 'username': 'testuser2'}
-        ]
-        
-        with patch.object(activity_service, '_query_user_activity', return_value=mock_results):
+        # Mock database query
+        with patch('bot.services.activity_service.db_manager') as mock_db:
+            mock_session = AsyncMock()
+            mock_db.get_session.return_value.__aenter__.return_value = mock_session
+            mock_db.get_session.return_value.__aexit__.return_value = None
+            
+            # Mock query result - need to make it iterable for row iteration
+            mock_row1 = MagicMock()
+            mock_row1.telegram_id = 123
+            mock_row1.message_count = 100
+            mock_row1.avg_message_length = 25.5
+            mock_row1.username = 'testuser'
+            mock_row1.first_name = 'Test User'
+            
+            mock_row2 = MagicMock()
+            mock_row2.telegram_id = 124
+            mock_row2.message_count = 80
+            mock_row2.avg_message_length = 20.0
+            mock_row2.username = 'testuser2'
+            mock_row2.first_name = 'Test User 2'
+            
+            mock_result = MagicMock()
+            mock_result.__iter__ = MagicMock(return_value=iter([mock_row1, mock_row2]))
+            mock_session.execute.return_value = mock_result
+            
             result = await activity_service.get_most_active_users(chat_id=456)
             
             assert len(result) == 2
@@ -365,20 +417,29 @@ class TestActivityService:
     async def test_get_user_activity_stats(self, activity_service):
         """Test getting user activity statistics."""
         
-        mock_stats = {
-            'total_messages': 150,
-            'messages_today': 20,
-            'most_active_hour': 14,
-            'night_messages': 30,
-            'streak_days': 5
-        }
-        
-        with patch.object(activity_service, '_calculate_user_stats', return_value=mock_stats):
+        # Mock database queries
+        with patch('bot.services.activity_service.db_manager') as mock_db:
+            mock_session = AsyncMock()
+            mock_db.get_session.return_value.__aenter__.return_value = mock_session
+            mock_db.get_session.return_value.__aexit__.return_value = None
+            
+            # Mock scalar calls directly on session for count queries
+            mock_session.scalar.return_value = 150
+            
+            # Mock execute call for hourly activity query
+            mock_row = MagicMock()
+            mock_row.hour = 14
+            mock_row.count = 25
+            
+            mock_hourly_result = MagicMock()
+            mock_hourly_result.__iter__ = MagicMock(return_value=iter([mock_row]))
+            mock_session.execute.return_value = mock_hourly_result
+            
             result = await activity_service.get_user_activity_stats(user_id=123, chat_id=456)
             
             assert result['total_messages'] == 150
-            assert result['messages_today'] == 20
-            assert result['streak_days'] == 5
+            assert result['user_id'] == 123
+            assert '14' in result['hourly_distribution'] or 14 in result['hourly_distribution']
 
 
 class TestMoodService:
@@ -395,29 +456,34 @@ class TestMoodService:
     async def test_analyze_user_mood_success(self, mood_service, mock_openai_service):
         """Test successful mood analysis."""
         
-        # Mock user messages
+        # Mock user messages - service expects list of dicts
         mock_messages = [
-            "I'm feeling great today!",
-            "This is an amazing day!",
-            "Everything is wonderful!"
+            {'text': "I'm feeling great today!", 'created_at': datetime.utcnow(), 'chat_id': 456},
+            {'text': "This is an amazing day!", 'created_at': datetime.utcnow(), 'chat_id': 456},
+            {'text': "Everything is wonderful!", 'created_at': datetime.utcnow(), 'chat_id': 456}
         ]
         
         mock_analysis = {
             'mood': 'happy',
             'confidence': 0.9,
-            'energy_level': 'high',
-            'explanation': 'Very positive language',
+            'analysis': 'Very positive language',
             'suggestions': ['Keep up the positive attitude!']
         }
         
+        # Mock user info
+        mock_user_info = {'username': 'testuser', 'first_name': 'Test'}
+        
         with patch.object(mood_service, '_get_recent_messages', return_value=mock_messages):
-            with patch.object(mood_service.openai_service, 'analyze_sentiment', return_value=mock_analysis):
-                result = await mood_service.analyze_user_mood(user_id=123)
-                
-                assert result['success'] is True
-                assert result['mood'] == 'happy'
-                assert result['confidence'] == 0.9
-                assert 'suggestions' in result
+            with patch.object(mood_service, '_analyze_mood_with_ai', return_value=mock_analysis):
+                with patch.object(mood_service, '_get_user_info', return_value=mock_user_info):
+                    result = await mood_service.analyze_user_mood(user_id=123)
+                    
+                    assert result['user_id'] == 123
+                    assert result['mood'] == 'happy'
+                    assert result['confidence'] == 0.9
+                    assert result['username'] == 'testuser'
+                    assert result['message_count'] == 3
+                    assert 'suggestions' in result
     
     @pytest.mark.asyncio
     async def test_analyze_user_mood_no_messages(self, mood_service):
@@ -426,52 +492,61 @@ class TestMoodService:
         with patch.object(mood_service, '_get_recent_messages', return_value=[]):
             result = await mood_service.analyze_user_mood(user_id=123)
             
-            assert result['success'] is False
-            assert 'not enough messages' in result['message']
+            assert result['user_id'] == 123
+            assert result['mood'] == 'unknown'
+            assert result['confidence'] == 0.0
+            assert result['message_count'] == 0
+            assert 'No recent messages found' in result['analysis']
     
     @pytest.mark.asyncio
     async def test_get_mood_trends(self, mood_service):
         """Test getting mood trends."""
         
-        mock_trends = {
-            'daily_moods': [
-                {'date': '2023-01-01', 'mood': 'happy', 'confidence': 0.8},
-                {'date': '2023-01-02', 'mood': 'neutral', 'confidence': 0.6}
-            ],
-            'average_mood': 'positive',
-            'trend_direction': 'stable',
-            'insights': ['User maintains consistent positive mood']
+        # Mock database sessions and AI analysis
+        mock_analysis = {
+            'mood': 'happy',
+            'confidence': 0.8
         }
         
-        with patch.object(mood_service, '_calculate_mood_trends', return_value=mock_trends):
-            result = await mood_service.get_mood_trends(user_id=123, days=7)
+        with patch('bot.services.mood_service.db_manager') as mock_db:
+            # Setup session mock
+            mock_session = AsyncMock()
+            mock_db.get_session.return_value.__aenter__.return_value = mock_session
+            mock_db.get_session.return_value.__aexit__.return_value = None
             
-            assert len(result['daily_moods']) == 2
-            assert result['average_mood'] == 'positive'
-            assert result['trend_direction'] == 'stable'
+            # Mock database results - return some messages for analysis
+            mock_session.execute.return_value = [['Test message 1'], ['Test message 2']]
+            
+            # Mock AI analysis calls
+            with patch.object(mood_service, '_analyze_mood_with_ai', return_value=mock_analysis):
+                result = await mood_service.get_mood_trends(user_id=123, days=7)
+                
+                assert result['user_id'] == 123
+                assert result['period_days'] == 7
+                assert 'mood_points' in result
+                assert 'overall_trend' in result
+                assert result['overall_trend'] in ['positive', 'negative', 'neutral', 'unknown']
     
     @pytest.mark.asyncio
-    async def test_analyze_chat_mood(self, mood_service):
-        """Test analyzing overall chat mood."""
+    async def test_analyze_user_mood_error_handling(self, mood_service):
+        """Test mood analysis error handling."""
         
-        mock_chat_mood = {
-            'overall_mood': 'positive',
-            'user_moods': [
-                {'user_id': 123, 'mood': 'happy'},
-                {'user_id': 124, 'mood': 'content'}
-            ],
-            'mood_distribution': {
-                'happy': 60,
-                'content': 30,
-                'neutral': 10
-            }
-        }
+        # Mock messages that exist
+        mock_messages = [
+            {'text': "Test message", 'created_at': datetime.utcnow(), 'chat_id': 456}
+        ]
         
-        with patch.object(mood_service, '_analyze_chat_sentiment', return_value=mock_chat_mood):
-            result = await mood_service.analyze_chat_mood(chat_id=456)
-            
-            assert result['overall_mood'] == 'positive'
-            assert len(result['user_moods']) == 2
+        # Mock AI service to raise exception
+        with patch.object(mood_service, '_get_recent_messages', return_value=mock_messages):
+            with patch.object(mood_service, '_analyze_mood_with_ai', side_effect=Exception("AI Error")):
+                with patch.object(mood_service, '_get_user_info', return_value={}):
+                    result = await mood_service.analyze_user_mood(user_id=123)
+                    
+                    assert result['user_id'] == 123
+                    assert result['mood'] == 'error'
+                    assert result['confidence'] == 0.0
+                    assert 'Error analyzing mood' in result['analysis']
+                    assert result['message_count'] == 0
 
 
 class TestSynonymService:
