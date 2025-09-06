@@ -1,0 +1,47 @@
+name: Deploy Bot to VPS
+on:
+  push:
+    branches: [ main ]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Upload repo to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_KEY }}
+          source: "."
+          target: "/opt/telegram-bot"
+
+      - name: Install deps & restart service
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_KEY }}
+          script: |
+            set -euo pipefail
+            APP_DIR="/opt/telegram-bot"
+            VENV_DIR="$APP_DIR/venv"
+            # Ensure Python & venv
+            if ! command -v python3 >/dev/null 2>&1; then
+              sudo apt-get update -y
+              sudo apt-get install -y python3 python3-venv python3-pip
+            fi
+            # Create venv if missing
+            if [ ! -d "$VENV_DIR" ]; then
+              python3 -m venv "$VENV_DIR"
+            fi
+            "$VENV_DIR/bin/pip" install --upgrade pip
+            if [ -f "$APP_DIR/requirements.txt" ]; then
+              "$VENV_DIR/bin/pip" install -r "$APP_DIR/requirements.txt"
+            fi
+            # Restart systemd service
+            sudo systemctl daemon-reload || true
+            sudo systemctl enable telegram-bot || true
+            sudo systemctl restart telegram-bot || sudo systemctl start telegram-bot
