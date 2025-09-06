@@ -30,42 +30,61 @@ async def callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -
     
     try:
         if callback_data == "help":
+            logger.info(f"Processing help callback for user {user.id}")
             await handle_help_callback(query, context)
         elif callback_data == "settings":
+            logger.info(f"Processing settings callback for user {user.id}")
             await handle_settings_callback(query, context)
         elif callback_data == "start":
+            logger.info(f"Processing start callback for user {user.id}")
             await handle_start_callback(query, context)
         # Main menu categories
         elif callback_data == "ai_menu":
+            logger.info(f"Processing ai_menu callback for user {user.id}")
             await handle_ai_menu_callback(query, context)
         elif callback_data == "casino_menu":
+            logger.info(f"Processing casino_menu callback for user {user.id}")
             await handle_casino_menu_callback(query, context)
         elif callback_data == "crypto_menu":
+            logger.info(f"Processing crypto_menu callback for user {user.id}")
             await handle_crypto_menu_callback(query, context)
         elif callback_data == "voting_menu":
+            logger.info(f"Processing voting_menu callback for user {user.id}")
             await handle_voting_menu_callback(query, context)
         elif callback_data == "todo_menu":
+            logger.info(f"Processing todo_menu callback for user {user.id}")
             await handle_todo_menu_callback(query, context)
         elif callback_data == "nsfw_menu":
+            logger.info(f"Processing nsfw_menu callback for user {user.id}")
             await handle_nsfw_menu_callback(query, context)
         elif callback_data == "calc_menu":
+            logger.info(f"Processing calc_menu callback for user {user.id}")
             await handle_calc_menu_callback(query, context)
         elif callback_data == "stats_menu":
+            logger.info(f"Processing stats_menu callback for user {user.id}")
             await handle_stats_menu_callback(query, context)
         # Legacy support
         elif callback_data == "ai_chat":
+            logger.info(f"Processing ai_chat callback for user {user.id}")
             await handle_ai_chat_callback(query, context)
+            logger.info(f"Completed ai_chat callback for user {user.id}")
         elif callback_data == "generate_image":
+            logger.info(f"Processing generate_image callback for user {user.id}")
             await handle_generate_image_callback(query, context)
         elif callback_data == "mines_info":
+            logger.info(f"Processing mines_info callback for user {user.id}")
             await handle_mines_info_callback(query, context)
         elif callback_data == "b2b_info":
+            logger.info(f"Processing b2b_info callback for user {user.id}")
             await handle_b2b_info_callback(query, context)
         elif callback_data == "crypto_info":
+            logger.info(f"Processing crypto_info callback for user {user.id}")
             await handle_crypto_info_callback(query, context)
         elif callback_data == "todo_info":
+            logger.info(f"Processing todo_info callback for user {user.id}")
             await handle_todo_info_callback(query, context)
         else:
+            logger.warning(f"Unknown callback data received: {callback_data} from user {user.id}")
             await query.edit_message_text("🤷‍♂️ Unknown command!")
             
     except Exception as e:
