@@ -1,0 +1,7 @@
+CI/CD Test File
+===============
+
+This file is created to test the GitHub Actions CI/CD pipeline.
+When this file is pushed to the repository, it should trigger an automatic deployment to the server.
+
+Test timestamp: 2025-09-06 11:15:00
