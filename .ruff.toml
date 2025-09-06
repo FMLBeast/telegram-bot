@@ -1,0 +1,17 @@
+line-length = 100
+target-version = "py312"
+
+[lint]
+# Common rule sets: F (pyflakes), E/W (pycodestyle), I (isort)
+select = ["F", "E", "W", "I"]
+# Ignore migration bucket by default; flip TRACK_PORT=true to re-enable
+exclude = ["to_port"]
+
+[format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
+
+[lint.isort]
+# Keep imports tidy but not overly aggressive for now
+combine-as-imports = true
