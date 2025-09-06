@@ -60,7 +60,9 @@ from .nsfw import (
     random_boobs_handler,
     show_me_handler,
     gimme_handler,
-    handle_nsfw_callback,
+    nsfw_callback_handler,
+    random_video_handler,
+    fetch_image_handler,
 )
 from .gambling import (
     casino_handler,
@@ -96,6 +98,12 @@ from .utilities import (
     shuffle_users_handler,
     random_user_picker_handler,
     handle_utility_callback,
+)
+from .profanity import (
+    cunt_counter_handler,
+    profanity_leaderboard_handler,
+    word_stats_handler,
+    profanity_callback_handler,
 )
 
 __all__ = [
@@ -156,7 +164,9 @@ __all__ = [
     "random_boobs_handler",
     "show_me_handler",
     "gimme_handler",
-    "handle_nsfw_callback",
+    "nsfw_callback_handler",
+    "random_video_handler",
+    "fetch_image_handler",
     # Gambling handlers
     "casino_handler",
     "bet_handler",
@@ -186,4 +196,9 @@ __all__ = [
     "shuffle_users_handler",
     "random_user_picker_handler",
     "handle_utility_callback",
+    # Profanity handlers
+    "cunt_counter_handler",
+    "profanity_leaderboard_handler",
+    "word_stats_handler",
+    "profanity_callback_handler",
 ]

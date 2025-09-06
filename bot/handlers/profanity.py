@@ -6,14 +6,13 @@ from telegram.constants import ParseMode
 
 from ..services.profanity_service import profanity_service
 from ..services.user_service import user_service
-from ..core.decorators import require_auth, rate_limit
+from ..decorators.auth import auth_check
 from ..core.logging import get_logger
 
 logger = get_logger(__name__)
 
 
-@require_auth
-@rate_limit(max_requests=5, window_minutes=5)
+@auth_check
 async def cunt_counter_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Handle /cunt_counter command - show profanity statistics."""
     try:
@@ -117,8 +116,7 @@ async def cunt_counter_handler(update: Update, context: ContextTypes.DEFAULT_TYP
         )
 
 
-@require_auth
-@rate_limit(max_requests=3, window_minutes=5)
+@auth_check
 async def profanity_leaderboard_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Handle /profanity_leaderboard command - show chat profanity leaderboard."""
     try:
@@ -202,8 +200,7 @@ async def profanity_leaderboard_handler(update: Update, context: ContextTypes.DE
         )
 
 
-@require_auth
-@rate_limit(max_requests=5, window_minutes=5)
+@auth_check
 async def word_stats_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Handle /word_stats command - show statistics for a specific word."""
     try:

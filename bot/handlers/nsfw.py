@@ -9,7 +9,7 @@ from telegram.ext import ContextTypes
 
 from ..core.logging import get_logger
 from ..core.config import settings
-from ..core.decorators import require_auth, rate_limit
+from ..decorators.auth import auth_check
 from ..services.user_service import user_service
 from ..services.nsfw_service import nsfw_service
 
@@ -23,8 +23,7 @@ def truncate_caption(caption: str, max_length: int = 1024) -> str:
     return caption
 
 
-@require_auth
-@rate_limit(max_requests=5, window_minutes=10)
+@auth_check
 async def random_boobs_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Handle /random_boobs command for random adult images."""
     if not update.message or not update.effective_user:
@@ -69,8 +68,7 @@ async def random_boobs_handler(update: Update, context: ContextTypes.DEFAULT_TYP
         await update.message.reply_text("❌ Error fetching content. Please try again.")
 
 
-@require_auth
-@rate_limit(max_requests=5, window_minutes=10)
+@auth_check
 async def show_me_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Handle /show_me <pornstar_name> command."""
     if not update.message or not update.effective_user:
@@ -127,8 +125,7 @@ async def show_me_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
         await update.message.reply_text("❌ Error performing search. Please try again.")
 
 
-@require_auth
-@rate_limit(max_requests=5, window_minutes=10)
+@auth_check
 async def gimme_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Handle /gimme <type> command for specific content types."""
     if not update.message or not update.effective_user:
@@ -568,8 +565,7 @@ async def nsfw_callback_handler(update: Update, context: ContextTypes.DEFAULT_TY
         await query.answer("❌ An error occurred", show_alert=True)
 
 
-@require_auth
-@rate_limit(max_requests=5, window_minutes=10)
+@auth_check
 async def random_video_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Handle /random_video command - fetch a random NSFW video."""
     try:
@@ -651,8 +647,7 @@ async def random_video_handler(update: Update, context: ContextTypes.DEFAULT_TYP
         )
 
 
-@require_auth  
-@rate_limit(max_requests=3, window_minutes=5)
+@auth_check
 async def fetch_image_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Handle /fetch_image command - fetch NSFW image by category."""
     try:

@@ -268,3 +268,19 @@ class UserService(LoggerMixin):
                 exc_info=True
             )
             return {}
+
+    async def log_command_usage(self, user_id: int, command: str, target_user: Optional[int] = None) -> None:
+        """Log command usage for analytics."""
+        try:
+            self.logger.info(
+                "Command usage logged",
+                user_id=user_id,
+                command=command,
+                target_user=target_user
+            )
+        except Exception as e:
+            self.logger.error("Error logging command usage", error=str(e))
+
+
+# Global service instance
+user_service = UserService()
