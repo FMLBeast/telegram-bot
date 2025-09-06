@@ -30,14 +30,17 @@ async def start_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
     
     welcome_text = (
         f"🤖 Welcome back {user.first_name or user.username}! 👋\n\n"
-        "I'm a modern, cutting-edge Telegram bot with AI capabilities.\n\n"
-        "Here's what I can do:\n"
-        "• 🧠 AI-powered conversations\n"
-        "• 🎨 Image generation and editing\n"
-        "• 🎲 Gambling calculators (Mines, B2B)\n"
-        "• 💰 Crypto tools and conversions\n"
-        "• 📝 Task management\n"
-        "• 🎯 Smart reminders\n\n"
+        "I'm a comprehensive Telegram bot with advanced AI and analytics.\n\n"
+        "🌟 <b>Main Features:</b>\n"
+        "• 🧠 AI-powered conversations & image generation\n"
+        "• 💰 Real crypto prices, betting & conversions\n"
+        "• 🎯 Activity tracking & mood analysis\n"
+        "• 🎲 Gambling calculators & casino games\n"
+        "• 📝 Task management & smart reminders\n"
+        "• 🔞 NSFW content (videos, images, searches)\n"
+        "• 🤬 Profanity monitoring & statistics\n"
+        "• 📚 Learning tools & synonyms\n"
+        "• 🗳️ Polls, voting & group utilities\n\n"
         "✨ Use /help to see all available commands!"
     )
     
@@ -81,9 +84,11 @@ async def menu_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
         "🎯 **All Available Features:**\n"
         "• 🧠 AI Chat & Image Generation\n"
         "• 🎰 Casino & Gambling Games\n"  
-        "• 💰 Crypto Trading & Betting\n"
+        "• 💰 Crypto Trading & Betting (Real API)\n"
         "• 🗳️ Polls & Voting System\n"
         "• 📝 Todo & Task Management\n"
+        "• 📊 Activity & Mood Analytics\n"
+        "• 🤬 Profanity Monitoring\n"
         "• 🔞 NSFW Content (18+)\n"
         "• 🎲 Game Calculators\n\n"
         "Choose a category below:"
@@ -170,8 +175,34 @@ async def help_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
         
         "<b>🔞 NSFW Content (18+):</b>\n"
         "/random_boobs - Random adult content\n"
+        "/random_video - Random NSFW video\n"
+        "/fetch_image [category] - Get NSFW image by category\n"
         "/show_me [name] - Search adult performer\n"
         "/gimme [type] - Specific adult content\n\n"
+        
+        "<b>🤬 Profanity Monitoring:</b>\n"
+        "/cunt_counter - Your profanity statistics\n"
+        "/profanity_leaderboard - Chat profanity leaderboard\n"
+        "/word_stats [word] - Statistics for specific word\n\n"
+        
+        "<b>📊 Activity & Analytics:</b>\n"
+        "/night_owls - Most active users at night\n"
+        "/most_active_users - Most active users\n"
+        "/my_activity - Your activity statistics\n"
+        "/hows [user] - Analyze user mood\n"
+        "/mood_trends - User mood trends over time\n\n"
+        
+        "<b>📚 Synonyms & Learning:</b>\n"
+        "/add_synonym [word] [synonyms] - Add word synonyms\n"
+        "/synonym_of_day - Get daily synonym\n"
+        "/search_synonyms [word] - Find synonyms\n\n"
+        
+        "<b>🔧 Utilities:</b>\n"
+        "/all - Mention all users in group\n"
+        "/shuffle_userlist - Shuffle user list\n"
+        "/random_user - Pick random user\n"
+        "/set_timezone [timezone] - Set your timezone\n"
+        "/remind_me [time] [message] - Set reminder\n\n"
         
         "💡 <i>Use /menu for interactive navigation!</i>"
     )

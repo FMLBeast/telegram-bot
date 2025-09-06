@@ -128,7 +128,7 @@ class CryptoService(LoggerMixin):
             }
     
     async def get_crypto_price(self, symbol: str) -> Optional[Dict[str, Any]]:
-        """Get current cryptocurrency price (mock implementation)."""
+        """Get current cryptocurrency price from CoinGecko API."""
         symbol = symbol.upper()
         
         if symbol not in self.supported_coins:
@@ -139,7 +139,94 @@ class CryptoService(LoggerMixin):
         if symbol in self.cache_expiry and now < self.cache_expiry[symbol]:
             return self.price_cache.get(symbol)
         
-        # Mock price data (in production, use real API like CoinGecko)
+        try:
+            # Map symbols to CoinGecko IDs
+            symbol_map = {
+                "BTC": "bitcoin",
+                "ETH": "ethereum", 
+                "BNB": "binancecoin",
+                "ADA": "cardano",
+                "DOT": "polkadot",
+                "LINK": "chainlink",
+                "LTC": "litecoin",
+                "BCH": "bitcoin-cash",
+                "XRP": "ripple",
+                "DOGE": "dogecoin"
+            }
+            
+            coin_id = symbol_map.get(symbol)
+            if not coin_id:
+                # Fallback to mock for unsupported coins
+                return await self._get_mock_price(symbol, now)
+            
+            import aiohttp
+            
+            url = f"https://api.coingecko.com/api/v3/simple/price"
+            params = {
+                "ids": coin_id,
+                "vs_currencies": "usd",
+                "include_24hr_change": "true",
+                "include_market_cap": "true",
+                "include_24hr_vol": "true"
+            }
+            
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url, params=params, timeout=aiohttp.ClientTimeout(total=10)) as response:
+                    if response.status == 200:
+                        data = await response.json()
+                        coin_data = data.get(coin_id, {})
+                        
+                        if coin_data:
+                            current_price = coin_data.get("usd", 0.0)
+                            change_percent = coin_data.get("usd_24h_change", 0.0)
+                            volume_24h = coin_data.get("usd_24h_vol", 0)
+                            market_cap = coin_data.get("usd_market_cap", 0)
+                            
+                            # Calculate change_24h from percentage
+                            change_24h = (change_percent / 100) * current_price if current_price else 0
+                            
+                            price_data = {
+                                "symbol": symbol,
+                                "name": self.supported_coins[symbol],
+                                "price": round(current_price, 8),
+                                "change_24h": round(change_24h, 8),
+                                "change_percent": round(change_percent, 2),
+                                "volume_24h": volume_24h,
+                                "market_cap": market_cap,
+                                "last_updated": now,
+                                "source": "coingecko"
+                            }
+                            
+                            # Cache the result for 2 minutes
+                            self.price_cache[symbol] = price_data
+                            self.cache_expiry[symbol] = now + timedelta(minutes=2)
+                            
+                            # Store in database
+                            async with db_manager.get_session() as session:
+                                crypto_price = CryptoPrice(
+                                    symbol=symbol,
+                                    price=current_price,
+                                    change_24h=change_24h,
+                                    change_percent=change_percent,
+                                    volume_24h=volume_24h,
+                                    market_cap=market_cap
+                                )
+                                session.add(crypto_price)
+                            
+                            self.logger.info("Fetched real crypto price", symbol=symbol, price=current_price, source="coingecko")
+                            return price_data
+                    
+                    # If API fails, fall back to mock data
+                    self.logger.warning("CoinGecko API failed, using mock data", symbol=symbol, status=response.status)
+                    return await self._get_mock_price(symbol, now)
+                    
+        except Exception as e:
+            self.logger.error("Error fetching crypto price", symbol=symbol, error=str(e))
+            # Fall back to mock data on any error
+            return await self._get_mock_price(symbol, now)
+    
+    async def _get_mock_price(self, symbol: str, now: datetime) -> Dict[str, Any]:
+        """Fallback mock price data when API is unavailable."""
         base_prices = {
             "BTC": 65000.0,
             "ETH": 3200.0,
@@ -170,7 +257,8 @@ class CryptoService(LoggerMixin):
             "change_percent": round(change_percent, 2),
             "volume_24h": random.uniform(1000000, 50000000000),
             "market_cap": current_price * random.uniform(10000000, 1000000000),
-            "last_updated": now
+            "last_updated": now,
+            "source": "mock"
         }
         
         # Cache for 60 seconds

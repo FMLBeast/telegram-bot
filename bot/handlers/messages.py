@@ -6,6 +6,7 @@ from telegram.ext import ContextTypes
 from ..core.logging import get_logger
 from ..services.openai_service import OpenAIService
 from ..services.user_service import UserService
+from ..services.profanity_service import profanity_service
 from ..utils.rate_limiter import RateLimiter
 
 logger = get_logger(__name__)
@@ -43,6 +44,23 @@ async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
         chat_id=update.effective_chat.id if update.effective_chat else 0,
         message_text=message_text,
     )
+    
+    # Monitor profanity in the message
+    try:
+        profanity_found = await profanity_service.check_and_count_profanity(
+            user_id=user.id,
+            chat_id=update.effective_chat.id if update.effective_chat else 0,
+            text=message_text
+        )
+        
+        # Optional: React to profanity with emojis (but don't send messages)
+        if profanity_found:
+            logger.debug("Profanity detected in message", 
+                        user_id=user.id, 
+                        words=list(profanity_found.keys()),
+                        total_count=sum(profanity_found.values()))
+    except Exception as e:
+        logger.error("Error monitoring profanity", error=str(e), exc_info=True)
     
     # Handle keyword triggers (like in original bot)
     await handle_keyword_triggers(update, context, message_text)

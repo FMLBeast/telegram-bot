@@ -9,11 +9,11 @@ from telegram.ext import ContextTypes
 
 from ..core.logging import get_logger
 from ..core.config import settings
-from ..decorators.auth import auth_check
-from ..services.user_service import UserService
+from ..core.decorators import require_auth, rate_limit
+from ..services.user_service import user_service
+from ..services.nsfw_service import nsfw_service
 
 logger = get_logger(__name__)
-user_service = UserService()
 
 
 def truncate_caption(caption: str, max_length: int = 1024) -> str:
@@ -23,7 +23,8 @@ def truncate_caption(caption: str, max_length: int = 1024) -> str:
     return caption
 
 
-@auth_check
+@require_auth
+@rate_limit(max_requests=5, window_minutes=10)
 async def random_boobs_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Handle /random_boobs command for random adult images."""
     if not update.message or not update.effective_user:
@@ -68,7 +69,8 @@ async def random_boobs_handler(update: Update, context: ContextTypes.DEFAULT_TYP
         await update.message.reply_text("❌ Error fetching content. Please try again.")
 
 
-@auth_check
+@require_auth
+@rate_limit(max_requests=5, window_minutes=10)
 async def show_me_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Handle /show_me <pornstar_name> command."""
     if not update.message or not update.effective_user:
@@ -125,7 +127,8 @@ async def show_me_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
         await update.message.reply_text("❌ Error performing search. Please try again.")
 
 
-@auth_check
+@require_auth
+@rate_limit(max_requests=5, window_minutes=10)
 async def gimme_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Handle /gimme <type> command for specific content types."""
     if not update.message or not update.effective_user:
@@ -373,7 +376,7 @@ async def search_pornstar(query: str) -> Optional[Dict[str, Any]]:
         return None
 
 
-async def handle_nsfw_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def nsfw_callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Handle NSFW-related callback queries."""
     if not update.callback_query or not update.effective_user:
         return
@@ -387,7 +390,124 @@ async def handle_nsfw_callback(update: Update, context: ContextTypes.DEFAULT_TYP
     logger.info("NSFW callback", user_id=user_id, callback_data=callback_data)
     
     try:
-        if callback_data == "random_boobs_another":
+        if callback_data == "nsfw_random_video":
+            # Fetch another random video
+            loading_message = await query.edit_message_text(
+                "🎬 Fetching another video...",
+                parse_mode="HTML"
+            )
+            
+            video_data = await nsfw_service.get_random_video()
+            
+            if video_data:
+                caption_parts = [
+                    f"🎬 <b>{video_data.get('title', 'Random Video')}</b>",
+                ]
+                
+                if video_data.get('category'):
+                    caption_parts.append(f"📂 Category: {video_data['category'].title()}")
+                    
+                if video_data.get('duration'):
+                    caption_parts.append(f"⏱ Duration: {video_data['duration']}")
+                    
+                caption_parts.append(f"🔗 Source: {video_data.get('source', 'Unknown')}")
+                caption = "\n".join(caption_parts)
+                
+                keyboard = [
+                    [
+                        InlineKeyboardButton("🎲 Another Video", callback_data="nsfw_random_video"),
+                        InlineKeyboardButton("📂 Categories", callback_data="nsfw_categories")
+                    ]
+                ]
+                reply_markup = InlineKeyboardMarkup(keyboard)
+                
+                await loading_message.delete()
+                
+                try:
+                    await query.message.reply_video(
+                        video=video_data['url'],
+                        caption=caption,
+                        parse_mode="HTML",
+                        reply_markup=reply_markup
+                    )
+                except:
+                    await query.message.reply_text(
+                        f"{caption}\n\n🔗 <a href='{video_data['url']}'>Watch Video</a>",
+                        parse_mode="HTML",
+                        reply_markup=reply_markup,
+                        disable_web_page_preview=False
+                    )
+            else:
+                await loading_message.edit_text("❌ Couldn't fetch another video.")
+                
+        elif callback_data == "nsfw_categories":
+            # Show available categories
+            categories = await nsfw_service.get_available_categories()
+            category_chunks = [categories[i:i+3] for i in range(0, len(categories), 3)]
+            
+            keyboard = []
+            for chunk in category_chunks[:7]:  # Show max 7 rows (21 categories)
+                keyboard.append([
+                    InlineKeyboardButton(cat.title(), callback_data=f"nsfw_cat_{cat}")
+                    for cat in chunk
+                ])
+            
+            keyboard.append([InlineKeyboardButton("🔙 Back", callback_data="nsfw_back")])
+            reply_markup = InlineKeyboardMarkup(keyboard)
+            
+            await query.edit_message_text(
+                "📂 <b>Select a category:</b>",
+                parse_mode="HTML",
+                reply_markup=reply_markup
+            )
+            
+        elif callback_data.startswith("nsfw_fetch_image_"):
+            category = callback_data.replace("nsfw_fetch_image_", "")
+            
+            loading_message = await query.edit_message_text(
+                f"🖼 Fetching another {category} image...",
+                parse_mode="HTML"
+            )
+            
+            image_data = await nsfw_service.get_image_by_category(category)
+            
+            if image_data:
+                caption_parts = [
+                    f"🖼 <b>{image_data.get('title', f'{category.title()} Image')}</b>",
+                    f"📂 Category: {category.title()}",
+                    f"🔗 Source: {image_data.get('source', 'Unknown')}"
+                ]
+                
+                caption = "\n".join(caption_parts)
+                
+                keyboard = [
+                    [
+                        InlineKeyboardButton("🎲 Random Image", callback_data=f"nsfw_fetch_image_{category}"),
+                        InlineKeyboardButton("📂 Categories", callback_data="nsfw_categories")
+                    ]
+                ]
+                reply_markup = InlineKeyboardMarkup(keyboard)
+                
+                await loading_message.delete()
+                
+                try:
+                    await query.message.reply_photo(
+                        photo=image_data['url'],
+                        caption=caption,
+                        parse_mode="HTML",
+                        reply_markup=reply_markup
+                    )
+                except:
+                    await query.message.reply_text(
+                        f"{caption}\n\n🔗 <a href='{image_data['url']}'>View Image</a>",
+                        parse_mode="HTML",
+                        reply_markup=reply_markup,
+                        disable_web_page_preview=False
+                    )
+            else:
+                await loading_message.edit_text(f"❌ Couldn't fetch another {category} image.")
+                
+        elif callback_data == "random_boobs_another":
             # Fetch another random image
             image_data = await fetch_random_adult_content()
             if image_data:
@@ -446,3 +566,176 @@ async def handle_nsfw_callback(update: Update, context: ContextTypes.DEFAULT_TYP
     except Exception as e:
         logger.error("Error handling NSFW callback", user_id=user_id, callback_data=callback_data, error=str(e), exc_info=True)
         await query.answer("❌ An error occurred", show_alert=True)
+
+
+@require_auth
+@rate_limit(max_requests=5, window_minutes=10)
+async def random_video_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Handle /random_video command - fetch a random NSFW video."""
+    try:
+        # Send initial loading message
+        loading_message = await update.message.reply_text(
+            "🎬 Fetching a random video...",
+            parse_mode="HTML"
+        )
+        
+        # Extract category from command args if provided
+        category = None
+        if context.args:
+            category = " ".join(context.args).strip().lower()
+        
+        # Fetch video from NSFW service
+        video_data = await nsfw_service.get_random_video(category=category)
+        
+        if not video_data:
+            await loading_message.edit_text(
+                "❌ Sorry, couldn't fetch a video right now. Try again later.",
+                parse_mode="HTML"
+            )
+            return
+        
+        # Create response message
+        caption_parts = [
+            f"🎬 <b>{video_data.get('title', 'Random Video')}</b>",
+        ]
+        
+        if video_data.get('category'):
+            caption_parts.append(f"📂 Category: {video_data['category'].title()}")
+            
+        if video_data.get('duration'):
+            caption_parts.append(f"⏱ Duration: {video_data['duration']}")
+            
+        caption_parts.append(f"🔗 Source: {video_data.get('source', 'Unknown')}")
+        
+        caption = "\n".join(caption_parts)
+        
+        # Create inline keyboard for actions
+        keyboard = [
+            [
+                InlineKeyboardButton("🎲 Another Video", callback_data="nsfw_random_video"),
+                InlineKeyboardButton("📂 Categories", callback_data="nsfw_categories")
+            ]
+        ]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        
+        # Delete loading message and send video
+        await loading_message.delete()
+        
+        # Try to send as video first, fallback to link if fails
+        try:
+            await update.message.reply_video(
+                video=video_data['url'],
+                caption=caption,
+                parse_mode="HTML",
+                reply_markup=reply_markup
+            )
+        except Exception as video_error:
+            logger.warning(f"Failed to send video, sending as link: {str(video_error)}")
+            await update.message.reply_text(
+                f"{caption}\n\n🔗 <a href='{video_data['url']}'>Watch Video</a>",
+                parse_mode="HTML",
+                reply_markup=reply_markup,
+                disable_web_page_preview=False
+            )
+        
+        # Log usage
+        user_id = update.effective_user.id
+        await user_service.log_command_usage(user_id, "random_video", category=category)
+        logger.info(f"Random video sent to user {user_id}, category: {category or 'any'}")
+        
+    except Exception as e:
+        logger.error(f"Error in random_video_handler: {str(e)}", exc_info=True)
+        await update.message.reply_text(
+            "❌ An error occurred while fetching the video. Please try again later.",
+            parse_mode="HTML"
+        )
+
+
+@require_auth  
+@rate_limit(max_requests=3, window_minutes=5)
+async def fetch_image_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Handle /fetch_image command - fetch NSFW image by category."""
+    try:
+        # Check if category is provided
+        if not context.args:
+            # Show available categories
+            categories = await nsfw_service.get_available_categories()
+            category_list = ", ".join(categories[:15])  # Show first 15 categories
+            
+            await update.message.reply_text(
+                f"📂 <b>Available Categories:</b>\n\n{category_list}\n\n"
+                f"💡 <b>Usage:</b> /fetch_image [category]\n"
+                f"📝 <b>Example:</b> /fetch_image amateur",
+                parse_mode="HTML"
+            )
+            return
+        
+        category = " ".join(context.args).strip().lower()
+        
+        # Send loading message
+        loading_message = await update.message.reply_text(
+            f"🖼 Fetching {category} image...",
+            parse_mode="HTML"
+        )
+        
+        # Fetch image from NSFW service
+        image_data = await nsfw_service.get_image_by_category(category)
+        
+        if not image_data:
+            await loading_message.edit_text(
+                f"❌ Sorry, couldn't fetch a {category} image right now. Try again later.",
+                parse_mode="HTML"
+            )
+            return
+        
+        # Create response message
+        caption_parts = [
+            f"🖼 <b>{image_data.get('title', f'{category.title()} Image')}</b>",
+            f"📂 Category: {category.title()}",
+            f"🔗 Source: {image_data.get('source', 'Unknown')}"
+        ]
+        
+        if image_data.get('width') and image_data.get('height'):
+            caption_parts.append(f"📏 Size: {image_data['width']}x{image_data['height']}")
+        
+        caption = "\n".join(caption_parts)
+        
+        # Create inline keyboard
+        keyboard = [
+            [
+                InlineKeyboardButton("🎲 Random Image", callback_data=f"nsfw_fetch_image_{category}"),
+                InlineKeyboardButton("📂 Categories", callback_data="nsfw_categories")
+            ]
+        ]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        
+        # Delete loading message and send image
+        await loading_message.delete()
+        
+        try:
+            await update.message.reply_photo(
+                photo=image_data['url'],
+                caption=caption,
+                parse_mode="HTML",
+                reply_markup=reply_markup
+            )
+        except Exception as photo_error:
+            logger.warning(f"Failed to send photo, sending as link: {str(photo_error)}")
+            await update.message.reply_text(
+                f"{caption}\n\n🔗 <a href='{image_data['url']}'>View Image</a>",
+                parse_mode="HTML",
+                reply_markup=reply_markup,
+                disable_web_page_preview=False
+            )
+        
+        # Log usage
+        user_id = update.effective_user.id
+        await user_service.log_command_usage(user_id, "fetch_image", category=category)
+        logger.info(f"NSFW image sent to user {user_id}, category: {category}")
+        
+    except Exception as e:
+        logger.error(f"Error in fetch_image_handler: {str(e)}", exc_info=True)
+        await update.message.reply_text(
+            "❌ An error occurred while fetching the image. Please try again later.",
+            parse_mode="HTML"
+        )
