@@ -39,29 +39,42 @@ async def random_boobs_handler(update: Update, context: ContextTypes.DEFAULT_TYP
     try:
         await update.message.reply_text("🔍 Fetching random content...")
         
-        # Simulate API call (replace with actual implementation)
-        image_data = await fetch_random_adult_content(keywords)
+        # Get images using adultdatalink API with "boobs" as default
+        search_term = keywords if keywords else "boobs"
+        images = await get_random_adult_images(search_term)
         
-        if image_data:
-            keyboard = [
-                [
-                    InlineKeyboardButton("❤️ Favorite", callback_data=f"fav_{image_data.get('id', 'unknown')}"),
-                    InlineKeyboardButton("📁 Add to Collection", callback_data=f"add_collection_{image_data.get('id', 'unknown')}"),
-                ],
-                [
-                    InlineKeyboardButton("🔄 Another", callback_data="random_boobs_another"),
-                ]
-            ]
-            reply_markup = InlineKeyboardMarkup(keyboard)
+        if images and isinstance(images, list) and len(images) > 0:
+            # Select random image from results
+            image = random.choice(images)
+            image_url = None
             
-            await context.bot.send_photo(
-                chat_id=update.effective_chat.id,
-                photo=image_data['url'],
-                caption=f"🔞 Random content{f' - {keywords}' if keywords else ''}",
-                reply_markup=reply_markup
-            )
+            # Extract image URL from API response structure
+            if isinstance(image, dict):
+                image_url = image.get('url') or image.get('image_url') or image.get('src')
+                if not image_url and 'urls' in image:
+                    urls = image['urls']
+                    if isinstance(urls, list) and len(urls) > 0:
+                        image_url = urls[0]
+            
+            if image_url:
+                keyboard = [
+                    [
+                        InlineKeyboardButton("❤️ Favorite", callback_data=f"fav_{random.randint(1000, 9999)}"),
+                        InlineKeyboardButton("🔄 Another", callback_data=f"random_boobs_another_{search_term}"),
+                    ]
+                ]
+                reply_markup = InlineKeyboardMarkup(keyboard)
+                
+                await context.bot.send_photo(
+                    chat_id=update.effective_chat.id,
+                    photo=image_url,
+                    caption=f"🔞 Random {search_term} image from AdultDataLink",
+                    reply_markup=reply_markup
+                )
+            else:
+                await update.message.reply_text("❌ No valid image URL found. Try again later.")
         else:
-            await update.message.reply_text("❌ No content found. Try again later.")
+            await update.message.reply_text(f"❌ No {search_term} images found. Try again later.")
             
     except Exception as e:
         logger.error("Error fetching random content", user_id=user_id, error=str(e), exc_info=True)
@@ -86,39 +99,44 @@ async def show_me_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
     try:
         await update.message.reply_text(f"🔍 Searching for: {query}...")
         
-        result = await search_pornstar(query)
+        # Get pornstar information using adultdatalink API
+        pornstar_info = await get_pornstar_info(query)
         
-        if result and 'data' in result:
-            data = result['data']
-            name = data.get('name', 'Unknown')
-            aka = data.get('aka', 'N/A')
-            rating = data.get('rating', {}).get('value', 'N/A')
-            votes = data.get('rating', {}).get('votes', 'N/A')
-            bio = data.get('bio', [])
-            profile_img_link = data.get('profileImgLink', '')
+        if pornstar_info:
+            # Format and send the pornstar information
+            caption = f"🌟 **{query}**\n\n"
             
-            bio_str = "\n".join([f"{item['name']}: {item['value']}" for item in bio[:5]])  # Limit bio items
+            # Add available information from the API response
+            if isinstance(pornstar_info, dict):
+                # Extract relevant fields (structure depends on API response)
+                if "bio" in pornstar_info:
+                    caption += f"📝 **Bio:** {pornstar_info['bio'][:200]}...\n\n"
+                if "birth_date" in pornstar_info:
+                    caption += f"🎂 **Born:** {pornstar_info['birth_date']}\n"
+                if "nationality" in pornstar_info:
+                    caption += f"🌍 **Nationality:** {pornstar_info['nationality']}\n"
+                if "measurements" in pornstar_info:
+                    caption += f"📏 **Measurements:** {pornstar_info['measurements']}\n"
+                if "career_start" in pornstar_info:
+                    caption += f"🎬 **Career Start:** {pornstar_info['career_start']}\n\n"
             
-            message = (
-                f"**Name:** {name}\n"
-                f"**AKA:** {aka}\n"
-                f"**Rating:** {rating} ({votes} votes)\n\n"
-                f"**Bio:**\n{bio_str}"
+            caption += f"💫 Information from AdultDataLink"
+            
+            keyboard = [
+                [
+                    InlineKeyboardButton("🔍 Search Videos", callback_data=f"search_videos_{query}"),
+                    InlineKeyboardButton("🖼️ Search Images", callback_data=f"search_images_{query}")
+                ]
+            ]
+            reply_markup = InlineKeyboardMarkup(keyboard)
+            
+            await update.message.reply_text(
+                caption,
+                parse_mode="Markdown",
+                reply_markup=reply_markup
             )
-            
-            truncated_message = truncate_caption(message)
-            
-            if profile_img_link:
-                await context.bot.send_photo(
-                    chat_id=update.effective_chat.id,
-                    photo=profile_img_link,
-                    caption=truncated_message,
-                    parse_mode='Markdown'
-                )
-            else:
-                await update.message.reply_text(truncated_message, parse_mode='Markdown')
         else:
-            await update.message.reply_text("❌ No results found for that search.")
+            await update.message.reply_text(f"❌ No information found for '{query}'. \n\nTry checking the spelling or use a more common name format.")
             
     except Exception as e:
         logger.error("Error searching pornstar", user_id=user_id, query=query, error=str(e), exc_info=True)
@@ -127,49 +145,105 @@ async def show_me_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
 
 @auth_check
 async def gimme_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Handle /gimme <query> command for porn video search."""
+    """Handle /gimme <query> command for searching videos, images, and GIFs."""
     if not update.message or not update.effective_user:
         return
     
     user_id = update.effective_user.id
     search_query = ' '.join(context.args) if context.args else "hot"
     
-    logger.info("Gimme video search request", user_id=user_id, query=search_query)
+    logger.info("Gimme adult content search request", user_id=user_id, query=search_query)
     
     try:
-        await update.message.reply_text(f"🔍 Searching for videos: '{search_query}'...")
+        await update.message.reply_text(f"🔍 Searching for videos, images, and GIFs: '{search_query}'...")
         
-        # Search for porn videos using RapidAPI
-        videos = await search_porn_videos(search_query)
+        # Search for adult content across videos, images, and GIFs using adultdatalink API
+        content_results = await search_adult_content(search_query)
         
-        if videos and len(videos) > 0:
-            # Select a random video from results
-            video = random.choice(videos)
+        # Collect all available content
+        all_content = []
+        
+        # Add videos
+        if content_results.get("videos") and isinstance(content_results["videos"], list):
+            for video in content_results["videos"]:
+                if isinstance(video, dict):
+                    all_content.append({
+                        "type": "video",
+                        "title": video.get("title", "Video"),
+                        "url": video.get("video_link") or video.get("url"),
+                        "thumbnail": video.get("thumbnail"),
+                        "duration": video.get("duration"),
+                        "views": video.get("views")
+                    })
+        
+        # Add images
+        if content_results.get("images") and isinstance(content_results["images"], list):
+            for image in content_results["images"]:
+                if isinstance(image, dict):
+                    all_content.append({
+                        "type": "image",
+                        "title": image.get("title", "Image"),
+                        "url": image.get("url"),
+                        "thumbnail": image.get("thumbnail") or image.get("url")
+                    })
+        
+        # Add GIFs
+        if content_results.get("gifs") and isinstance(content_results["gifs"], list):
+            for gif in content_results["gifs"]:
+                if isinstance(gif, dict):
+                    all_content.append({
+                        "type": "gif",
+                        "title": gif.get("title", "GIF"),
+                        "url": gif.get("url"),
+                        "thumbnail": gif.get("thumbnail") or gif.get("url")
+                    })
+        
+        if all_content:
+            # Select a random item from all results
+            content = random.choice(all_content)
             
-            # Create response message with video info
-            caption = f"🔞 **{video.get('title', 'Video')}**\n"
-            caption += f"⏱️ Duration: {video.get('duration', 'Unknown')}\n"
-            caption += f"👁️ Views: {video.get('views', 'N/A')}\n"
-            caption += f"🔗 [Watch Video]({video.get('video_link', '#')})"
+            # Create response message based on content type
+            content_type_emoji = {"video": "🎬", "image": "🖼️", "gif": "🎞️"}
+            emoji = content_type_emoji.get(content["type"], "🔞")
+            
+            caption = f"{emoji} **{content.get('title', 'Content')}**\n"
+            caption += f"📂 Type: {content['type'].title()}\n"
+            
+            if content.get('duration'):
+                caption += f"⏱️ Duration: {content['duration']}\n"
+            if content.get('views'):
+                caption += f"👁️ Views: {content['views']}\n"
+                
+            if content.get('url'):
+                caption += f"🔗 [View {content['type'].title()}]({content['url']})"
             
             keyboard = [
                 [
-                    InlineKeyboardButton("🔗 Watch", url=video.get('video_link', '#')),
+                    InlineKeyboardButton("🔗 View", url=content.get('url', '#')),
                     InlineKeyboardButton("🔄 Another", callback_data=f"gimme_another_{search_query}"),
                 ]
             ]
             reply_markup = InlineKeyboardMarkup(keyboard)
             
             # Send thumbnail if available
-            thumbnail_url = video.get('thumbnail')
-            if thumbnail_url:
-                await context.bot.send_photo(
-                    chat_id=update.effective_chat.id,
-                    photo=thumbnail_url,
-                    caption=caption,
-                    reply_markup=reply_markup,
-                    parse_mode="Markdown"
-                )
+            thumbnail_url = content.get('thumbnail')
+            if thumbnail_url and content["type"] in ["image", "gif"]:
+                try:
+                    await context.bot.send_photo(
+                        chat_id=update.effective_chat.id,
+                        photo=thumbnail_url,
+                        caption=caption,
+                        reply_markup=reply_markup,
+                        parse_mode="Markdown"
+                    )
+                except Exception:
+                    # Fallback to text if image fails
+                    await update.message.reply_text(
+                        caption,
+                        reply_markup=reply_markup,
+                        parse_mode="Markdown",
+                        disable_web_page_preview=False
+                    )
             else:
                 await update.message.reply_text(
                     caption,
@@ -178,11 +252,11 @@ async def gimme_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
                     disable_web_page_preview=False
                 )
         else:
-            await update.message.reply_text(f"❌ No videos found for '{search_query}'. Try a different search term.")
+            await update.message.reply_text(f"❌ No content found for '{search_query}'. Try a different search term.")
             
     except Exception as e:
-        logger.error("Error searching videos", user_id=user_id, query=search_query, error=str(e), exc_info=True)
-        await update.message.reply_text("❌ Error searching for videos. Please try again.")
+        logger.error("Error searching adult content", user_id=user_id, query=search_query, error=str(e), exc_info=True)
+        await update.message.reply_text("❌ Error searching for content. Please try again.")
 
 
 async def fetch_random_adult_content(keywords: str = "") -> Optional[Dict[str, Any]]:
@@ -351,6 +425,109 @@ async def search_porn_videos(query: str = "hot") -> Optional[List[Dict[str, Any]
     except Exception as e:
         logger.error("Error searching porn videos", query=query, error=str(e), exc_info=True)
         return None
+
+
+async def get_pornstar_info(pornstar_name: str) -> Optional[Dict[str, Any]]:
+    """Get pornstar information from adultdatalink API."""
+    try:
+        # Use babepedia endpoint for pornstar information
+        url = "https://api.adultdatalink.com/babepedia/model-information"
+        params = {"model_name": pornstar_name}
+        
+        async with aiohttp.ClientSession() as session:
+            try:
+                async with session.get(url, params=params, timeout=15) as response:
+                    if response.status == 200:
+                        data = await response.json()
+                        logger.info(f"Found pornstar info for: {pornstar_name}")
+                        return data
+                    else:
+                        logger.warning("API request failed", status=response.status, pornstar=pornstar_name)
+                        return None
+            except Exception as api_error:
+                logger.warning("AdultDataLink API request failed", pornstar=pornstar_name, error=str(api_error))
+                return None
+        
+    except Exception as e:
+        logger.error("Error getting pornstar info", pornstar=pornstar_name, error=str(e), exc_info=True)
+        return None
+
+
+async def get_random_adult_images(query: str = "boobs") -> Optional[List[Dict[str, Any]]]:
+    """Get random adult images from adultdatalink API."""
+    try:
+        # Use pornpics search endpoint
+        url = "https://api.adultdatalink.com/pornpics/search"
+        params = {"query": query}
+        
+        async with aiohttp.ClientSession() as session:
+            try:
+                async with session.get(url, params=params, timeout=15) as response:
+                    if response.status == 200:
+                        data = await response.json()
+                        logger.info(f"Found adult images for: {query}")
+                        return data
+                    else:
+                        logger.warning("API request failed", status=response.status, query=query)
+                        return None
+            except Exception as api_error:
+                logger.warning("AdultDataLink images request failed", query=query, error=str(api_error))
+                return None
+        
+    except Exception as e:
+        logger.error("Error getting adult images", query=query, error=str(e), exc_info=True)
+        return None
+
+
+async def search_adult_content(query: str) -> Dict[str, Any]:
+    """Search for adult content across videos, images, and GIFs."""
+    results = {
+        "videos": [],
+        "images": [],
+        "gifs": []
+    }
+    
+    try:
+        async with aiohttp.ClientSession() as session:
+            # Search videos (using eporner)
+            try:
+                video_url = "https://api.adultdatalink.com/eporner/search"
+                video_params = {"query": query, "per_page": 5}
+                async with session.get(video_url, params=video_params, timeout=15) as response:
+                    if response.status == 200:
+                        video_data = await response.json()
+                        results["videos"] = video_data
+            except Exception:
+                pass
+            
+            # Search images (using pornpics)
+            try:
+                image_url = "https://api.adultdatalink.com/pornpics/search"
+                image_params = {"query": query}
+                async with session.get(image_url, params=image_params, timeout=15) as response:
+                    if response.status == 200:
+                        image_data = await response.json()
+                        results["images"] = image_data
+            except Exception:
+                pass
+            
+            # Search GIFs (using redgifs)
+            try:
+                gif_url = "https://api.adultdatalink.com/redgifs/search"
+                gif_params = {"media_type": "gif", "search_text": query, "count": 5}
+                async with session.get(gif_url, params=gif_params, timeout=15) as response:
+                    if response.status == 200:
+                        gif_data = await response.json()
+                        results["gifs"] = gif_data
+            except Exception:
+                pass
+        
+        logger.info(f"Adult content search completed for: {query}")
+        return results
+        
+    except Exception as e:
+        logger.error("Error searching adult content", query=query, error=str(e), exc_info=True)
+        return results
 
 
 async def search_pornstar(query: str) -> Optional[Dict[str, Any]]:
