@@ -9,7 +9,7 @@ To fix the bot constantly restarting issue, you need to add these secrets to you
 Add the following secrets:
 
 ### Server Connection:
-- `VPS_HOST` - Your server IP address (85.31.227.41)
+- `VPS_HOST` - Your server IP address (194.31.143.17)
 - `VPS_USER` - Your server username (beast)  
 - `VPS_KEY` - Your private SSH key (the one you created earlier)
 
