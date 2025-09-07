@@ -592,20 +592,30 @@ async def handle_stats_menu_callback(query, context: ContextTypes.DEFAULT_TYPE) 
 async def handle_crypto_prices_action(query, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Show current crypto prices."""
     try:
-        prices = await crypto_service.get_trending_prices()
-        if prices:
-            price_text = "📊 <b>Current Crypto Prices</b>\n\n"
-            for symbol, data in prices.items():
-                price_text += f"• <b>{symbol.upper()}</b>: ${data['price']:,.2f}\n"
-                if 'change_24h' in data:
-                    change = data['change_24h']
-                    emoji = "📈" if change >= 0 else "📉"
-                    price_text += f"  {emoji} {change:+.2f}% (24h)\n"
-            price_text += "\n💡 Use /price [symbol] for specific coins"
-        else:
-            price_text = "❌ Unable to fetch crypto prices at the moment."
+        # Get prices for popular cryptocurrencies
+        symbols = ["BTC", "ETH", "BNB", "ADA", "SOL"]
+        price_text = "📊 <b>Current Crypto Prices</b>\n\n"
+        
+        for symbol in symbols:
+            try:
+                price_data = await crypto_service.get_crypto_price(symbol)
+                if price_data and 'price' in price_data:
+                    price = price_data['price']
+                    price_text += f"• <b>{symbol}</b>: ${price:,.2f}\n"
+                    if 'change_24h' in price_data:
+                        change = price_data['change_24h']
+                        emoji = "📈" if change >= 0 else "📉"
+                        price_text += f"  {emoji} {change:+.2f}% (24h)\n"
+                else:
+                    price_text += f"• <b>{symbol}</b>: Price unavailable\n"
+            except Exception:
+                price_text += f"• <b>{symbol}</b>: Error fetching price\n"
+        
+        price_text += "\n💡 Use /price [symbol] for specific coins"
+        
     except Exception as e:
         price_text = "❌ Error fetching crypto prices."
+        logger.error("Error in crypto prices action", error=str(e), exc_info=True)
     
     keyboard = [[InlineKeyboardButton("🔄 Refresh", callback_data="crypto_prices"),
                  InlineKeyboardButton("🏠 Back", callback_data="crypto_menu")]]
@@ -620,12 +630,25 @@ async def handle_crypto_prices_action(query, context: ContextTypes.DEFAULT_TYPE)
 async def handle_crypto_balance_action(query, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Show user's crypto balance."""
     user = query.from_user
-    balance = await crypto_service.get_user_balance(user.id)
-    
-    balance_text = f"💰 <b>Your Crypto Balance</b>\n\n"
-    balance_text += f"Virtual Balance: ${balance:,.2f}\n\n"
-    balance_text += "💡 Use /bet to place crypto bets\n"
-    balance_text += "📈 Use /bets to see your betting history"
+    try:
+        balance_data = await crypto_service.get_user_balance(user.id)
+        
+        balance_text = f"💰 <b>Your Crypto Balance</b>\n\n"
+        if balance_data:
+            balance = balance_data.get('balance', 1000.0)  # Default starting balance
+            balance_text += f"Virtual Balance: ${balance:,.2f}\n\n"
+            balance_text += f"Total Bets: {balance_data.get('total_bets', 0)}\n"
+            balance_text += f"Wins: {balance_data.get('wins', 0)}\n"
+            balance_text += f"Losses: {balance_data.get('losses', 0)}\n\n"
+        else:
+            balance_text += "Virtual Balance: $1,000.00 (Starting balance)\n\n"
+        
+        balance_text += "💡 Use /bet to place crypto bets\n"
+        balance_text += "📈 Use /bets to see your betting history"
+        
+    except Exception as e:
+        balance_text = "❌ Error loading balance information."
+        logger.error("Error in crypto balance action", error=str(e), exc_info=True)
     
     keyboard = [
         [InlineKeyboardButton("📈 My Bets", callback_data="crypto_bets"),
@@ -644,28 +667,43 @@ async def handle_todo_list_action(query, context: ContextTypes.DEFAULT_TYPE) -> 
     """Show user's todo list."""
     user = query.from_user
     try:
-        todos = await todo_service.get_user_todos(user.id)
+        # Get user's todo lists and tasks
+        todo_lists = await todo_service.get_user_lists(user.id)
         
-        if todos:
-            todo_text = "📝 <b>Your Todo List</b>\n\n"
-            for i, todo in enumerate(todos[:10], 1):  # Show max 10 todos
-                status = "✅" if todo.get('completed') else "⏳"
-                priority = ""
-                if todo.get('priority') == 'high':
-                    priority = "🔴 "
-                elif todo.get('priority') == 'medium':
-                    priority = "🟡 "
+        if todo_lists:
+            todo_text = "📝 <b>Your Todo Lists</b>\n\n"
+            for todo_list in todo_lists[:5]:  # Show max 5 lists
+                list_name = todo_list.get('name', 'Unnamed List')
+                todo_text += f"• <b>{list_name}</b>\n"
                 
-                todo_text += f"{i}. {status} {priority}{todo['title']}\n"
-                if todo.get('due_date'):
-                    todo_text += f"   📅 Due: {todo['due_date']}\n"
-            
-            if len(todos) > 10:
-                todo_text += f"\n... and {len(todos) - 10} more tasks"
+                # Get tasks for this list
+                tasks = await todo_service.get_tasks(
+                    user_id=user.id,
+                    list_id=todo_list['id'],
+                    limit=3
+                )
+                
+                if tasks:
+                    for task in tasks:
+                        status = "✅" if task.get('completed') else "⏳"
+                        priority = ""
+                        if task.get('priority') == 'high':
+                            priority = "🔴 "
+                        elif task.get('priority') == 'medium':
+                            priority = "🟡 "
+                        
+                        task_title = task.get('title', 'Untitled')
+                        todo_text += f"  {status} {priority}{task_title}\n"
+                else:
+                    todo_text += "  ✨ No tasks in this list\n"
+                
+                todo_text += "\n"
         else:
-            todo_text = "📝 <b>Your Todo List</b>\n\n✨ No tasks yet! Add one with the button below."
+            todo_text = "📝 <b>Your Todo Lists</b>\n\n✨ No todo lists yet! Create one with /add_todo"
+            
     except Exception as e:
-        todo_text = "❌ Error loading todo list."
+        todo_text = "❌ Error loading todo lists."
+        logger.error("Error in todo list action", error=str(e), exc_info=True)
     
     keyboard = [
         [InlineKeyboardButton("➕ Add Task", callback_data="todo_add"),
@@ -684,21 +722,29 @@ async def handle_todo_stats_action(query, context: ContextTypes.DEFAULT_TYPE) ->
     """Show user's todo statistics."""
     user = query.from_user
     try:
-        stats = await todo_service.get_user_stats(user.id)
+        stats = await todo_service.get_task_stats(user.id)
         
         stats_text = f"📊 <b>Todo Statistics</b>\n\n"
-        stats_text += f"📝 Total tasks: {stats.get('total', 0)}\n"
-        stats_text += f"✅ Completed: {stats.get('completed', 0)}\n"
-        stats_text += f"⏳ Pending: {stats.get('pending', 0)}\n"
-        stats_text += f"🔴 High priority: {stats.get('high_priority', 0)}\n"
+        stats_text += f"📝 Total tasks: {stats.get('total_tasks', 0)}\n"
+        stats_text += f"✅ Completed: {stats.get('completed_tasks', 0)}\n"
+        stats_text += f"⏳ Pending: {stats.get('pending_tasks', 0)}\n"
+        stats_text += f"📅 Lists: {stats.get('total_lists', 0)}\n"
         
         completion_rate = 0
-        if stats.get('total', 0) > 0:
-            completion_rate = (stats.get('completed', 0) / stats.get('total', 0)) * 100
+        total = stats.get('total_tasks', 0)
+        completed = stats.get('completed_tasks', 0)
+        if total > 0:
+            completion_rate = (completed / total) * 100
         
         stats_text += f"\n🎯 Completion rate: {completion_rate:.1f}%"
+        
+        # Add productivity info if available
+        if stats.get('recent_activity'):
+            stats_text += f"\n📈 Recent activity: {stats['recent_activity']}"
+            
     except Exception as e:
         stats_text = "❌ Error loading todo statistics."
+        logger.error("Error in todo stats action", error=str(e), exc_info=True)
     
     keyboard = [[InlineKeyboardButton("🏠 Back", callback_data="todo_menu")]]
     
@@ -712,20 +758,24 @@ async def handle_todo_stats_action(query, context: ContextTypes.DEFAULT_TYPE) ->
 async def handle_poll_list_action(query, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Show active polls."""
     try:
-        polls = await voting_service.get_active_polls(limit=5)
+        polls = await voting_service.get_active_polls()
         
         if polls:
             poll_text = "🗳️ <b>Active Polls</b>\n\n"
-            for i, poll in enumerate(polls, 1):
-                poll_text += f"{i}. <b>{poll['question']}</b>\n"
-                poll_text += f"   👥 {poll.get('vote_count', 0)} votes\n"
-                if poll.get('created_by'):
-                    poll_text += f"   👤 By: {poll['created_by']}\n"
+            for i, poll in enumerate(polls[:5], 1):  # Show max 5 polls
+                question = poll.get('question', 'Unknown Question')
+                poll_text += f"{i}. <b>{question}</b>\n"
+                poll_text += f"   👥 {poll.get('total_votes', 0)} votes\n"
+                if poll.get('creator_username'):
+                    poll_text += f"   👤 By: @{poll['creator_username']}\n"
+                elif poll.get('creator_id'):
+                    poll_text += f"   👤 By: User {poll['creator_id']}\n"
                 poll_text += "\n"
         else:
             poll_text = "🗳️ <b>Active Polls</b>\n\n📋 No active polls found.\n\n💡 Create one with /poll \"Question\" \"Option1\" \"Option2\""
     except Exception as e:
         poll_text = "❌ Error loading polls."
+        logger.error("Error in poll list action", error=str(e), exc_info=True)
     
     keyboard = [
         [InlineKeyboardButton("🗳️ Create Poll", callback_data="poll_create")],
@@ -791,22 +841,31 @@ async def handle_user_stats_action(query, context: ContextTypes.DEFAULT_TYPE) ->
     
     try:
         # Get user activity stats
-        activity_stats = await activity_service.get_user_activity(user.id)
+        activity_stats = await activity_service.get_user_activity_stats(user.id)
         
         stats_text = f"📊 <b>Your Statistics</b>\n\n"
         stats_text += f"👤 User: {user.first_name or user.username}\n"
         stats_text += f"🆔 ID: {user.id}\n\n"
         
         if activity_stats:
-            stats_text += f"💬 Messages sent: {activity_stats.get('message_count', 0)}\n"
-            stats_text += f"🤖 Bot commands used: {activity_stats.get('command_count', 0)}\n"
+            stats_text += f"💬 Messages sent: {activity_stats.get('total_messages', 0)}\n"
             stats_text += f"📅 Active days: {activity_stats.get('active_days', 0)}\n"
-            stats_text += f"⏰ Last active: {activity_stats.get('last_active', 'Never')}\n"
+            stats_text += f"📊 Avg messages/day: {activity_stats.get('avg_messages_per_day', 0):.1f}\n"
+            
+            if activity_stats.get('peak_hour'):
+                stats_text += f"🕐 Most active hour: {activity_stats['peak_hour']}:00\n"
+            
+            if activity_stats.get('first_seen'):
+                stats_text += f"📅 Member since: {activity_stats['first_seen']}\n"
+                
+            if activity_stats.get('last_active'):
+                stats_text += f"⏰ Last active: {activity_stats['last_active']}\n"
         else:
-            stats_text += "📊 No activity data yet - start using the bot!"
+            stats_text += "📊 No activity data yet - start using the bot more!"
             
     except Exception as e:
         stats_text = "❌ Error loading user statistics."
+        logger.error("Error in user stats action", error=str(e), exc_info=True)
     
     keyboard = [[InlineKeyboardButton("🏠 Back", callback_data="stats_menu")]]
     

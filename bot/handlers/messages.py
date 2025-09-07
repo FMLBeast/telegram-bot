@@ -57,8 +57,8 @@ async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
         await handle_b2b_calc_input(update, context, message_text)
         return
     
-    # Default: AI response for regular messages
-    await handle_ai_response(update, context, message_text)
+    # No auto-AI responses - users must explicitly use /ask or AI menu
+    logger.info("Message logged without AI response", user_id=user.id)
 
 
 async def handle_keyword_triggers(update: Update, context: ContextTypes.DEFAULT_TYPE, message_text: str) -> None:
