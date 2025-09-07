@@ -22,6 +22,9 @@ Add the following secrets:
 ### OpenAI:
 - `OPENAI_API_KEY` - Your OpenAI API key
 
+### RapidAPI (for NSFW features):
+- `RAPIDAPI_KEY` - Your RapidAPI key for NSFW content APIs (b3d94a48ffmsh77a9d7c5639d202p11fdc7jsn7b4229d8666e)
+
 ### Admin Users:
 - `ADMIN_USER_IDS` - Comma-separated list of admin user IDs (e.g., "123456789,987654321")
 
@@ -29,9 +32,11 @@ Add the following secrets:
 
 The bot is constantly restarting because it's missing these environment variables on the server. The updated GitHub Actions workflow will now:
 
-1. Create a `.env` file on the server using your GitHub secrets
-2. Secure the file with proper permissions (600)
-3. Deploy the bot with all required configuration
+1. **Preserve existing `.env` files** - If a working `.env` file already exists, it won't be overwritten
+2. Create a `.env` file from GitHub secrets only if missing or incomplete
+3. Backup existing `.env` files with timestamp before any changes
+4. Secure the file with proper permissions (600)
+5. Deploy the bot with all required configuration
 
 ## After Adding Secrets
 
@@ -47,3 +52,14 @@ Once you've added all the secrets to GitHub:
 - The `.env` file is never committed to git (it's in .gitignore)
 - GitHub secrets are encrypted and only accessible during workflow runs
 - The `.env` file on the server has restricted permissions (600 = owner read/write only)
+
+## .env File Management
+
+The deployment process is now smart about handling `.env` files:
+
+- **Existing files are preserved**: If you have a working `.env` file on the server (like one with RAPIDAPI_KEY), it won't be overwritten
+- **Automatic backups**: Before any changes, existing `.env` files are backed up with timestamps
+- **Fallback creation**: Only creates new `.env` from GitHub secrets if the file is missing or incomplete
+- **Manual sync**: You can still use `./sync_env.sh` to manually sync your local `.env` to the server when needed
+
+This prevents the issue where deployments would overwrite manually configured environment variables like `RAPIDAPI_KEY`.
