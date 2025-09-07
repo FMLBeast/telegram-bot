@@ -65,11 +65,6 @@ from .nsfw import (
     fetch_image_handler,
     create_porn_handler,
 )
-from .gambling import (
-    casino_handler,
-    bet_handler,
-    handle_gambling_callback,
-)
 from .voting import (
     create_poll_handler,
     list_polls_handler,
@@ -87,24 +82,11 @@ from .mood import (
     mood_trends_handler,
     handle_mood_callback,
 )
-from .synonyms import (
-    add_synonym_handler,
-    synonym_of_day_handler,
-    search_synonyms_handler,
-    synonym_stats_handler,
-    handle_synonym_callback,
-)
 from .utilities import (
     mention_all_handler,
     shuffle_users_handler,
     random_user_picker_handler,
     handle_utility_callback,
-)
-from .profanity import (
-    cunt_counter_handler,
-    profanity_leaderboard_handler,
-    word_stats_handler,
-    profanity_callback_handler,
 )
 
 __all__ = [
@@ -169,10 +151,6 @@ __all__ = [
     "random_video_handler",
     "fetch_image_handler",
     "create_porn_handler",
-    # Gambling handlers
-    "casino_handler",
-    "bet_handler",
-    "handle_gambling_callback",
     # Voting handlers
     "create_poll_handler",
     "list_polls_handler",
@@ -187,20 +165,9 @@ __all__ = [
     "mood_analysis_handler",
     "mood_trends_handler",
     "handle_mood_callback",
-    # Synonym handlers
-    "add_synonym_handler",
-    "synonym_of_day_handler",
-    "search_synonyms_handler",
-    "synonym_stats_handler",
-    "handle_synonym_callback",
     # Utility handlers
     "mention_all_handler",
     "shuffle_users_handler",
     "random_user_picker_handler",
     "handle_utility_callback",
-    # Profanity handlers
-    "cunt_counter_handler",
-    "profanity_leaderboard_handler",
-    "word_stats_handler",
-    "profanity_callback_handler",
 ]
