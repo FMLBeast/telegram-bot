@@ -275,27 +275,37 @@ async def fetch_random_adult_content(keywords: str = "") -> Optional[Dict[str, A
             await asyncio.sleep(0.5)
             return random.choice(mock_images)
         
-        # RapidAPI integration for adult content  
+        # RapidAPI integration for adult content using working endpoint
         headers = {
-            "X-RapidAPI-Key": settings.rapidapi_key,
-            "X-RapidAPI-Host": "nsfw-images.p.rapidapi.com"
+            "x-rapidapi-key": settings.rapidapi_key,
+            "x-rapidapi-host": "girls-nude-image.p.rapidapi.com"
         }
         
         async with aiohttp.ClientSession() as session:
-            # Try different NSFW content APIs
+            # Use working girls-nude-image API
             try:
-                url = "https://nsfw-images1.p.rapidapi.com/nsfw"
-                params = {"category": "boobs"} if not keywords else {"category": "boobs", "tags": keywords}
+                url = "https://girls-nude-image.p.rapidapi.com/"
+                # Map keywords to available types
+                image_type = "boobs"
+                if keywords:
+                    if "ass" in keywords.lower():
+                        image_type = "ass"
+                    elif any(word in keywords.lower() for word in ["boobs", "tits", "breasts"]):
+                        image_type = "boobs"
+                
+                params = {"type": image_type}
                 
                 async with session.get(url, headers=headers, params=params, timeout=10) as response:
                     if response.status == 200:
                         data = await response.json()
-                        if data and isinstance(data, dict) and "url" in data:
+                        if data and data.get('success') and data.get('url'):
                             return {
                                 "id": str(random.randint(1000, 9999)),
                                 "url": data["url"],
-                                "title": data.get("title", "NSFW Content")
+                                "title": f"{image_type.title()} Image"
                             }
+                    elif response.status == 403:
+                        logger.error("NSFW API authentication failed (403)")
             except Exception as api_error:
                 logger.warning("RapidAPI request failed", error=str(api_error))
                 
@@ -327,39 +337,43 @@ async def fetch_specific_content(content_type: str) -> Optional[Dict[str, Any]]:
                 "title": f"{content_type.title()} Content"
             }
         
-        # RapidAPI integration for specific content types
+        # RapidAPI integration for specific content types using working endpoint
         headers = {
-            "X-RapidAPI-Key": settings.rapidapi_key,
-            "X-RapidAPI-Host": "nsfw-images1.p.rapidapi.com"
+            "x-rapidapi-key": settings.rapidapi_key,
+            "x-rapidapi-host": "girls-nude-image.p.rapidapi.com"
         }
         
-        # Map content types to API categories
-        category_mapping = {
+        # Map content types to available API types
+        type_mapping = {
             "boobs": "boobs",
-            "ass": "ass",
-            "pussy": "pussy",
-            "milf": "milf",
-            "teen": "teen",
-            "big tits": "big-tits",
-            "anal": "anal"
+            "ass": "ass", 
+            "pussy": "boobs",  # fallback to boobs
+            "milf": "boobs",
+            "teen": "boobs",
+            "big tits": "boobs",
+            "anal": "ass",
+            "tits": "boobs",
+            "breasts": "boobs"
         }
         
-        category = category_mapping.get(content_type.lower(), "boobs")
+        image_type = type_mapping.get(content_type.lower(), "boobs")
         
         async with aiohttp.ClientSession() as session:
             try:
-                url = "https://nsfw-images1.p.rapidapi.com/nsfw"
-                params = {"category": category}
+                url = "https://girls-nude-image.p.rapidapi.com/"
+                params = {"type": image_type}
                 
                 async with session.get(url, headers=headers, params=params, timeout=10) as response:
                     if response.status == 200:
                         data = await response.json()
-                        if data and isinstance(data, dict) and "url" in data:
+                        if data and data.get('success') and data.get('url'):
                             return {
                                 "id": f"{content_type}_" + str(random.randint(1000, 9999)),
                                 "url": data["url"],
-                                "title": data.get("title", f"{content_type.title()} Content")
+                                "title": f"{content_type.title()} Image"
                             }
+                    elif response.status == 403:
+                        logger.error("NSFW specific content API authentication failed (403)")
             except Exception as api_error:
                 logger.warning("RapidAPI request failed for specific content", content_type=content_type, error=str(api_error))
         
@@ -454,24 +468,54 @@ async def get_pornstar_info(pornstar_name: str) -> Optional[Dict[str, Any]]:
 
 
 async def get_random_adult_images(query: str = "boobs") -> Optional[List[Dict[str, Any]]]:
-    """Get random adult images from adultdatalink API."""
+    """Get random adult images from working RapidAPI endpoint."""
     try:
-        # Use pornpics search endpoint
-        url = "https://api.adultdatalink.com/pornpics/search"
-        params = {"query": query}
+        if not settings.rapidapi_key:
+            logger.warning("No RapidAPI key configured for NSFW images")
+            return None
+        
+        # Use working girls-nude-image API
+        url = "https://girls-nude-image.p.rapidapi.com/"
+        headers = {
+            "x-rapidapi-key": settings.rapidapi_key,
+            "x-rapidapi-host": "girls-nude-image.p.rapidapi.com"
+        }
+        
+        # Map query to available types
+        type_mapping = {
+            'boobs': 'boobs',
+            'ass': 'ass',
+            'pussy': 'boobs',  # fallback to boobs if pussy not available
+            'tits': 'boobs',
+            'breasts': 'boobs'
+        }
+        image_type = type_mapping.get(query.lower(), 'boobs')
+        params = {"type": image_type}
         
         async with aiohttp.ClientSession() as session:
             try:
-                async with session.get(url, params=params, timeout=15) as response:
+                async with session.get(url, headers=headers, params=params, timeout=15) as response:
                     if response.status == 200:
                         data = await response.json()
-                        logger.info(f"Found adult images for: {query}")
-                        return data
+                        if data.get('success') and data.get('url'):
+                            # Convert single response to list format expected by handler
+                            logger.info(f"Found adult image for: {query}")
+                            return [{
+                                'url': data['url'],
+                                'type': data.get('type', query),
+                                'title': f'{query.title()} Image'
+                            }]
+                        else:
+                            logger.warning(f"API returned unsuccessful response for {query}")
+                            return None
+                    elif response.status == 403:
+                        logger.error("NSFW images API authentication failed (403). RapidAPI key may not be subscribed to girls-nude-image.p.rapidapi.com")
+                        return None
                     else:
                         logger.warning("API request failed", status=response.status, query=query)
                         return None
             except Exception as api_error:
-                logger.warning("AdultDataLink images request failed", query=query, error=str(api_error))
+                logger.warning("Girls nude image API request failed", query=query, error=str(api_error))
                 return None
         
     except Exception as e:
