@@ -1,0 +1,692 @@
+Sep 06 20:14:08 ubuntu python[127807]: 2025-09-06T20:14:08.240519Z [info ] Callback query received [bot.handlers.callbacks] callback_data=ai_chat user_id=7403788775 username=FMLBeast
+Sep 06 20:14:08 ubuntu python[127807]: 2025-09-06T20:14:08.240753Z [info ] Processing ai_chat callback for user 7403788775 [bot.handlers.callbacks]
+Sep 06 20:14:08 ubuntu python[127807]: 2025-09-06T20:14:08.272424Z [info ] Completed ai_chat callback for user 7403788775 [bot.handlers.callbacks]
+Sep 06 20:14:10 ubuntu python[127807]: 2025-09-06T20:14:10.981497Z [info ] Message received [bot.handlers.messages] message_length=4 user_id=7403788775 username=FMLBeast
+Sep 06 20:14:10 ubuntu python[127807]: 2025-09-06 20:14:10,982 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+Sep 06 20:14:10 ubuntu python[127807]: BEGIN (implicit)
+Sep 06 20:14:10 ubuntu python[127807]: 2025-09-06 20:14:10,982 INFO sqlalchemy.engine.Engine SELECT users.id, users.telegram_id, users.username, users.first_name, users.last_name, users.is_active, users.is_admin, users.created_at, users.updated_at
+Sep 06 20:14:10 ubuntu python[127807]: FROM users
+Sep 06 20:14:10 ubuntu python[127807]: WHERE users.telegram_id = ?
+Sep 06 20:14:10 ubuntu python[127807]: SELECT users.id, users.telegram_id, users.username, users.first_name, users.last_name, users.is_active, users.is_admin, users.created_at, users.updated_at
+Sep 06 20:14:10 ubuntu python[127807]: FROM users
+Sep 06 20:14:10 ubuntu python[127807]: WHERE users.telegram_id = ?
+Sep 06 20:14:10 ubuntu python[127807]: 2025-09-06 20:14:10,982 INFO sqlalchemy.engine.Engine [cached since 7.572s ago] (7403788775,)
+Sep 06 20:14:10 ubuntu python[127807]: [cached since 7.572s ago] (7403788775,)
+Sep 06 20:14:10 ubuntu python[127807]: 2025-09-06T20:14:10.984192Z [info ] User updated [UserService] telegram_id=7403788775 user_id=1 username=FMLBeast
+Sep 06 20:14:10 ubuntu python[127807]: 2025-09-06 20:14:10,984 INFO sqlalchemy.engine.Engine UPDATE users SET updated_at=? WHERE users.id = ?
+Sep 06 20:14:10 ubuntu python[127807]: UPDATE users SET updated_at=? WHERE users.id = ?
+Sep 06 20:14:10 ubuntu python[127807]: 2025-09-06 20:14:10,984 INFO sqlalchemy.engine.Engine [cached since 7.57s ago] ('2025-09-06 20:14:10.984156', 1)
+Sep 06 20:14:10 ubuntu python[127807]: [cached since 7.57s ago] ('2025-09-06 20:14:10.984156', 1)
+Sep 06 20:14:10 ubuntu python[127807]: 2025-09-06 20:14:10,985 INFO sqlalchemy.engine.Engine COMMIT
+Sep 06 20:14:10 ubuntu python[127807]: COMMIT
+Sep 06 20:14:10 ubuntu python[127807]: 2025-09-06 20:14:10,988 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+Sep 06 20:14:10 ubuntu python[127807]: BEGIN (implicit)
+Sep 06 20:14:10 ubuntu python[127807]: 2025-09-06 20:14:10,989 INFO sqlalchemy.engine.Engine INSERT INTO messages (telegram_message_id, user_id, chat_id, text, message_type, created_at) VALUES (?, ?, ?, ?, ?, ?)
+Sep 06 20:14:10 ubuntu python[127807]: INSERT INTO messages (telegram_message_id, user_id, chat_id, text, message_type, created_at) VALUES (?, ?, ?, ?, ?, ?)
+Sep 06 20:14:10 ubuntu python[127807]: 2025-09-06 20:14:10,990 INFO sqlalchemy.engine.Engine [generated in 0.00020s] (0, 7403788775, 7403788775, 'test', 'text', '2025-09-06 20:14:10.989856')
+Sep 06 20:14:10 ubuntu python[127807]: [generated in 0.00020s] (0, 7403788775, 7403788775, 'test', 'text', '2025-09-06 20:14:10.989856')
+Sep 06 20:14:10 ubuntu python[127807]: 2025-09-06 20:14:10,990 INFO sqlalchemy.engine.Engine COMMIT
+Sep 06 20:14:10 ubuntu python[127807]: COMMIT
+Sep 06 20:15:02 ubuntu python[127807]: 2025-09-06T20:15:02.813043Z [info ] Help command received [bot.handlers.commands] user_id=7403788775 username=FMLBeast
+Sep 06 20:15:19 ubuntu python[127807]: 2025-09-06T20:15:19.906265Z [info ] GPT query [bot.handlers.messages] query=test user_id=7403788775
+Sep 06 20:15:20 ubuntu python[127807]: 2025-09-06T20:15:20.032651Z [info ] Generating AI response [OpenAIService] history_length=0 message_length=4 user_id=7403788775 username=FMLBeast
+Sep 06 20:15:22 ubuntu python[127807]: 2025-09-06T20:15:22.080568Z [info ] AI response generated [OpenAIService] response_length=81 tokens_used=93 user_id=7403788775
+Sep 06 20:15:22 ubuntu python[127807]: 2025-09-06T20:15:22.204151Z [info ] AI response sent [bot.handlers.messages] response_length=81 user_id=7403788775
+Sep 06 20:15:30 ubuntu python[127807]: 2025-09-06T20:15:30.696250Z [info ] Command attempt [bot.decorators.auth] args=[] chat_id=7403788775 command=/random_video user_id=7403788775 username=FMLBeast
+Sep 06 20:15:30 ubuntu python[127807]: 2025-09-06T20:15:30.696451Z [info ] Access check [AuthService] admin_users=[7403788775] channel_authorized=True channel_id=7403788775 is_admin=True is_banned=False user_id=7403788775
+Sep 06 20:15:31 ubuntu python[127807]: 2025-09-06T20:15:31.333720Z [warning ] NSFW video API returned status 403 [bot.services.nsfw_service]
+Sep 06 20:15:31 ubuntu python[127807]: 2025-09-06T20:15:31.397523Z [warning ] Failed to send video, sending as link: Wrong type of the web page content [bot.handlers.nsfw]
+Sep 06 20:15:31 ubuntu python[127807]: /opt/telegram-bot/venv/lib/python3.12/site-packages/structlog/_base.py:173: UserWarning: Remove `format_exc_info` from your processor chain if you want pretty exceptions.
+Sep 06 20:15:31 ubuntu python[127807]: event_dict = proc(self._logger, method_name, event_dict)
+Sep 06 20:15:31 ubuntu python[127807]: 2025-09-06T20:15:31.448372Z [error ] Error in random_video_handler: UserService.log_command_usage() got an unexpected keyword argument 'category' [bot.handlers.nsfw]
+Sep 06 20:15:31 ubuntu python[127807]: Traceback (most recent call last):
+Sep 06 20:15:31 ubuntu python[127807]: File "/opt/telegram-bot/bot/handlers/nsfw.py", line 900, in random_video_handler
+Sep 06 20:15:31 ubuntu python[127807]: await user_service.log_command_usage(user_id, "random_video", category=category)
+Sep 06 20:15:31 ubuntu python[127807]: ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Sep 06 20:15:31 ubuntu python[127807]: TypeError: UserService.log_command_usage() got an unexpected keyword argument 'category'
+Sep 06 20:15:44 ubuntu python[127807]: 2025-09-06T20:15:44.674228Z [info ] Message received [bot.handlers.messages] message_length=79 user_id=1045157047 username=Yaboyhabibs
+Sep 06 20:15:44 ubuntu python[127807]: 2025-09-06 20:15:44,675 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+Sep 06 20:15:44 ubuntu python[127807]: BEGIN (implicit)
+Sep 06 20:15:44 ubuntu python[127807]: 2025-09-06 20:15:44,675 INFO sqlalchemy.engine.Engine SELECT users.id, users.telegram_id, users.username, users.first_name, users.last_name, users.is_active, users.is_admin, users.created_at, users.updated_at
+Sep 06 20:15:44 ubuntu python[127807]: FROM users
+Sep 06 20:15:44 ubuntu python[127807]: WHERE users.telegram_id = ?
+Sep 06 20:15:44 ubuntu python[127807]: SELECT users.id, users.telegram_id, users.username, users.first_name, users.last_name, users.is_active, users.is_admin, users.created_at, users.updated_at
+Sep 06 20:15:44 ubuntu python[127807]: FROM users
+Sep 06 20:15:44 ubuntu python[127807]: WHERE users.telegram_id = ?
+Sep 06 20:15:44 ubuntu python[127807]: 2025-09-06 20:15:44,675 INFO sqlalchemy.engine.Engine [cached since 101.3s ago] (1045157047,)
+Sep 06 20:15:44 ubuntu python[127807]: [cached since 101.3s ago] (1045157047,)
+Sep 06 20:15:44 ubuntu python[127807]: 2025-09-06T20:15:44.677434Z [info ] User updated [UserService] telegram_id=1045157047 user_id=3 username=Yaboyhabibs
+Sep 06 20:15:44 ubuntu python[127807]: 2025-09-06 20:15:44,677 INFO sqlalchemy.engine.Engine UPDATE users SET updated_at=? WHERE users.id = ?
+Sep 06 20:15:44 ubuntu python[127807]: UPDATE users SET updated_at=? WHERE users.id = ?
+Sep 06 20:15:44 ubuntu python[127807]: 2025-09-06 20:15:44,677 INFO sqlalchemy.engine.Engine [cached since 101.3s ago] ('2025-09-06 20:15:44.677379', 3)
+Sep 06 20:15:44 ubuntu python[127807]: [cached since 101.3s ago] ('2025-09-06 20:15:44.677379', 3)
+Sep 06 20:15:44 ubuntu python[127807]: 2025-09-06 20:15:44,678 INFO sqlalchemy.engine.Engine COMMIT
+Sep 06 20:15:44 ubuntu python[127807]: COMMIT
+Sep 06 20:15:44 ubuntu python[127807]: 2025-09-06 20:15:44,682 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+Sep 06 20:15:44 ubuntu python[127807]: BEGIN (implicit)
+Sep 06 20:15:44 ubuntu python[127807]: 2025-09-06 20:15:44,682 INFO sqlalchemy.engine.Engine INSERT INTO messages (telegram_message_id, user_id, chat_id, text, message_type, created_at) VALUES (?, ?, ?, ?, ?, ?)
+Sep 06 20:15:44 ubuntu python[127807]: INSERT INTO messages (telegram_message_id, user_id, chat_id, text, message_type, created_at) VALUES (?, ?, ?, ?, ?, ?)
+Sep 06 20:15:44 ubuntu python[127807]: 2025-09-06 20:15:44,682 INFO sqlalchemy.engine.Engine [cached since 93.69s ago] (0, 1045157047, -1002570688884, 'this is the best i can do without throwing 700gb of notes and data at your face', 'text', '2025-09-06 20:15:44.682645')
+Sep 06 20:15:44 ubuntu python[127807]: [cached since 93.69s ago] (0, 1045157047, -1002570688884, 'this is the best i can do without throwing 700gb of notes and data at your face', 'text', '2025-09-06 20:15:44.682645')
+Sep 06 20:15:44 ubuntu python[127807]: 2025-09-06 20:15:44,683 INFO sqlalchemy.engine.Engine COMMIT
+Sep 06 20:15:44 ubuntu python[127807]: COMMIT
+Sep 06 20:15:46 ubuntu python[127807]: 2025-09-06T20:15:46.328157Z [info ] Message received [bot.handlers.messages] message_length=2863 user_id=1045157047 username=Yaboyhabibs
+Sep 06 20:15:46 ubuntu python[127807]: 2025-09-06 20:15:46,328 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+Sep 06 20:15:46 ubuntu python[127807]: BEGIN (implicit)
+Sep 06 20:15:46 ubuntu python[127807]: 2025-09-06 20:15:46,328 INFO sqlalchemy.engine.Engine SELECT users.id, users.telegram_id, users.username, users.first_name, users.last_name, users.is_active, users.is_admin, users.created_at, users.updated_at
+Sep 06 20:15:46 ubuntu python[127807]: FROM users
+Sep 06 20:15:46 ubuntu python[127807]: WHERE users.telegram_id = ?
+Sep 06 20:15:46 ubuntu python[127807]: SELECT users.id, users.telegram_id, users.username, users.first_name, users.last_name, users.is_active, users.is_admin, users.created_at, users.updated_at
+Sep 06 20:15:46 ubuntu python[127807]: FROM users
+Sep 06 20:15:46 ubuntu python[127807]: WHERE users.telegram_id = ?
+Sep 06 20:15:46 ubuntu python[127807]: 2025-09-06 20:15:46,329 INFO sqlalchemy.engine.Engine [cached since 102.9s ago] (1045157047,)
+Sep 06 20:15:46 ubuntu python[127807]: [cached since 102.9s ago] (1045157047,)
+Sep 06 20:15:46 ubuntu python[127807]: 2025-09-06T20:15:46.330607Z [info ] User updated [UserService] telegram_id=1045157047 user_id=3 username=Yaboyhabibs
+Sep 06 20:15:46 ubuntu python[127807]: 2025-09-06 20:15:46,330 INFO sqlalchemy.engine.Engine UPDATE users SET updated_at=? WHERE users.id = ?
+Sep 06 20:15:46 ubuntu python[127807]: UPDATE users SET updated_at=? WHERE users.id = ?
+Sep 06 20:15:46 ubuntu python[127807]: 2025-09-06 20:15:46,331 INFO sqlalchemy.engine.Engine [cached since 102.9s ago] ('2025-09-06 20:15:46.330563', 3)
+Sep 06 20:15:46 ubuntu python[127807]: [cached since 102.9s ago] ('2025-09-06 20:15:46.330563', 3)
+Sep 06 20:15:46 ubuntu python[127807]: 2025-09-06 20:15:46,331 INFO sqlalchemy.engine.Engine COMMIT
+Sep 06 20:15:46 ubuntu python[127807]: COMMIT
+Sep 06 20:15:46 ubuntu python[127807]: 2025-09-06 20:15:46,334 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+Sep 06 20:15:46 ubuntu python[127807]: BEGIN (implicit)
+Sep 06 20:15:46 ubuntu python[127807]: 2025-09-06 20:15:46,334 INFO sqlalchemy.engine.Engine INSERT INTO messages (telegram_message_id, user_id, chat_id, text, message_type, created_at) VALUES (?, ?, ?, ?, ?, ?)
+Sep 06 20:15:46 ubuntu python[127807]: INSERT INTO messages (telegram_message_id, user_id, chat_id, text, message_type, created_at) VALUES (?, ?, ?, ?, ?, ?)
+Sep 06 20:15:46 ubuntu python[127807]: 2025-09-06 20:15:46,334 INFO sqlalchemy.engine.Engine [cached since 95.34s ago] (0, 1045157047, -1002570688884, "Chain Reconstruction\nChain 1 (Starting from 0x1)\n\nInitial terms: 0x1, 0x2 (implied doubling), 0x3\nSequence from list: 0x1, 0x3, 0x15, 0x1d3, 0x1b ... (2627 characters truncated) ... 1f0, 0x398, 0x588, 0x920, 0xd98, 0x18b8, 0x2630, 0x3fa8, 0x65d8, 0xb10f22572c497a836ea187f2e1fc23 (matches)\n\n\nGaps exist, but endpoint consistent.", 'text', '2025-09-06 20:15:46.334688')
+Sep 06 20:15:46 ubuntu python[127807]: [cached since 95.34s ago] (0, 1045157047, -1002570688884, "Chain Reconstruction\nChain 1 (Starting from 0x1)\n\nInitial terms: 0x1, 0x2 (implied doubling), 0x3\nSequence from list: 0x1, 0x3, 0x15, 0x1d3, 0x1b ... (2627 characters truncated) ... 1f0, 0x398, 0x588, 0x920, 0xd98, 0x18b8, 0x2630, 0x3fa8, 0x65d8, 0xb10f22572c497a836ea187f2e1fc23 (matches)\n\n\nGaps exist, but endpoint consistent.", 'text', '2025-09-06 20:15:46.334688')
+Sep 06 20:15:46 ubuntu python[127807]: 2025-09-06 20:15:46,335 INFO sqlalchemy.engine.Engine COMMIT
+Sep 06 20:15:46 ubuntu python[127807]: COMMIT
+Sep 06 20:15:48 ubuntu python[127807]: 2025-09-06T20:15:48.376081Z [info ] Command attempt [bot.decorators.auth] args=[] chat_id=7403788775 command=/draw_me user_id=7403788775 username=FMLBeast
+Sep 06 20:15:48 ubuntu python[127807]: 2025-09-06T20:15:48.376300Z [info ] Access check [AuthService] admin_users=[7403788775] channel_authorized=True channel_id=7403788775 is_admin=True is_banned=False user_id=7403788775
+Sep 06 20:15:55 ubuntu python[127807]: 2025-09-06T20:15:55.612836Z [info ] Command attempt [bot.decorators.auth] args=['a', 'cute', 'robot', 'in', 'a', 'garden'] chat_id=7403788775 command=/draw_me user_id=7403788775 username=FMLBeast
+Sep 06 20:15:55 ubuntu python[127807]: 2025-09-06T20:15:55.613070Z [info ] Access check [AuthService] admin_users=[7403788775] channel_authorized=True channel_id=7403788775 is_admin=True is_banned=False user_id=7403788775
+Sep 06 20:15:55 ubuntu python[127807]: 2025-09-06 20:15:55,661 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+Sep 06 20:15:55 ubuntu python[127807]: BEGIN (implicit)
+Sep 06 20:15:55 ubuntu python[127807]: 2025-09-06 20:15:55,663 INFO sqlalchemy.engine.Engine SELECT count(image_requests.id) AS count_1
+Sep 06 20:15:55 ubuntu python[127807]: FROM image_requests
+Sep 06 20:15:55 ubuntu python[127807]: WHERE image_requests.user_id = ?
+Sep 06 20:15:55 ubuntu python[127807]: SELECT count(image_requests.id) AS count_1
+Sep 06 20:15:55 ubuntu python[127807]: FROM image_requests
+Sep 06 20:15:55 ubuntu python[127807]: WHERE image_requests.user_id = ?
+Sep 06 20:15:55 ubuntu python[127807]: 2025-09-06 20:15:55,663 INFO sqlalchemy.engine.Engine [generated in 0.00016s] (7403788775,)
+Sep 06 20:15:55 ubuntu python[127807]: [generated in 0.00016s] (7403788775,)
+Sep 06 20:15:55 ubuntu python[127807]: 2025-09-06 20:15:55,665 INFO sqlalchemy.engine.Engine SELECT count(image_requests.id) AS count_1
+Sep 06 20:15:55 ubuntu python[127807]: FROM image_requests
+Sep 06 20:15:55 ubuntu python[127807]: WHERE image_requests.user_id = ? AND image_requests.created_at >= ?
+Sep 06 20:15:55 ubuntu python[127807]: SELECT count(image_requests.id) AS count_1
+Sep 06 20:15:55 ubuntu python[127807]: FROM image_requests
+Sep 06 20:15:55 ubuntu python[127807]: WHERE image_requests.user_id = ? AND image_requests.created_at >= ?
+Sep 06 20:15:55 ubuntu python[127807]: 2025-09-06 20:15:55,665 INFO sqlalchemy.engine.Engine [generated in 0.00015s] (7403788775, '2025-09-06 00:00:00.000000')
+Sep 06 20:15:55 ubuntu python[127807]: [generated in 0.00015s] (7403788775, '2025-09-06 00:00:00.000000')
+Sep 06 20:15:55 ubuntu python[127807]: 2025-09-06 20:15:55,667 INFO sqlalchemy.engine.Engine SELECT count(image_requests.id) AS count_1
+Sep 06 20:15:55 ubuntu python[127807]: FROM image_requests
+Sep 06 20:15:55 ubuntu python[127807]: WHERE image_requests.user_id = ? AND image_requests.is_favorite = 1
+Sep 06 20:15:55 ubuntu python[127807]: SELECT count(image_requests.id) AS count_1
+Sep 06 20:15:55 ubuntu python[127807]: FROM image_requests
+Sep 06 20:15:55 ubuntu python[127807]: WHERE image_requests.user_id = ? AND image_requests.is_favorite = 1
+Sep 06 20:15:55 ubuntu python[127807]: 2025-09-06 20:15:55,667 INFO sqlalchemy.engine.Engine [generated in 0.00012s] (7403788775,)
+Sep 06 20:15:55 ubuntu python[127807]: [generated in 0.00012s] (7403788775,)
+Sep 06 20:15:55 ubuntu python[127807]: 2025-09-06 20:15:55,667 INFO sqlalchemy.engine.Engine COMMIT
+Sep 06 20:15:55 ubuntu python[127807]: COMMIT
+Sep 06 20:15:55 ubuntu python[127807]: 2025-09-06 20:15:55,728 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+Sep 06 20:15:55 ubuntu python[127807]: BEGIN (implicit)
+Sep 06 20:15:55 ubuntu python[127807]: 2025-09-06 20:15:55,728 INFO sqlalchemy.engine.Engine SELECT count(image_requests.id) AS count_1
+Sep 06 20:15:55 ubuntu python[127807]: FROM image_requests
+Sep 06 20:15:55 ubuntu python[127807]: WHERE image_requests.user_id = ? AND image_requests.created_at >= ?
+Sep 06 20:15:55 ubuntu python[127807]: SELECT count(image_requests.id) AS count_1
+Sep 06 20:15:55 ubuntu python[127807]: FROM image_requests
+Sep 06 20:15:55 ubuntu python[127807]: WHERE image_requests.user_id = ? AND image_requests.created_at >= ?
+Sep 06 20:15:55 ubuntu python[127807]: 2025-09-06 20:15:55,728 INFO sqlalchemy.engine.Engine [cached since 0.06313s ago] (7403788775, '2025-09-06 00:00:00.000000')
+Sep 06 20:15:55 ubuntu python[127807]: [cached since 0.06313s ago] (7403788775, '2025-09-06 00:00:00.000000')
+Sep 06 20:15:55 ubuntu python[127807]: 2025-09-06 20:15:55,729 INFO sqlalchemy.engine.Engine COMMIT
+Sep 06 20:15:55 ubuntu python[127807]: COMMIT
+Sep 06 20:15:55 ubuntu python[127807]: 2025-09-06T20:15:55.729771Z [info ] Generating image [OpenAIService] prompt_length=24 quality=standard size=1024x1024 user_id=7403788775
+Sep 06 20:16:08 ubuntu python[127807]: 2025-09-06T20:16:08.402915Z [info ] Image generated successfully [OpenAIService] image_url='https://oaidalleapiprodscus.blob.core.windows.net/private/org-FTIyWrV8reAxk4j32GiJJRkY/user-arKm0fdSLO4qtIsdTRFVcabP/img-bQb3FRoGKSZtRkwW9WHCmf6B.png?st=2025-09-06T19%3A16%3A08Z&se=2025-09-06T21%3A16%3A08Z&sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&skoid=8b33a531-2df9-46a3-bc02-d4b1430a422c&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-09-06T06%3A03%3A21Z&ske=2025-09-07T06%3A03%3A21Z&sks=b&skv=2024-08-04&sig=9o7q9OZl4TH9YABfuwqpT4CtiWh7CP7LKGbKY16HdUM%3D' user_id=7403788775
+Sep 06 20:16:09 ubuntu python[127807]: 2025-09-06T20:16:09.918617Z [info ] Image saved [ImageService] file_path=data/images/7403788775_20250906_201609.png size=2050415
+Sep 06 20:16:09 ubuntu python[127807]: 2025-09-06 20:16:09,919 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+Sep 06 20:16:09 ubuntu python[127807]: BEGIN (implicit)
+Sep 06 20:16:09 ubuntu python[127807]: 2025-09-06 20:16:09,921 INFO sqlalchemy.engine.Engine INSERT INTO image_requests (user_id, prompt, model, size, quality, style, image_url, revised_prompt, file_path, is_favorite, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Sep 06 20:16:09 ubuntu python[127807]: INSERT INTO image_requests (user_id, prompt, model, size, quality, style, image_url, revised_prompt, file_path, is_favorite, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Sep 06 20:16:09 ubuntu python[127807]: 2025-09-06 20:16:09,921 INFO sqlalchemy.engine.Engine [generated in 0.00023s] (7403788775, 'a cute robot in a garden', 'dall-e-3', '1024x1024', 'standard', None, 'https://oaidalleapiprodscus.blob.core.windows.net/private/org-FTIyWrV8reAxk4j32GiJJRkY/user-arKm0fdSLO4qtIsdTRFVcabP/img-bQb3FRoGKSZtRkwW9WHCmf6B.png ... (174 characters truncated) ... e-a814-9c849652bcb3&skt=2025-09-06T06%3A03%3A21Z&ske=2025-09-07T06%3A03%3A21Z&sks=b&skv=2024-08-04&sig=9o7q9OZl4TH9YABfuwqpT4CtiWh7CP7LKGbKY16HdUM%3D', None, 'data/images/7403788775_20250906_201609.png', 0, '2025-09-06 20:16:09.921166')
+Sep 06 20:16:09 ubuntu python[127807]: [generated in 0.00023s] (7403788775, 'a cute robot in a garden', 'dall-e-3', '1024x1024', 'standard', None, 'https://oaidalleapiprodscus.blob.core.windows.net/private/org-FTIyWrV8reAxk4j32GiJJRkY/user-arKm0fdSLO4qtIsdTRFVcabP/img-bQb3FRoGKSZtRkwW9WHCmf6B.png ... (174 characters truncated) ... e-a814-9c849652bcb3&skt=2025-09-06T06%3A03%3A21Z&ske=2025-09-07T06%3A03%3A21Z&sks=b&skv=2024-08-04&sig=9o7q9OZl4TH9YABfuwqpT4CtiWh7CP7LKGbKY16HdUM%3D', None, 'data/images/7403788775_20250906_201609.png', 0, '2025-09-06 20:16:09.921166')
+Sep 06 20:16:09 ubuntu python[127807]: 2025-09-06 20:16:09,922 INFO sqlalchemy.engine.Engine COMMIT
+Sep 06 20:16:09 ubuntu python[127807]: COMMIT
+Sep 06 20:16:09 ubuntu python[127807]: 2025-09-06T20:16:09.925783Z [info ] Image generated successfully [ImageService] file_path=PosixPath('data/images/7403788775_20250906_201609.png') image_id=3 prompt_length=24 user_id=7403788775
+Sep 06 20:16:12 ubuntu python[127807]: 2025-09-06T20:16:12.228371Z [info ] Image generated and sent [bot.handlers.images] image_id=3 prompt_length=24 user_id=7403788775
+Sep 06 20:16:19 ubuntu python[127807]: 2025-09-06 20:16:19,515 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+Sep 06 20:16:19 ubuntu python[127807]: BEGIN (implicit)
+Sep 06 20:16:19 ubuntu python[127807]: 2025-09-06 20:16:19,516 INFO sqlalchemy.engine.Engine INSERT INTO image_collections (user_id, chat_id, image_id, collection_name, added_at) VALUES (?, ?, ?, ?, ?)
+Sep 06 20:16:19 ubuntu python[127807]: INSERT INTO image_collections (user_id, chat_id, image_id, collection_name, added_at) VALUES (?, ?, ?, ?, ?)
+Sep 06 20:16:19 ubuntu python[127807]: 2025-09-06 20:16:19,516 INFO sqlalchemy.engine.Engine [generated in 0.00020s] (7403788775, None, 3, 'default', '2025-09-06 20:16:19.516480')
+Sep 06 20:16:19 ubuntu python[127807]: [generated in 0.00020s] (7403788775, None, 3, 'default', '2025-09-06 20:16:19.516480')
+Sep 06 20:16:19 ubuntu python[127807]: 2025-09-06T20:16:19.517979Z [info ] Image added to collection [ImageService] chat_id=None collection_name=default image_id=3 user_id=7403788775
+Sep 06 20:16:19 ubuntu python[127807]: 2025-09-06 20:16:19,518 INFO sqlalchemy.engine.Engine COMMIT
+Sep 06 20:16:19 ubuntu python[127807]: COMMIT
+Sep 06 20:16:34 ubuntu python[127807]: 2025-09-06T20:16:34.570110Z [info ] Command attempt [bot.decorators.auth] args=[] chat_id=7403788775 command=/casino user_id=7403788775 username=FMLBeast
+Sep 06 20:16:34 ubuntu python[127807]: 2025-09-06T20:16:34.570309Z [info ] Access check [AuthService] admin_users=[7403788775] channel_authorized=True channel_id=7403788775 is_admin=True is_banned=False user_id=7403788775
+Sep 06 20:16:48 ubuntu python[127807]: 2025-09-06T20:16:48.042252Z [info ] Command attempt [bot.decorators.auth] args=['dice', '10', 'usd'] chat_id=7403788775 command=/casino user_id=7403788775 username=FMLBeast
+Sep 06 20:16:48 ubuntu python[127807]: 2025-09-06T20:16:48.042449Z [info ] Access check [AuthService] admin_users=[7403788775] channel_authorized=True channel_id=7403788775 is_admin=True is_banned=False user_id=7403788775
+Sep 06 20:16:48 ubuntu python[127807]: 2025-09-06T20:16:48.042565Z [info ] Casino query [bot.handlers.gambling] query='dice 10 usd' user_id=7403788775
+Sep 06 20:16:52 ubuntu python[127807]: 2025-09-06T20:16:52.775201Z [info ] Gambling callback [bot.handlers.gambling] callback_data=casino_dice_10 user_id=7403788775
+Sep 06 20:16:55 ubuntu python[127807]: 2025-09-06T20:16:55.061202Z [info ] Gambling callback [bot.handlers.gambling] callback_data=casino_dice_10 user_id=7403788775
+Sep 06 20:16:56 ubuntu python[127807]: 2025-09-06T20:16:56.746825Z [info ] Gambling callback [bot.handlers.gambling] callback_data=casino_dice_10 user_id=7403788775
+Sep 06 20:16:58 ubuntu python[127807]: 2025-09-06T20:16:58.697561Z [info ] Gambling callback [bot.handlers.gambling] callback_data=casino_dice_10 user_id=7403788775
+Sep 06 20:16:59 ubuntu python[127807]: 2025-09-06T20:16:59.698320Z [info ] Gambling callback [bot.handlers.gambling] callback_data=casino_dice_10 user_id=7403788775
+Sep 06 20:17:00 ubuntu python[127807]: 2025-09-06T20:17:00.822580Z [info ] Gambling callback [bot.handlers.gambling] callback_data=casino_dice_10 user_id=7403788775
+Sep 06 20:17:01 ubuntu python[127807]: 2025-09-06T20:17:01.800332Z [info ] Gambling callback [bot.handlers.gambling] callback_data=casino_dice_10 user_id=7403788775
+Sep 06 20:17:17 ubuntu python[127807]: 2025-09-06T20:17:17.511682Z [info ] Command attempt [bot.decorators.auth] args=['blackjack', '1', 'usd'] chat_id=7403788775 command=/casino user_id=7403788775 username=FMLBeast
+Sep 06 20:17:17 ubuntu python[127807]: 2025-09-06T20:17:17.511913Z [info ] Access check [AuthService] admin_users=[7403788775] channel_authorized=True channel_id=7403788775 is_admin=True is_banned=False user_id=7403788775
+Sep 06 20:17:17 ubuntu python[127807]: 2025-09-06T20:17:17.512007Z [info ] Casino query [bot.handlers.gambling] query='blackjack 1 usd' user_id=7403788775
+Sep 06 20:17:17 ubuntu python[127807]: 2025-09-06T20:17:17.512084Z [error ] Error in auth decorator [bot.decorators.auth] error="name 'handle_blackjack_game' is not defined" handler=casino_handler
+Sep 06 20:17:17 ubuntu python[127807]: Traceback (most recent call last):
+Sep 06 20:17:17 ubuntu python[127807]: File "/opt/telegram-bot/bot/decorators/auth.py", line 80, in wrapper
+Sep 06 20:17:17 ubuntu python[127807]: return await handler_func(update, context)
+Sep 06 20:17:17 ubuntu python[127807]: ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Sep 06 20:17:17 ubuntu python[127807]: File "/opt/telegram-bot/bot/handlers/gambling.py", line 68, in casino_handler
+Sep 06 20:17:17 ubuntu python[127807]: await handle_blackjack_game(update, context, query)
+Sep 06 20:17:17 ubuntu python[127807]: ^^^^^^^^^^^^^^^^^^^^^
+Sep 06 20:17:17 ubuntu python[127807]: NameError: name 'handle_blackjack_game' is not defined
+Sep 06 20:17:27 ubuntu python[127807]: 2025-09-06T20:17:27.203125Z [info ] Command attempt [bot.decorators.auth] args=['vip', 'levels'] chat_id=7403788775 command=/casino user_id=7403788775 username=FMLBeast
+Sep 06 20:17:27 ubuntu python[127807]: 2025-09-06T20:17:27.203334Z [info ] Access check [AuthService] admin_users=[7403788775] channel_authorized=True channel_id=7403788775 is_admin=True is_banned=False user_id=7403788775
+Sep 06 20:17:27 ubuntu python[127807]: 2025-09-06T20:17:27.203420Z [info ] Casino query [bot.handlers.gambling] query='vip levels' user_id=7403788775
+Sep 06 20:17:45 ubuntu python[127807]: 2025-09-06T20:17:45.427651Z [info ] Command attempt [bot.decorators.auth] args=['strategy', 'roulette'] chat_id=7403788775 command=/casino user_id=7403788775 username=FMLBeast
+Sep 06 20:17:45 ubuntu python[127807]: 2025-09-06T20:17:45.427891Z [info ] Access check [AuthService] admin_users=[7403788775] channel_authorized=True channel_id=7403788775 is_admin=True is_banned=False user_id=7403788775
+Sep 06 20:17:45 ubuntu python[127807]: 2025-09-06T20:17:45.427985Z [info ] Casino query [bot.handlers.gambling] query='strategy roulette' user_id=7403788775
+Sep 06 20:17:45 ubuntu python[127807]: 2025-09-06T20:17:45.428062Z [error ] Error in auth decorator [bot.decorators.auth] error="name 'handle_roulette_game' is not defined" handler=casino_handler
+Sep 06 20:17:45 ubuntu python[127807]: Traceback (most recent call last):
+Sep 06 20:17:45 ubuntu python[127807]: File "/opt/telegram-bot/bot/decorators/auth.py", line 80, in wrapper
+Sep 06 20:17:45 ubuntu python[127807]: return await handler_func(update, context)
+Sep 06 20:17:45 ubuntu python[127807]: ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Sep 06 20:17:45 ubuntu python[127807]: File "/opt/telegram-bot/bot/handlers/gambling.py", line 72, in casino_handler
+Sep 06 20:17:45 ubuntu python[127807]: await handle_roulette_game(update, context, query)
+Sep 06 20:17:45 ubuntu python[127807]: ^^^^^^^^^^^^^^^^^^^^
+Sep 06 20:17:45 ubuntu python[127807]: NameError: name 'handle_roulette_game' is not defined. Did you mean: 'handle_slots_game'?
+Sep 06 20:18:05 ubuntu python[127807]: 2025-09-06T20:18:05.265254Z [info ] Command attempt [bot.decorators.auth] args=[] chat_id=7403788775 command=/price user_id=7403788775 username=FMLBeast
+Sep 06 20:18:05 ubuntu python[127807]: 2025-09-06T20:18:05.265509Z [info ] Access check [AuthService] admin_users=[7403788775] channel_authorized=True channel_id=7403788775 is_admin=True is_banned=False user_id=7403788775
+Sep 06 20:18:05 ubuntu python[127807]: 2025-09-06 20:18:05,339 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+Sep 06 20:18:05 ubuntu python[127807]: BEGIN (implicit)
+Sep 06 20:18:05 ubuntu python[127807]: 2025-09-06 20:18:05,340 INFO sqlalchemy.engine.Engine INSERT INTO crypto_prices (symbol, price, change_24h, change_percent, volume_24h, market_cap, last_updated) VALUES (?, ?, ?, ?, ?, ?, ?)
+Sep 06 20:18:05 ubuntu python[127807]: INSERT INTO crypto_prices (symbol, price, change_24h, change_percent, volume_24h, market_cap, last_updated) VALUES (?, ?, ?, ?, ?, ?, ?)
+Sep 06 20:18:05 ubuntu python[127807]: 2025-09-06 20:18:05,340 INFO sqlalchemy.engine.Engine [generated in 0.00025s] ('BTC', 110085.0, -1298.4682896450483, -1.1795142750102632, 23058981758.256523, 2192525493396.235, '2025-09-06 20:18:05.340604')
+Sep 06 20:18:05 ubuntu python[127807]: [generated in 0.00025s] ('BTC', 110085.0, -1298.4682896450483, -1.1795142750102632, 23058981758.256523, 2192525493396.235, '2025-09-06 20:18:05.340604')
+Sep 06 20:18:05 ubuntu python[127807]: 2025-09-06 20:18:05,342 INFO sqlalchemy.engine.Engine COMMIT
+Sep 06 20:18:05 ubuntu python[127807]: COMMIT
+Sep 06 20:18:05 ubuntu python[127807]: 2025-09-06T20:18:05.345464Z [info ] Fetched real crypto price [CryptoService] price=110085 source=coingecko symbol=BTC
+Sep 06 20:18:05 ubuntu python[127807]: 2025-09-06 20:18:05,516 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+Sep 06 20:18:05 ubuntu python[127807]: BEGIN (implicit)
+Sep 06 20:18:05 ubuntu python[127807]: 2025-09-06 20:18:05,516 INFO sqlalchemy.engine.Engine INSERT INTO crypto_prices (symbol, price, change_24h, change_percent, volume_24h, market_cap, last_updated) VALUES (?, ?, ?, ?, ?, ?, ?)
+Sep 06 20:18:05 ubuntu python[127807]: INSERT INTO crypto_prices (symbol, price, change_24h, change_percent, volume_24h, market_cap, last_updated) VALUES (?, ?, ?, ?, ?, ?, ?)
+Sep 06 20:18:05 ubuntu python[127807]: 2025-09-06 20:18:05,516 INFO sqlalchemy.engine.Engine [cached since 0.1762s ago] ('ETH', 4262.22, -62.300977191696894, -1.4617025210265282, 14543340061.305832, 514445488276.65393, '2025-09-06 20:18:05.516589')
+Sep 06 20:18:05 ubuntu python[127807]: [cached since 0.1762s ago] ('ETH', 4262.22, -62.300977191696894, -1.4617025210265282, 14543340061.305832, 514445488276.65393, '2025-09-06 20:18:05.516589')
+Sep 06 20:18:05 ubuntu python[127807]: 2025-09-06 20:18:05,517 INFO sqlalchemy.engine.Engine COMMIT
+Sep 06 20:18:05 ubuntu python[127807]: COMMIT
+Sep 06 20:18:05 ubuntu python[127807]: 2025-09-06T20:18:05.519805Z [info ] Fetched real crypto price [CryptoService] price=4262.22 source=coingecko symbol=ETH
+Sep 06 20:18:06 ubuntu python[127807]: 2025-09-06 20:18:06,268 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+Sep 06 20:18:06 ubuntu python[127807]: BEGIN (implicit)
+Sep 06 20:18:06 ubuntu python[127807]: 2025-09-06 20:18:06,268 INFO sqlalchemy.engine.Engine INSERT INTO crypto_prices (symbol, price, change_24h, change_percent, volume_24h, market_cap, last_updated) VALUES (?, ?, ?, ?, ?, ?, ?)
+Sep 06 20:18:06 ubuntu python[127807]: INSERT INTO crypto_prices (symbol, price, change_24h, change_percent, volume_24h, market_cap, last_updated) VALUES (?, ?, ?, ?, ?, ?, ?)
+Sep 06 20:18:06 ubuntu python[127807]: 2025-09-06 20:18:06,268 INFO sqlalchemy.engine.Engine [cached since 0.9281s ago] ('BNB', 857.41, 6.723599326267098, 0.7841755200274195, 971773444.2936028, 119333659592.38159, '2025-09-06 20:18:06.268527')
+Sep 06 20:18:06 ubuntu python[127807]: [cached since 0.9281s ago] ('BNB', 857.41, 6.723599326267098, 0.7841755200274195, 971773444.2936028, 119333659592.38159, '2025-09-06 20:18:06.268527')
+Sep 06 20:18:06 ubuntu python[127807]: 2025-09-06 20:18:06,269 INFO sqlalchemy.engine.Engine COMMIT
+Sep 06 20:18:06 ubuntu python[127807]: COMMIT
+Sep 06 20:18:06 ubuntu python[127807]: 2025-09-06T20:18:06.271592Z [info ] Fetched real crypto price [CryptoService] price=857.41 source=coingecko symbol=BNB
+Sep 06 20:18:06 ubuntu python[127807]: 2025-09-06 20:18:06,423 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+Sep 06 20:18:06 ubuntu python[127807]: BEGIN (implicit)
+Sep 06 20:18:06 ubuntu python[127807]: 2025-09-06 20:18:06,423 INFO sqlalchemy.engine.Engine INSERT INTO crypto_prices (symbol, price, change_24h, change_percent, volume_24h, market_cap, last_updated) VALUES (?, ?, ?, ?, ?, ?, ?)
+Sep 06 20:18:06 ubuntu python[127807]: INSERT INTO crypto_prices (symbol, price, change_24h, change_percent, volume_24h, market_cap, last_updated) VALUES (?, ?, ?, ?, ?, ?, ?)
+Sep 06 20:18:06 ubuntu python[127807]: 2025-09-06 20:18:06,423 INFO sqlalchemy.engine.Engine [cached since 1.083s ago] ('ADA', 0.817561, -0.016951944840390348, -2.073477678165953, 888729637.2517354, 29841286142.458706, '2025-09-06 20:18:06.423517')
+Sep 06 20:18:06 ubuntu python[127807]: [cached since 1.083s ago] ('ADA', 0.817561, -0.016951944840390348, -2.073477678165953, 888729637.2517354, 29841286142.458706, '2025-09-06 20:18:06.423517')
+Sep 06 20:18:06 ubuntu python[127807]: 2025-09-06 20:18:06,424 INFO sqlalchemy.engine.Engine COMMIT
+Sep 06 20:18:06 ubuntu python[127807]: COMMIT
+Sep 06 20:18:06 ubuntu python[127807]: 2025-09-06T20:18:06.426502Z [info ] Fetched real crypto price [CryptoService] price=0.817561 source=coingecko symbol=ADA
+Sep 06 20:18:06 ubuntu python[127807]: 2025-09-06 20:18:06,576 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+Sep 06 20:18:06 ubuntu python[127807]: BEGIN (implicit)
+Sep 06 20:18:06 ubuntu python[127807]: 2025-09-06 20:18:06,577 INFO sqlalchemy.engine.Engine INSERT INTO crypto_prices (symbol, price, change_24h, change_percent, volume_24h, market_cap, last_updated) VALUES (?, ?, ?, ?, ?, ?, ?)
+Sep 06 20:18:06 ubuntu python[127807]: INSERT INTO crypto_prices (symbol, price, change_24h, change_percent, volume_24h, market_cap, last_updated) VALUES (?, ?, ?, ?, ?, ?, ?)
+Sep 06 20:18:06 ubuntu python[127807]: 2025-09-06 20:18:06,577 INFO sqlalchemy.engine.Engine [cached since 1.237s ago] ('DOGE', 0.213321, -0.0040199960937929565, -1.8844821155877556, 1084360712.6581635, 32168424966.784496, '2025-09-06 20:18:06.577028')
+Sep 06 20:18:06 ubuntu python[127807]: [cached since 1.237s ago] ('DOGE', 0.213321, -0.0040199960937929565, -1.8844821155877556, 1084360712.6581635, 32168424966.784496, '2025-09-06 20:18:06.577028')
+Sep 06 20:18:06 ubuntu python[127807]: 2025-09-06 20:18:06,577 INFO sqlalchemy.engine.Engine COMMIT
+Sep 06 20:18:06 ubuntu python[127807]: COMMIT
+Sep 06 20:18:06 ubuntu python[127807]: 2025-09-06T20:18:06.580682Z [info ] Fetched real crypto price [CryptoService] price=0.213321 source=coingecko symbol=DOGE
+Sep 06 20:18:13 ubuntu python[127807]: 2025-09-06T20:18:13.980300Z [info ] Command attempt [bot.decorators.auth] args=['xrp'] chat_id=7403788775 command=/price user_id=7403788775 username=FMLBeast
+Sep 06 20:18:13 ubuntu python[127807]: 2025-09-06T20:18:13.980560Z [info ] Access check [AuthService] admin_users=[7403788775] channel_authorized=True channel_id=7403788775 is_admin=True is_banned=False user_id=7403788775
+Sep 06 20:18:14 ubuntu python[127807]: 2025-09-06T20:18:14.011912Z [warning ] CoinGecko API failed, using mock data [CryptoService] status=429 symbol=XRP
+Sep 06 20:18:14 ubuntu python[127807]: 2025-09-06 20:18:14,012 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+Sep 06 20:18:14 ubuntu python[127807]: BEGIN (implicit)
+Sep 06 20:18:14 ubuntu python[127807]: 2025-09-06 20:18:14,013 INFO sqlalchemy.engine.Engine INSERT INTO crypto_prices (symbol, price, change_24h, change_percent, volume_24h, market_cap, last_updated) VALUES (?, ?, ?, ?, ?, ?, ?)
+Sep 06 20:18:14 ubuntu python[127807]: INSERT INTO crypto_prices (symbol, price, change_24h, change_percent, volume_24h, market_cap, last_updated) VALUES (?, ?, ?, ?, ?, ?, ?)
+Sep 06 20:18:14 ubuntu python[127807]: 2025-09-06 20:18:14,013 INFO sqlalchemy.engine.Engine [cached since 8.673s ago] ('XRP', 0.9018751660579558, -0.017925758067517207, -2.0370179622178646, 32497874812.40111, 749071659.398594, '2025-09-06 20:18:14.013182')
+Sep 06 20:18:14 ubuntu python[127807]: [cached since 8.673s ago] ('XRP', 0.9018751660579558, -0.017925758067517207, -2.0370179622178646, 32497874812.40111, 749071659.398594, '2025-09-06 20:18:14.013182')
+Sep 06 20:18:14 ubuntu python[127807]: 2025-09-06 20:18:14,014 INFO sqlalchemy.engine.Engine COMMIT
+Sep 06 20:18:14 ubuntu python[127807]: COMMIT
+Sep 06 20:18:20 ubuntu python[127807]: 2025-09-06 20:18:20,338 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+Sep 06 20:18:20 ubuntu python[127807]: BEGIN (implicit)
+Sep 06 20:18:20 ubuntu python[127807]: 2025-09-06 20:18:20,340 INFO sqlalchemy.engine.Engine SELECT user_balances.id, user_balances.user_id, user_balances.balance, user_balances.total_wagered, user_balances.total_won, user_balances.total_lost, user_balances.win_streak, user_balances.best_streak, user_balances.total_bets, user_balances.last_daily_bonus, user_balances.created_at, user_balances.updated_at
+Sep 06 20:18:20 ubuntu python[127807]: FROM user_balances
+Sep 06 20:18:20 ubuntu python[127807]: WHERE user_balances.user_id = ?
+Sep 06 20:18:20 ubuntu python[127807]: SELECT user_balances.id, user_balances.user_id, user_balances.balance, user_balances.total_wagered, user_balances.total_won, user_balances.total_lost, user_balances.win_streak, user_balances.best_streak, user_balances.total_bets, user_balances.last_daily_bonus, user_balances.created_at, user_balances.updated_at
+Sep 06 20:18:20 ubuntu python[127807]: FROM user_balances
+Sep 06 20:18:20 ubuntu python[127807]: WHERE user_balances.user_id = ?
+Sep 06 20:18:20 ubuntu python[127807]: 2025-09-06 20:18:20,340 INFO sqlalchemy.engine.Engine [generated in 0.00023s] (7403788775,)
+Sep 06 20:18:20 ubuntu python[127807]: [generated in 0.00023s] (7403788775,)
+Sep 06 20:18:20 ubuntu python[127807]: 2025-09-06 20:18:20,343 INFO sqlalchemy.engine.Engine INSERT INTO user_balances (user_id, balance, total_wagered, total_won, total_lost, win_streak, best_streak, total_bets, last_daily_bonus, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Sep 06 20:18:20 ubuntu python[127807]: INSERT INTO user_balances (user_id, balance, total_wagered, total_won, total_lost, win_streak, best_streak, total_bets, last_daily_bonus, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Sep 06 20:18:20 ubuntu python[127807]: 2025-09-06 20:18:20,344 INFO sqlalchemy.engine.Engine [generated in 0.00029s] (7403788775, 1000.0, 0.0, 0.0, 0.0, 0, 0, 0, None, '2025-09-06 20:18:20.343846', '2025-09-06 20:18:20.343849')
+Sep 06 20:18:20 ubuntu python[127807]: [generated in 0.00029s] (7403788775, 1000.0, 0.0, 0.0, 0.0, 0, 0, 0, None, '2025-09-06 20:18:20.343846', '2025-09-06 20:18:20.343849')
+Sep 06 20:18:20 ubuntu python[127807]: 2025-09-06T20:18:20.345319Z [info ] Created new user balance [CryptoService] user_id=7403788775
+Sep 06 20:18:20 ubuntu python[127807]: 2025-09-06 20:18:20,345 INFO sqlalchemy.engine.Engine COMMIT
+Sep 06 20:18:20 ubuntu python[127807]: COMMIT
+Sep 06 20:18:20 ubuntu python[127807]: 2025-09-06 20:18:20,348 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+Sep 06 20:18:20 ubuntu python[127807]: BEGIN (implicit)
+Sep 06 20:18:20 ubuntu python[127807]: 2025-09-06 20:18:20,350 INFO sqlalchemy.engine.Engine UPDATE user_balances SET balance=(user_balances.balance - ?), total_wagered=(user_balances.total_wagered + ?), total_bets=(user_balances.total_bets + ?), updated_at=? WHERE user_balances.user_id = ?
+Sep 06 20:18:20 ubuntu python[127807]: UPDATE user_balances SET balance=(user_balances.balance - ?), total_wagered=(user_balances.total_wagered + ?), total_bets=(user_balances.total_bets + ?), updated_at=? WHERE user_balances.user_id = ?
+Sep 06 20:18:20 ubuntu python[127807]: 2025-09-06 20:18:20,350 INFO sqlalchemy.engine.Engine [generated in 0.00016s] (10.0, 10.0, 1, '2025-09-06 20:18:20.350181', 7403788775)
+Sep 06 20:18:20 ubuntu python[127807]: [generated in 0.00016s] (10.0, 10.0, 1, '2025-09-06 20:18:20.350181', 7403788775)
+Sep 06 20:18:20 ubuntu python[127807]: 2025-09-06 20:18:20,352 INFO sqlalchemy.engine.Engine INSERT INTO crypto_bets (user_id, chat_id, symbol, bet_type, target_price, current_price, amount, multiplier, duration_minutes, expires_at, final_price, status, payout, created_at, resolved_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Sep 06 20:18:20 ubuntu python[127807]: INSERT INTO crypto_bets (user_id, chat_id, symbol, bet_type, target_price, current_price, amount, multiplier, duration_minutes, expires_at, final_price, status, payout, created_at, resolved_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Sep 06 20:18:20 ubuntu python[127807]: 2025-09-06 20:18:20,352 INFO sqlalchemy.engine.Engine [generated in 0.00019s] (7403788775, 7403788775, 'XRP', 'up', None, 0.90187517, 10.0, 2.0, 60, '2025-09-06 21:18:20.348064', None, <BetStatus.PENDING: 'pending'>, 0.0, '2025-09-06 20:18:20.352109', None)
+Sep 06 20:18:20 ubuntu python[127807]: [generated in 0.00019s] (7403788775, 7403788775, 'XRP', 'up', None, 0.90187517, 10.0, 2.0, 60, '2025-09-06 21:18:20.348064', None, <BetStatus.PENDING: 'pending'>, 0.0, '2025-09-06 20:18:20.352109', None)
+Sep 06 20:18:20 ubuntu python[127807]: 2025-09-06T20:18:20.353274Z [info ] Bet placed [CryptoService] amount=10.0 bet_id=1 bet_type=up current_price=0.90187517 symbol=XRP user_id=7403788775
+Sep 06 20:18:20 ubuntu python[127807]: 2025-09-06 20:18:20,353 INFO sqlalchemy.engine.Engine COMMIT
+Sep 06 20:18:20 ubuntu python[127807]: COMMIT
+Sep 06 20:18:22 ubuntu python[127807]: 2025-09-06 20:18:22,780 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+Sep 06 20:18:22 ubuntu python[127807]: BEGIN (implicit)
+Sep 06 20:18:22 ubuntu python[127807]: 2025-09-06 20:18:22,780 INFO sqlalchemy.engine.Engine SELECT user_balances.id, user_balances.user_id, user_balances.balance, user_balances.total_wagered, user_balances.total_won, user_balances.total_lost, user_balances.win_streak, user_balances.best_streak, user_balances.total_bets, user_balances.last_daily_bonus, user_balances.created_at, user_balances.updated_at
+Sep 06 20:18:22 ubuntu python[127807]: FROM user_balances
+Sep 06 20:18:22 ubuntu python[127807]: WHERE user_balances.user_id = ?
+Sep 06 20:18:22 ubuntu python[127807]: SELECT user_balances.id, user_balances.user_id, user_balances.balance, user_balances.total_wagered, user_balances.total_won, user_balances.total_lost, user_balances.win_streak, user_balances.best_streak, user_balances.total_bets, user_balances.last_daily_bonus, user_balances.created_at, user_balances.updated_at
+Sep 06 20:18:22 ubuntu python[127807]: FROM user_balances
+Sep 06 20:18:22 ubuntu python[127807]: WHERE user_balances.user_id = ?
+Sep 06 20:18:22 ubuntu python[127807]: 2025-09-06 20:18:22,780 INFO sqlalchemy.engine.Engine [cached since 2.44s ago] (7403788775,)
+Sep 06 20:18:22 ubuntu python[127807]: [cached since 2.44s ago] (7403788775,)
+Sep 06 20:18:22 ubuntu python[127807]: 2025-09-06 20:18:22,781 INFO sqlalchemy.engine.Engine COMMIT
+Sep 06 20:18:22 ubuntu python[127807]: COMMIT
+Sep 06 20:18:22 ubuntu python[127807]: 2025-09-06 20:18:22,782 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+Sep 06 20:18:22 ubuntu python[127807]: BEGIN (implicit)
+Sep 06 20:18:22 ubuntu python[127807]: 2025-09-06 20:18:22,782 INFO sqlalchemy.engine.Engine UPDATE user_balances SET balance=(user_balances.balance - ?), total_wagered=(user_balances.total_wagered + ?), total_bets=(user_balances.total_bets + ?), updated_at=? WHERE user_balances.user_id = ?
+Sep 06 20:18:22 ubuntu python[127807]: UPDATE user_balances SET balance=(user_balances.balance - ?), total_wagered=(user_balances.total_wagered + ?), total_bets=(user_balances.total_bets + ?), updated_at=? WHERE user_balances.user_id = ?
+Sep 06 20:18:22 ubuntu python[127807]: 2025-09-06 20:18:22,782 INFO sqlalchemy.engine.Engine [cached since 2.433s ago] (10.0, 10.0, 1, '2025-09-06 20:18:22.782589', 7403788775)
+Sep 06 20:18:22 ubuntu python[127807]: [cached since 2.433s ago] (10.0, 10.0, 1, '2025-09-06 20:18:22.782589', 7403788775)
+Sep 06 20:18:22 ubuntu python[127807]: 2025-09-06 20:18:22,783 INFO sqlalchemy.engine.Engine INSERT INTO crypto_bets (user_id, chat_id, symbol, bet_type, target_price, current_price, amount, multiplier, duration_minutes, expires_at, final_price, status, payout, created_at, resolved_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Sep 06 20:18:22 ubuntu python[127807]: INSERT INTO crypto_bets (user_id, chat_id, symbol, bet_type, target_price, current_price, amount, multiplier, duration_minutes, expires_at, final_price, status, payout, created_at, resolved_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Sep 06 20:18:22 ubuntu python[127807]: 2025-09-06 20:18:22,783 INFO sqlalchemy.engine.Engine [cached since 2.432s ago] (7403788775, 7403788775, 'XRP', 'down', None, 0.90187517, 10.0, 2.0, 60, '2025-09-06 21:18:22.781828', None, <BetStatus.PENDING: 'pending'>, 0.0, '2025-09-06 20:18:22.783542', None)
+Sep 06 20:18:22 ubuntu python[127807]: [cached since 2.432s ago] (7403788775, 7403788775, 'XRP', 'down', None, 0.90187517, 10.0, 2.0, 60, '2025-09-06 21:18:22.781828', None, <BetStatus.PENDING: 'pending'>, 0.0, '2025-09-06 20:18:22.783542', None)
+Sep 06 20:18:22 ubuntu python[127807]: 2025-09-06T20:18:22.784159Z [info ] Bet placed [CryptoService] amount=10.0 bet_id=2 bet_type=down current_price=0.90187517 symbol=XRP user_id=7403788775
+Sep 06 20:18:22 ubuntu python[127807]: 2025-09-06 20:18:22,784 INFO sqlalchemy.engine.Engine COMMIT
+Sep 06 20:18:22 ubuntu python[127807]: COMMIT
+Sep 06 20:18:29 ubuntu python[127807]: 2025-09-06 20:18:29,922 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+Sep 06 20:18:29 ubuntu python[127807]: BEGIN (implicit)
+Sep 06 20:18:29 ubuntu python[127807]: 2025-09-06 20:18:29,923 INFO sqlalchemy.engine.Engine SELECT user_balances.id, user_balances.user_id, user_balances.balance, user_balances.total_wagered, user_balances.total_won, user_balances.total_lost, user_balances.win_streak, user_balances.best_streak, user_balances.total_bets, user_balances.last_daily_bonus, user_balances.created_at, user_balances.updated_at
+Sep 06 20:18:29 ubuntu python[127807]: FROM user_balances
+Sep 06 20:18:29 ubuntu python[127807]: WHERE user_balances.user_id = ?
+Sep 06 20:18:29 ubuntu python[127807]: SELECT user_balances.id, user_balances.user_id, user_balances.balance, user_balances.total_wagered, user_balances.total_won, user_balances.total_lost, user_balances.win_streak, user_balances.best_streak, user_balances.total_bets, user_balances.last_daily_bonus, user_balances.created_at, user_balances.updated_at
+Sep 06 20:18:29 ubuntu python[127807]: FROM user_balances
+Sep 06 20:18:29 ubuntu python[127807]: WHERE user_balances.user_id = ?
+Sep 06 20:18:29 ubuntu python[127807]: 2025-09-06 20:18:29,923 INFO sqlalchemy.engine.Engine [cached since 9.583s ago] (7403788775,)
+Sep 06 20:18:29 ubuntu python[127807]: [cached since 9.583s ago] (7403788775,)
+Sep 06 20:18:29 ubuntu python[127807]: 2025-09-06 20:18:29,924 INFO sqlalchemy.engine.Engine COMMIT
+Sep 06 20:18:29 ubuntu python[127807]: COMMIT
+Sep 06 20:19:27 ubuntu python[127807]: 2025-09-06T20:19:27.153636Z [info ] Message received [bot.handlers.messages] message_length=9 user_id=1045157047 username=Yaboyhabibs
+Sep 06 20:19:27 ubuntu python[127807]: 2025-09-06 20:19:27,154 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+Sep 06 20:19:27 ubuntu python[127807]: BEGIN (implicit)
+Sep 06 20:19:27 ubuntu python[127807]: 2025-09-06 20:19:27,154 INFO sqlalchemy.engine.Engine SELECT users.id, users.telegram_id, users.username, users.first_name, users.last_name, users.is_active, users.is_admin, users.created_at, users.updated_at
+Sep 06 20:19:27 ubuntu python[127807]: FROM users
+Sep 06 20:19:27 ubuntu python[127807]: WHERE users.telegram_id = ?
+Sep 06 20:19:27 ubuntu python[127807]: SELECT users.id, users.telegram_id, users.username, users.first_name, users.last_name, users.is_active, users.is_admin, users.created_at, users.updated_at
+Sep 06 20:19:27 ubuntu python[127807]: FROM users
+Sep 06 20:19:27 ubuntu python[127807]: WHERE users.telegram_id = ?
+Sep 06 20:19:27 ubuntu python[127807]: 2025-09-06 20:19:27,154 INFO sqlalchemy.engine.Engine [cached since 323.7s ago] (1045157047,)
+Sep 06 20:19:27 ubuntu python[127807]: [cached since 323.7s ago] (1045157047,)
+Sep 06 20:19:27 ubuntu python[127807]: 2025-09-06T20:19:27.156339Z [info ] User updated [UserService] telegram_id=1045157047 user_id=3 username=Yaboyhabibs
+Sep 06 20:19:27 ubuntu python[127807]: 2025-09-06 20:19:27,156 INFO sqlalchemy.engine.Engine UPDATE users SET updated_at=? WHERE users.id = ?
+Sep 06 20:19:27 ubuntu python[127807]: UPDATE users SET updated_at=? WHERE users.id = ?
+Sep 06 20:19:27 ubuntu python[127807]: 2025-09-06 20:19:27,156 INFO sqlalchemy.engine.Engine [cached since 323.7s ago] ('2025-09-06 20:19:27.156293', 3)
+Sep 06 20:19:27 ubuntu python[127807]: [cached since 323.7s ago] ('2025-09-06 20:19:27.156293', 3)
+Sep 06 20:19:27 ubuntu python[127807]: 2025-09-06 20:19:27,157 INFO sqlalchemy.engine.Engine COMMIT
+Sep 06 20:19:27 ubuntu python[127807]: COMMIT
+Sep 06 20:19:27 ubuntu python[127807]: 2025-09-06 20:19:27,160 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+Sep 06 20:19:27 ubuntu python[127807]: BEGIN (implicit)
+Sep 06 20:19:27 ubuntu python[127807]: 2025-09-06 20:19:27,160 INFO sqlalchemy.engine.Engine INSERT INTO messages (telegram_message_id, user_id, chat_id, text, message_type, created_at) VALUES (?, ?, ?, ?, ?, ?)
+Sep 06 20:19:27 ubuntu python[127807]: INSERT INTO messages (telegram_message_id, user_id, chat_id, text, message_type, created_at) VALUES (?, ?, ?, ?, ?, ?)
+Sep 06 20:19:27 ubuntu python[127807]: 2025-09-06 20:19:27,160 INFO sqlalchemy.engine.Engine [cached since 316.2s ago] (0, 1045157047, -1002570688884, '@FMLBeast', 'text', '2025-09-06 20:19:27.160838')
+Sep 06 20:19:27 ubuntu python[127807]: [cached since 316.2s ago] (0, 1045157047, -1002570688884, '@FMLBeast', 'text', '2025-09-06 20:19:27.160838')
+Sep 06 20:19:27 ubuntu python[127807]: 2025-09-06 20:19:27,161 INFO sqlalchemy.engine.Engine COMMIT
+Sep 06 20:19:27 ubuntu python[127807]: COMMIT
+Sep 06 20:19:37 ubuntu python[127807]: 2025-09-06T20:19:37.194308Z [info ] Message received [bot.handlers.messages] message_length=539 user_id=1045157047 username=Yaboyhabibs
+Sep 06 20:19:37 ubuntu python[127807]: 2025-09-06 20:19:37,194 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+Sep 06 20:19:37 ubuntu python[127807]: BEGIN (implicit)
+Sep 06 20:19:37 ubuntu python[127807]: 2025-09-06 20:19:37,195 INFO sqlalchemy.engine.Engine SELECT users.id, users.telegram_id, users.username, users.first_name, users.last_name, users.is_active, users.is_admin, users.created_at, users.updated_at
+Sep 06 20:19:37 ubuntu python[127807]: FROM users
+Sep 06 20:19:37 ubuntu python[127807]: WHERE users.telegram_id = ?
+Sep 06 20:19:37 ubuntu python[127807]: SELECT users.id, users.telegram_id, users.username, users.first_name, users.last_name, users.is_active, users.is_admin, users.created_at, users.updated_at
+Sep 06 20:19:37 ubuntu python[127807]: FROM users
+Sep 06 20:19:37 ubuntu python[127807]: WHERE users.telegram_id = ?
+Sep 06 20:19:37 ubuntu python[127807]: 2025-09-06 20:19:37,195 INFO sqlalchemy.engine.Engine [cached since 333.8s ago] (1045157047,)
+Sep 06 20:19:37 ubuntu python[127807]: [cached since 333.8s ago] (1045157047,)
+Sep 06 20:19:37 ubuntu python[127807]: 2025-09-06T20:19:37.196821Z [info ] User updated [UserService] telegram_id=1045157047 user_id=3 username=Yaboyhabibs
+Sep 06 20:19:37 ubuntu python[127807]: 2025-09-06 20:19:37,197 INFO sqlalchemy.engine.Engine UPDATE users SET updated_at=? WHERE users.id = ?
+Sep 06 20:19:37 ubuntu python[127807]: UPDATE users SET updated_at=? WHERE users.id = ?
+Sep 06 20:19:37 ubuntu python[127807]: 2025-09-06 20:19:37,197 INFO sqlalchemy.engine.Engine [cached since 333.8s ago] ('2025-09-06 20:19:37.196776', 3)
+Sep 06 20:19:37 ubuntu python[127807]: [cached since 333.8s ago] ('2025-09-06 20:19:37.196776', 3)
+Sep 06 20:19:37 ubuntu python[127807]: 2025-09-06 20:19:37,197 INFO sqlalchemy.engine.Engine COMMIT
+Sep 06 20:19:37 ubuntu python[127807]: COMMIT
+Sep 06 20:19:37 ubuntu python[127807]: 2025-09-06 20:19:37,200 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+Sep 06 20:19:37 ubuntu python[127807]: BEGIN (implicit)
+Sep 06 20:19:37 ubuntu python[127807]: 2025-09-06 20:19:37,200 INFO sqlalchemy.engine.Engine INSERT INTO messages (telegram_message_id, user_id, chat_id, text, message_type, created_at) VALUES (?, ?, ?, ?, ?, ?)
+Sep 06 20:19:37 ubuntu python[127807]: INSERT INTO messages (telegram_message_id, user_id, chat_id, text, message_type, created_at) VALUES (?, ?, ?, ?, ?, ?)
+Sep 06 20:19:37 ubuntu python[127807]: 2025-09-06 20:19:37,200 INFO sqlalchemy.engine.Engine [cached since 326.2s ago] (0, 1045157047, -1002570688884, 'Chain 3 (Starting from 0x7)\n\nInitial terms: 0x7, 0xe (implied doubling), 0x15\nSequence from list: 0x15, 0x4c, 0x483, 0x556e52, 0x4b5f8303e9, 0x6bd ... (251 characters truncated) ... 50cf (large gap)\nForward: 0x7, 0xe, 0x15, 0x23, 0x38, 0x5b, 0x93, 0xee, 0x181, 0x26f, 0x3f0, 0x65f, 0xa4f, 0x60f4d11574f5deee49961d9609ac6 (matches)', 'text', '2025-09-06 20:19:37.200667')
+Sep 06 20:19:37 ubuntu python[127807]: [cached since 326.2s ago] (0, 1045157047, -1002570688884, 'Chain 3 (Starting from 0x7)\n\nInitial terms: 0x7, 0xe (implied doubling), 0x15\nSequence from list: 0x15, 0x4c, 0x483, 0x556e52, 0x4b5f8303e9, 0x6bd ... (251 characters truncated) ... 50cf (large gap)\nForward: 0x7, 0xe, 0x15, 0x23, 0x38, 0x5b, 0x93, 0xee, 0x181, 0x26f, 0x3f0, 0x65f, 0xa4f, 0x60f4d11574f5deee49961d9609ac6 (matches)', 'text', '2025-09-06 20:19:37.200667')
+Sep 06 20:19:37 ubuntu python[127807]: 2025-09-06 20:19:37,201 INFO sqlalchemy.engine.Engine COMMIT
+Sep 06 20:19:37 ubuntu python[127807]: COMMIT
+Sep 06 20:21:54 ubuntu python[127807]: 2025-09-06T20:21:54.101300Z [info ] Message received [bot.handlers.messages] message_length=30 user_id=1045157047 username=Yaboyhabibs
+Sep 06 20:21:54 ubuntu python[127807]: 2025-09-06 20:21:54,103 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+Sep 06 20:21:54 ubuntu python[127807]: BEGIN (implicit)
+Sep 06 20:21:54 ubuntu python[127807]: 2025-09-06 20:21:54,104 INFO sqlalchemy.engine.Engine SELECT users.id, users.telegram_id, users.username, users.first_name, users.last_name, users.is_active, users.is_admin, users.created_at, users.updated_at
+Sep 06 20:21:54 ubuntu python[127807]: FROM users
+Sep 06 20:21:54 ubuntu python[127807]: WHERE users.telegram_id = ?
+Sep 06 20:21:54 ubuntu python[127807]: SELECT users.id, users.telegram_id, users.username, users.first_name, users.last_name, users.is_active, users.is_admin, users.created_at, users.updated_at
+Sep 06 20:21:54 ubuntu python[127807]: FROM users
+Sep 06 20:21:54 ubuntu python[127807]: WHERE users.telegram_id = ?
+Sep 06 20:21:54 ubuntu python[127807]: 2025-09-06 20:21:54,104 INFO sqlalchemy.engine.Engine [cached since 470.7s ago] (1045157047,)
+Sep 06 20:21:54 ubuntu python[127807]: [cached since 470.7s ago] (1045157047,)
+Sep 06 20:21:54 ubuntu python[127807]: 2025-09-06T20:21:54.106431Z [info ] User updated [UserService] telegram_id=1045157047 user_id=3 username=Yaboyhabibs
+Sep 06 20:21:54 ubuntu python[127807]: 2025-09-06 20:21:54,107 INFO sqlalchemy.engine.Engine UPDATE users SET updated_at=? WHERE users.id = ?
+Sep 06 20:21:54 ubuntu python[127807]: UPDATE users SET updated_at=? WHERE users.id = ?
+Sep 06 20:21:54 ubuntu python[127807]: 2025-09-06 20:21:54,107 INFO sqlalchemy.engine.Engine [cached since 470.7s ago] ('2025-09-06 20:21:54.106334', 3)
+Sep 06 20:21:54 ubuntu python[127807]: [cached since 470.7s ago] ('2025-09-06 20:21:54.106334', 3)
+Sep 06 20:21:54 ubuntu python[127807]: 2025-09-06 20:21:54,107 INFO sqlalchemy.engine.Engine COMMIT
+Sep 06 20:21:54 ubuntu python[127807]: COMMIT
+Sep 06 20:21:54 ubuntu python[127807]: 2025-09-06 20:21:54,111 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+Sep 06 20:21:54 ubuntu python[127807]: BEGIN (implicit)
+Sep 06 20:21:54 ubuntu python[127807]: 2025-09-06 20:21:54,111 INFO sqlalchemy.engine.Engine INSERT INTO messages (telegram_message_id, user_id, chat_id, text, message_type, created_at) VALUES (?, ?, ?, ?, ?, ?)
+Sep 06 20:21:54 ubuntu python[127807]: INSERT INTO messages (telegram_message_id, user_id, chat_id, text, message_type, created_at) VALUES (?, ?, ?, ?, ?, ?)
+Sep 06 20:21:54 ubuntu python[127807]: 2025-09-06 20:21:54,111 INFO sqlalchemy.engine.Engine [cached since 463.1s ago] (0, 1045157047, -1002570688884, 'b10f22572c497a836ea187f2e1fc23', 'text', '2025-09-06 20:21:54.111340')
+Sep 06 20:21:54 ubuntu python[127807]: [cached since 463.1s ago] (0, 1045157047, -1002570688884, 'b10f22572c497a836ea187f2e1fc23', 'text', '2025-09-06 20:21:54.111340')
+Sep 06 20:21:54 ubuntu python[127807]: 2025-09-06 20:21:54,112 INFO sqlalchemy.engine.Engine COMMIT
+Sep 06 20:21:54 ubuntu python[127807]: COMMIT
+Sep 06 20:22:31 ubuntu python[127807]: 2025-09-06T20:22:31.450372Z [info ] Message received [bot.handlers.messages] message_length=34 user_id=1045157047 username=Yaboyhabibs
+Sep 06 20:22:31 ubuntu python[127807]: 2025-09-06 20:22:31,452 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+Sep 06 20:22:31 ubuntu python[127807]: BEGIN (implicit)
+Sep 06 20:22:31 ubuntu python[127807]: 2025-09-06 20:22:31,453 INFO sqlalchemy.engine.Engine SELECT users.id, users.telegram_id, users.username, users.first_name, users.last_name, users.is_active, users.is_admin, users.created_at, users.updated_at
+Sep 06 20:22:31 ubuntu python[127807]: FROM users
+Sep 06 20:22:31 ubuntu python[127807]: WHERE users.telegram_id = ?
+Sep 06 20:22:31 ubuntu python[127807]: SELECT users.id, users.telegram_id, users.username, users.first_name, users.last_name, users.is_active, users.is_admin, users.created_at, users.updated_at
+Sep 06 20:22:31 ubuntu python[127807]: FROM users
+Sep 06 20:22:31 ubuntu python[127807]: WHERE users.telegram_id = ?
+Sep 06 20:22:31 ubuntu python[127807]: 2025-09-06 20:22:31,453 INFO sqlalchemy.engine.Engine [cached since 508s ago] (1045157047,)
+Sep 06 20:22:31 ubuntu python[127807]: [cached since 508s ago] (1045157047,)
+Sep 06 20:22:31 ubuntu python[127807]: 2025-09-06T20:22:31.455418Z [info ] User updated [UserService] telegram_id=1045157047 user_id=3 username=Yaboyhabibs
+Sep 06 20:22:31 ubuntu python[127807]: 2025-09-06 20:22:31,456 INFO sqlalchemy.engine.Engine UPDATE users SET updated_at=? WHERE users.id = ?
+Sep 06 20:22:31 ubuntu python[127807]: UPDATE users SET updated_at=? WHERE users.id = ?
+Sep 06 20:22:31 ubuntu python[127807]: 2025-09-06 20:22:31,456 INFO sqlalchemy.engine.Engine [cached since 508s ago] ('2025-09-06 20:22:31.455266', 3)
+Sep 06 20:22:31 ubuntu python[127807]: [cached since 508s ago] ('2025-09-06 20:22:31.455266', 3)
+Sep 06 20:22:31 ubuntu python[127807]: 2025-09-06 20:22:31,456 INFO sqlalchemy.engine.Engine COMMIT
+Sep 06 20:22:31 ubuntu python[127807]: COMMIT
+Sep 06 20:22:31 ubuntu python[127807]: 2025-09-06 20:22:31,459 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+Sep 06 20:22:31 ubuntu python[127807]: BEGIN (implicit)
+Sep 06 20:22:31 ubuntu python[127807]: 2025-09-06 20:22:31,460 INFO sqlalchemy.engine.Engine INSERT INTO messages (telegram_message_id, user_id, chat_id, text, message_type, created_at) VALUES (?, ?, ?, ?, ?, ?)
+Sep 06 20:22:31 ubuntu python[127807]: INSERT INTO messages (telegram_message_id, user_id, chat_id, text, message_type, created_at) VALUES (?, ?, ?, ?, ?, ?)
+Sep 06 20:22:31 ubuntu python[127807]: 2025-09-06 20:22:31,460 INFO sqlalchemy.engine.Engine [cached since 500.5s ago] (0, 1045157047, -1002570688884, 'the extension operation looks like', 'text', '2025-09-06 20:22:31.460207')
+Sep 06 20:22:31 ubuntu python[127807]: [cached since 500.5s ago] (0, 1045157047, -1002570688884, 'the extension operation looks like', 'text', '2025-09-06 20:22:31.460207')
+Sep 06 20:22:31 ubuntu python[127807]: 2025-09-06 20:22:31,460 INFO sqlalchemy.engine.Engine COMMIT
+Sep 06 20:22:31 ubuntu python[127807]: COMMIT
+Sep 06 20:23:46 ubuntu python[127807]: 2025-09-06T20:23:46.398540Z [info ] Message received [bot.handlers.messages] message_length=29 user_id=1045157047 username=Yaboyhabibs
+Sep 06 20:23:46 ubuntu python[127807]: 2025-09-06 20:23:46,399 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+Sep 06 20:23:46 ubuntu python[127807]: BEGIN (implicit)
+Sep 06 20:23:46 ubuntu python[127807]: 2025-09-06 20:23:46,399 INFO sqlalchemy.engine.Engine SELECT users.id, users.telegram_id, users.username, users.first_name, users.last_name, users.is_active, users.is_admin, users.created_at, users.updated_at
+Sep 06 20:23:46 ubuntu python[127807]: FROM users
+Sep 06 20:23:46 ubuntu python[127807]: WHERE users.telegram_id = ?
+Sep 06 20:23:46 ubuntu python[127807]: SELECT users.id, users.telegram_id, users.username, users.first_name, users.last_name, users.is_active, users.is_admin, users.created_at, users.updated_at
+Sep 06 20:23:46 ubuntu python[127807]: FROM users
+Sep 06 20:23:46 ubuntu python[127807]: WHERE users.telegram_id = ?
+Sep 06 20:23:46 ubuntu python[127807]: 2025-09-06 20:23:46,400 INFO sqlalchemy.engine.Engine [cached since 583s ago] (1045157047,)
+Sep 06 20:23:46 ubuntu python[127807]: [cached since 583s ago] (1045157047,)
+Sep 06 20:23:46 ubuntu python[127807]: 2025-09-06T20:23:46.401795Z [info ] User updated [UserService] telegram_id=1045157047 user_id=3 username=Yaboyhabibs
+Sep 06 20:23:46 ubuntu python[127807]: 2025-09-06 20:23:46,402 INFO sqlalchemy.engine.Engine UPDATE users SET updated_at=? WHERE users.id = ?
+Sep 06 20:23:46 ubuntu python[127807]: UPDATE users SET updated_at=? WHERE users.id = ?
+Sep 06 20:23:46 ubuntu python[127807]: 2025-09-06 20:23:46,402 INFO sqlalchemy.engine.Engine [cached since 583s ago] ('2025-09-06 20:23:46.401746', 3)
+Sep 06 20:23:46 ubuntu python[127807]: [cached since 583s ago] ('2025-09-06 20:23:46.401746', 3)
+Sep 06 20:23:46 ubuntu python[127807]: 2025-09-06 20:23:46,402 INFO sqlalchemy.engine.Engine COMMIT
+Sep 06 20:23:46 ubuntu python[127807]: COMMIT
+Sep 06 20:23:46 ubuntu python[127807]: 2025-09-06 20:23:46,405 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+Sep 06 20:23:46 ubuntu python[127807]: BEGIN (implicit)
+Sep 06 20:23:46 ubuntu python[127807]: 2025-09-06 20:23:46,405 INFO sqlalchemy.engine.Engine INSERT INTO messages (telegram_message_id, user_id, chat_id, text, message_type, created_at) VALUES (?, ?, ?, ?, ?, ?)
+Sep 06 20:23:46 ubuntu python[127807]: INSERT INTO messages (telegram_message_id, user_id, chat_id, text, message_type, created_at) VALUES (?, ?, ?, ?, ?, ?)
+Sep 06 20:23:46 ubuntu python[127807]: 2025-09-06 20:23:46,405 INFO sqlalchemy.engine.Engine [cached since 575.4s ago] (0, 1045157047, -1002570688884, 'and ends up landing on target', 'text', '2025-09-06 20:23:46.405792')
+Sep 06 20:23:46 ubuntu python[127807]: [cached since 575.4s ago] (0, 1045157047, -1002570688884, 'and ends up landing on target', 'text', '2025-09-06 20:23:46.405792')
+Sep 06 20:23:46 ubuntu python[127807]: 2025-09-06 20:23:46,406 INFO sqlalchemy.engine.Engine COMMIT
+Sep 06 20:23:46 ubuntu python[127807]: COMMIT
+Sep 06 20:26:20 ubuntu python[127807]: 2025-09-06T20:26:20.789062Z [info ] Message received [bot.handlers.messages] message_length=6 user_id=1045157047 username=Yaboyhabibs
+Sep 06 20:26:20 ubuntu python[127807]: 2025-09-06 20:26:20,792 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+Sep 06 20:26:20 ubuntu python[127807]: BEGIN (implicit)
+Sep 06 20:26:20 ubuntu python[127807]: 2025-09-06 20:26:20,793 INFO sqlalchemy.engine.Engine SELECT users.id, users.telegram_id, users.username, users.first_name, users.last_name, users.is_active, users.is_admin, users.created_at, users.updated_at
+Sep 06 20:26:20 ubuntu python[127807]: FROM users
+Sep 06 20:26:20 ubuntu python[127807]: WHERE users.telegram_id = ?
+Sep 06 20:26:20 ubuntu python[127807]: SELECT users.id, users.telegram_id, users.username, users.first_name, users.last_name, users.is_active, users.is_admin, users.created_at, users.updated_at
+Sep 06 20:26:20 ubuntu python[127807]: FROM users
+Sep 06 20:26:20 ubuntu python[127807]: WHERE users.telegram_id = ?
+Sep 06 20:26:20 ubuntu python[127807]: 2025-09-06 20:26:20,793 INFO sqlalchemy.engine.Engine [cached since 737.4s ago] (1045157047,)
+Sep 06 20:26:20 ubuntu python[127807]: [cached since 737.4s ago] (1045157047,)
+Sep 06 20:26:20 ubuntu python[127807]: 2025-09-06T20:26:20.797104Z [info ] User updated [UserService] telegram_id=1045157047 user_id=3 username=Yaboyhabibs
+Sep 06 20:26:20 ubuntu python[127807]: 2025-09-06 20:26:20,805 INFO sqlalchemy.engine.Engine UPDATE users SET updated_at=? WHERE users.id = ?
+Sep 06 20:26:20 ubuntu python[127807]: UPDATE users SET updated_at=? WHERE users.id = ?
+Sep 06 20:26:20 ubuntu python[127807]: 2025-09-06 20:26:20,805 INFO sqlalchemy.engine.Engine [cached since 737.4s ago] ('2025-09-06 20:26:20.796845', 3)
+Sep 06 20:26:20 ubuntu python[127807]: [cached since 737.4s ago] ('2025-09-06 20:26:20.796845', 3)
+Sep 06 20:26:20 ubuntu python[127807]: 2025-09-06 20:26:20,806 INFO sqlalchemy.engine.Engine COMMIT
+Sep 06 20:26:20 ubuntu python[127807]: COMMIT
+Sep 06 20:26:20 ubuntu python[127807]: 2025-09-06 20:26:20,810 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+Sep 06 20:26:20 ubuntu python[127807]: BEGIN (implicit)
+Sep 06 20:26:20 ubuntu python[127807]: 2025-09-06 20:26:20,810 INFO sqlalchemy.engine.Engine INSERT INTO messages (telegram_message_id, user_id, chat_id, text, message_type, created_at) VALUES (?, ?, ?, ?, ?, ?)
+Sep 06 20:26:20 ubuntu python[127807]: INSERT INTO messages (telegram_message_id, user_id, chat_id, text, message_type, created_at) VALUES (?, ?, ?, ?, ?, ?)
+Sep 06 20:26:20 ubuntu python[127807]: 2025-09-06 20:26:20,810 INFO sqlalchemy.engine.Engine [cached since 729.8s ago] (0, 1045157047, -1002570688884, 'BTCGOD', 'text', '2025-09-06 20:26:20.810803')
+Sep 06 20:26:20 ubuntu python[127807]: [cached since 729.8s ago] (0, 1045157047, -1002570688884, 'BTCGOD', 'text', '2025-09-06 20:26:20.810803')
+Sep 06 20:26:20 ubuntu python[127807]: 2025-09-06 20:26:20,811 INFO sqlalchemy.engine.Engine COMMIT
+Sep 06 20:26:20 ubuntu python[127807]: COMMIT
+Sep 06 20:27:56 ubuntu python[127807]: 2025-09-06T20:27:56.731513Z [info ] Message received [bot.handlers.messages] message_length=30 user_id=7403788775 username=FMLBeast
+Sep 06 20:27:56 ubuntu python[127807]: 2025-09-06 20:27:56,732 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+Sep 06 20:27:56 ubuntu python[127807]: BEGIN (implicit)
+Sep 06 20:27:56 ubuntu python[127807]: 2025-09-06 20:27:56,732 INFO sqlalchemy.engine.Engine SELECT users.id, users.telegram_id, users.username, users.first_name, users.last_name, users.is_active, users.is_admin, users.created_at, users.updated_at
+Sep 06 20:27:56 ubuntu python[127807]: FROM users
+Sep 06 20:27:56 ubuntu python[127807]: WHERE users.telegram_id = ?
+Sep 06 20:27:56 ubuntu python[127807]: SELECT users.id, users.telegram_id, users.username, users.first_name, users.last_name, users.is_active, users.is_admin, users.created_at, users.updated_at
+Sep 06 20:27:56 ubuntu python[127807]: FROM users
+Sep 06 20:27:56 ubuntu python[127807]: WHERE users.telegram_id = ?
+Sep 06 20:27:56 ubuntu python[127807]: 2025-09-06 20:27:56,732 INFO sqlalchemy.engine.Engine [cached since 833.3s ago] (7403788775,)
+Sep 06 20:27:56 ubuntu python[127807]: [cached since 833.3s ago] (7403788775,)
+Sep 06 20:27:56 ubuntu python[127807]: 2025-09-06T20:27:56.734622Z [info ] User updated [UserService] telegram_id=7403788775 user_id=1 username=FMLBeast
+Sep 06 20:27:56 ubuntu python[127807]: 2025-09-06 20:27:56,735 INFO sqlalchemy.engine.Engine UPDATE users SET updated_at=? WHERE users.id = ?
+Sep 06 20:27:56 ubuntu python[127807]: UPDATE users SET updated_at=? WHERE users.id = ?
+Sep 06 20:27:56 ubuntu python[127807]: 2025-09-06 20:27:56,735 INFO sqlalchemy.engine.Engine [cached since 833.3s ago] ('2025-09-06 20:27:56.734571', 1)
+Sep 06 20:27:56 ubuntu python[127807]: [cached since 833.3s ago] ('2025-09-06 20:27:56.734571', 1)
+Sep 06 20:27:56 ubuntu python[127807]: 2025-09-06 20:27:56,735 INFO sqlalchemy.engine.Engine COMMIT
+Sep 06 20:27:56 ubuntu python[127807]: COMMIT
+Sep 06 20:27:56 ubuntu python[127807]: 2025-09-06 20:27:56,738 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+Sep 06 20:27:56 ubuntu python[127807]: BEGIN (implicit)
+Sep 06 20:27:56 ubuntu python[127807]: 2025-09-06 20:27:56,738 INFO sqlalchemy.engine.Engine INSERT INTO messages (telegram_message_id, user_id, chat_id, text, message_type, created_at) VALUES (?, ?, ?, ?, ?, ?)
+Sep 06 20:27:56 ubuntu python[127807]: INSERT INTO messages (telegram_message_id, user_id, chat_id, text, message_type, created_at) VALUES (?, ?, ?, ?, ?, ?)
+Sep 06 20:27:56 ubuntu python[127807]: 2025-09-06 20:27:56,738 INFO sqlalchemy.engine.Engine [cached since 825.7s ago] (0, 7403788775, -1002570688884, 'okay gimme some digestion time', 'text', '2025-09-06 20:27:56.738559')
+Sep 06 20:27:56 ubuntu python[127807]: [cached since 825.7s ago] (0, 7403788775, -1002570688884, 'okay gimme some digestion time', 'text', '2025-09-06 20:27:56.738559')
+Sep 06 20:27:56 ubuntu python[127807]: 2025-09-06 20:27:56,739 INFO sqlalchemy.engine.Engine COMMIT
+Sep 06 20:27:56 ubuntu python[127807]: COMMIT
+Sep 06 20:28:22 ubuntu python[127807]: 2025-09-06T20:28:22.887516Z [info ] Message received [bot.handlers.messages] message_length=9 user_id=1045157047 username=Yaboyhabibs
+Sep 06 20:28:22 ubuntu python[127807]: 2025-09-06 20:28:22,888 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+Sep 06 20:28:22 ubuntu python[127807]: BEGIN (implicit)
+Sep 06 20:28:22 ubuntu python[127807]: 2025-09-06 20:28:22,888 INFO sqlalchemy.engine.Engine SELECT users.id, users.telegram_id, users.username, users.first_name, users.last_name, users.is_active, users.is_admin, users.created_at, users.updated_at
+Sep 06 20:28:22 ubuntu python[127807]: FROM users
+Sep 06 20:28:22 ubuntu python[127807]: WHERE users.telegram_id = ?
+Sep 06 20:28:22 ubuntu python[127807]: SELECT users.id, users.telegram_id, users.username, users.first_name, users.last_name, users.is_active, users.is_admin, users.created_at, users.updated_at
+Sep 06 20:28:22 ubuntu python[127807]: FROM users
+Sep 06 20:28:22 ubuntu python[127807]: WHERE users.telegram_id = ?
+Sep 06 20:28:22 ubuntu python[127807]: 2025-09-06 20:28:22,888 INFO sqlalchemy.engine.Engine [cached since 859.5s ago] (1045157047,)
+Sep 06 20:28:22 ubuntu python[127807]: [cached since 859.5s ago] (1045157047,)
+Sep 06 20:28:22 ubuntu python[127807]: 2025-09-06T20:28:22.890296Z [info ] User updated [UserService] telegram_id=1045157047 user_id=3 username=Yaboyhabibs
+Sep 06 20:28:22 ubuntu python[127807]: 2025-09-06 20:28:22,890 INFO sqlalchemy.engine.Engine UPDATE users SET updated_at=? WHERE users.id = ?
+Sep 06 20:28:22 ubuntu python[127807]: UPDATE users SET updated_at=? WHERE users.id = ?
+Sep 06 20:28:22 ubuntu python[127807]: 2025-09-06 20:28:22,890 INFO sqlalchemy.engine.Engine [cached since 859.5s ago] ('2025-09-06 20:28:22.890249', 3)
+Sep 06 20:28:22 ubuntu python[127807]: [cached since 859.5s ago] ('2025-09-06 20:28:22.890249', 3)
+Sep 06 20:28:22 ubuntu python[127807]: 2025-09-06 20:28:22,891 INFO sqlalchemy.engine.Engine COMMIT
+Sep 06 20:28:22 ubuntu python[127807]: COMMIT
+Sep 06 20:28:22 ubuntu python[127807]: 2025-09-06 20:28:22,894 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+Sep 06 20:28:22 ubuntu python[127807]: BEGIN (implicit)
+Sep 06 20:28:22 ubuntu python[127807]: 2025-09-06 20:28:22,894 INFO sqlalchemy.engine.Engine INSERT INTO messages (telegram_message_id, user_id, chat_id, text, message_type, created_at) VALUES (?, ?, ?, ?, ?, ?)
+Sep 06 20:28:22 ubuntu python[127807]: INSERT INTO messages (telegram_message_id, user_id, chat_id, text, message_type, created_at) VALUES (?, ?, ?, ?, ?, ?)
+Sep 06 20:28:22 ubuntu python[127807]: 2025-09-06 20:28:22,894 INFO sqlalchemy.engine.Engine [cached since 851.9s ago] (0, 1045157047, -1002570688884, 'sweet bro', 'text', '2025-09-06 20:28:22.894229')
+Sep 06 20:28:22 ubuntu python[127807]: [cached since 851.9s ago] (0, 1045157047, -1002570688884, 'sweet bro', 'text', '2025-09-06 20:28:22.894229')
+Sep 06 20:28:22 ubuntu python[127807]: 2025-09-06 20:28:22,894 INFO sqlalchemy.engine.Engine COMMIT
+Sep 06 20:28:22 ubuntu python[127807]: COMMIT
+Sep 06 20:28:37 ubuntu python[127807]: 2025-09-06T20:28:37.112469Z [info ] Message received [bot.handlers.messages] message_length=68 user_id=1045157047 username=Yaboyhabibs
+Sep 06 20:28:37 ubuntu python[127807]: 2025-09-06 20:28:37,113 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+Sep 06 20:28:37 ubuntu python[127807]: BEGIN (implicit)
+Sep 06 20:28:37 ubuntu python[127807]: 2025-09-06 20:28:37,113 INFO sqlalchemy.engine.Engine SELECT users.id, users.telegram_id, users.username, users.first_name, users.last_name, users.is_active, users.is_admin, users.created_at, users.updated_at
+Sep 06 20:28:37 ubuntu python[127807]: FROM users
+Sep 06 20:28:37 ubuntu python[127807]: WHERE users.telegram_id = ?
+Sep 06 20:28:37 ubuntu python[127807]: SELECT users.id, users.telegram_id, users.username, users.first_name, users.last_name, users.is_active, users.is_admin, users.created_at, users.updated_at
+Sep 06 20:28:37 ubuntu python[127807]: FROM users
+Sep 06 20:28:37 ubuntu python[127807]: WHERE users.telegram_id = ?
+Sep 06 20:28:37 ubuntu python[127807]: 2025-09-06 20:28:37,113 INFO sqlalchemy.engine.Engine [cached since 873.7s ago] (1045157047,)
+Sep 06 20:28:37 ubuntu python[127807]: [cached since 873.7s ago] (1045157047,)
+Sep 06 20:28:37 ubuntu python[127807]: 2025-09-06T20:28:37.115415Z [info ] User updated [UserService] telegram_id=1045157047 user_id=3 username=Yaboyhabibs
+Sep 06 20:28:37 ubuntu python[127807]: 2025-09-06 20:28:37,115 INFO sqlalchemy.engine.Engine UPDATE users SET updated_at=? WHERE users.id = ?
+Sep 06 20:28:37 ubuntu python[127807]: UPDATE users SET updated_at=? WHERE users.id = ?
+Sep 06 20:28:37 ubuntu python[127807]: 2025-09-06 20:28:37,115 INFO sqlalchemy.engine.Engine [cached since 873.7s ago] ('2025-09-06 20:28:37.115371', 3)
+Sep 06 20:28:37 ubuntu python[127807]: [cached since 873.7s ago] ('2025-09-06 20:28:37.115371', 3)
+Sep 06 20:28:37 ubuntu python[127807]: 2025-09-06 20:28:37,116 INFO sqlalchemy.engine.Engine COMMIT
+Sep 06 20:28:37 ubuntu python[127807]: COMMIT
+Sep 06 20:28:37 ubuntu python[127807]: 2025-09-06 20:28:37,119 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+Sep 06 20:28:37 ubuntu python[127807]: BEGIN (implicit)
+Sep 06 20:28:37 ubuntu python[127807]: 2025-09-06 20:28:37,120 INFO sqlalchemy.engine.Engine INSERT INTO messages (telegram_message_id, user_id, chat_id, text, message_type, created_at) VALUES (?, ?, ?, ?, ?, ?)
+Sep 06 20:28:37 ubuntu python[127807]: INSERT INTO messages (telegram_message_id, user_id, chat_id, text, message_type, created_at) VALUES (?, ?, ?, ?, ?, ?)
+Sep 06 20:28:37 ubuntu python[127807]: 2025-09-06 20:28:37,120 INFO sqlalchemy.engine.Engine [cached since 866.1s ago] (0, 1045157047, -1002570688884, 'when this usdt gets released ill send over 5 to your shuffle as well', 'text', '2025-09-06 20:28:37.120047')
+Sep 06 20:28:37 ubuntu python[127807]: [cached since 866.1s ago] (0, 1045157047, -1002570688884, 'when this usdt gets released ill send over 5 to your shuffle as well', 'text', '2025-09-06 20:28:37.120047')
+Sep 06 20:28:37 ubuntu python[127807]: 2025-09-06 20:28:37,120 INFO sqlalchemy.engine.Engine COMMIT
+Sep 06 20:28:37 ubuntu python[127807]: COMMIT
+Sep 06 20:28:40 ubuntu python[127807]: 2025-09-06T20:28:40.573599Z [info ] Message received [bot.handlers.messages] message_length=14 user_id=1045157047 username=Yaboyhabibs
+Sep 06 20:28:40 ubuntu python[127807]: 2025-09-06 20:28:40,574 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+Sep 06 20:28:40 ubuntu python[127807]: BEGIN (implicit)
+Sep 06 20:28:40 ubuntu python[127807]: 2025-09-06 20:28:40,574 INFO sqlalchemy.engine.Engine SELECT users.id, users.telegram_id, users.username, users.first_name, users.last_name, users.is_active, users.is_admin, users.created_at, users.updated_at
+Sep 06 20:28:40 ubuntu python[127807]: FROM users
+Sep 06 20:28:40 ubuntu python[127807]: WHERE users.telegram_id = ?
+Sep 06 20:28:40 ubuntu python[127807]: SELECT users.id, users.telegram_id, users.username, users.first_name, users.last_name, users.is_active, users.is_admin, users.created_at, users.updated_at
+Sep 06 20:28:40 ubuntu python[127807]: FROM users
+Sep 06 20:28:40 ubuntu python[127807]: WHERE users.telegram_id = ?
+Sep 06 20:28:40 ubuntu python[127807]: 2025-09-06 20:28:40,574 INFO sqlalchemy.engine.Engine [cached since 877.2s ago] (1045157047,)
+Sep 06 20:28:40 ubuntu python[127807]: [cached since 877.2s ago] (1045157047,)
+Sep 06 20:28:40 ubuntu python[127807]: 2025-09-06T20:28:40.576140Z [info ] User updated [UserService] telegram_id=1045157047 user_id=3 username=Yaboyhabibs
+Sep 06 20:28:40 ubuntu python[127807]: 2025-09-06 20:28:40,576 INFO sqlalchemy.engine.Engine UPDATE users SET updated_at=? WHERE users.id = ?
+Sep 06 20:28:40 ubuntu python[127807]: UPDATE users SET updated_at=? WHERE users.id = ?
+Sep 06 20:28:40 ubuntu python[127807]: 2025-09-06 20:28:40,576 INFO sqlalchemy.engine.Engine [cached since 877.2s ago] ('2025-09-06 20:28:40.576105', 3)
+Sep 06 20:28:40 ubuntu python[127807]: [cached since 877.2s ago] ('2025-09-06 20:28:40.576105', 3)
+Sep 06 20:28:40 ubuntu python[127807]: 2025-09-06 20:28:40,577 INFO sqlalchemy.engine.Engine COMMIT
+Sep 06 20:28:40 ubuntu python[127807]: COMMIT
+Sep 06 20:28:40 ubuntu python[127807]: 2025-09-06 20:28:40,579 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+Sep 06 20:28:40 ubuntu python[127807]: BEGIN (implicit)
+Sep 06 20:28:40 ubuntu python[127807]: 2025-09-06 20:28:40,579 INFO sqlalchemy.engine.Engine INSERT INTO messages (telegram_message_id, user_id, chat_id, text, message_type, created_at) VALUES (?, ?, ?, ?, ?, ?)
+Sep 06 20:28:40 ubuntu python[127807]: INSERT INTO messages (telegram_message_id, user_id, chat_id, text, message_type, created_at) VALUES (?, ?, ?, ?, ?, ?)
+Sep 06 20:28:40 ubuntu python[127807]: 2025-09-06 20:28:40,579 INFO sqlalchemy.engine.Engine [cached since 869.6s ago] (0, 1045157047, -1002570688884, 'and 5 to feeds', 'text', '2025-09-06 20:28:40.579836')
+Sep 06 20:28:40 ubuntu python[127807]: [cached since 869.6s ago] (0, 1045157047, -1002570688884, 'and 5 to feeds', 'text', '2025-09-06 20:28:40.579836')
+Sep 06 20:28:40 ubuntu python[127807]: 2025-09-06 20:28:40,580 INFO sqlalchemy.engine.Engine COMMIT
+Sep 06 20:28:40 ubuntu python[127807]: COMMIT
+Sep 06 20:29:37 ubuntu python[127807]: 2025-09-06T20:29:37.412863Z [info ] Message received [bot.handlers.messages] message_length=68 user_id=7403788775 username=FMLBeast
+Sep 06 20:29:37 ubuntu python[127807]: 2025-09-06 20:29:37,413 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+Sep 06 20:29:37 ubuntu python[127807]: BEGIN (implicit)
+Sep 06 20:29:37 ubuntu python[127807]: 2025-09-06 20:29:37,413 INFO sqlalchemy.engine.Engine SELECT users.id, users.telegram_id, users.username, users.first_name, users.last_name, users.is_active, users.is_admin, users.created_at, users.updated_at
+Sep 06 20:29:37 ubuntu python[127807]: FROM users
+Sep 06 20:29:37 ubuntu python[127807]: WHERE users.telegram_id = ?
+Sep 06 20:29:37 ubuntu python[127807]: SELECT users.id, users.telegram_id, users.username, users.first_name, users.last_name, users.is_active, users.is_admin, users.created_at, users.updated_at
+Sep 06 20:29:37 ubuntu python[127807]: FROM users
+Sep 06 20:29:37 ubuntu python[127807]: WHERE users.telegram_id = ?
+Sep 06 20:29:37 ubuntu python[127807]: 2025-09-06 20:29:37,413 INFO sqlalchemy.engine.Engine [cached since 934s ago] (7403788775,)
+Sep 06 20:29:37 ubuntu python[127807]: [cached since 934s ago] (7403788775,)
+Sep 06 20:29:37 ubuntu python[127807]: 2025-09-06T20:29:37.415972Z [info ] User updated [UserService] telegram_id=7403788775 user_id=1 username=FMLBeast
+Sep 06 20:29:37 ubuntu python[127807]: 2025-09-06 20:29:37,416 INFO sqlalchemy.engine.Engine UPDATE users SET updated_at=? WHERE users.id = ?
+Sep 06 20:29:37 ubuntu python[127807]: UPDATE users SET updated_at=? WHERE users.id = ?
+Sep 06 20:29:37 ubuntu python[127807]: 2025-09-06 20:29:37,416 INFO sqlalchemy.engine.Engine [cached since 934s ago] ('2025-09-06 20:29:37.415921', 1)
+Sep 06 20:29:37 ubuntu python[127807]: [cached since 934s ago] ('2025-09-06 20:29:37.415921', 1)
+Sep 06 20:29:37 ubuntu python[127807]: 2025-09-06 20:29:37,417 INFO sqlalchemy.engine.Engine COMMIT
+Sep 06 20:29:37 ubuntu python[127807]: COMMIT
+Sep 06 20:29:37 ubuntu python[127807]: 2025-09-06 20:29:37,419 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+Sep 06 20:29:37 ubuntu python[127807]: BEGIN (implicit)
+Sep 06 20:29:37 ubuntu python[127807]: 2025-09-06 20:29:37,420 INFO sqlalchemy.engine.Engine INSERT INTO messages (telegram_message_id, user_id, chat_id, text, message_type, created_at) VALUES (?, ?, ?, ?, ?, ?)
+Sep 06 20:29:37 ubuntu python[127807]: INSERT INTO messages (telegram_message_id, user_id, chat_id, text, message_type, created_at) VALUES (?, ?, ?, ?, ?, ?)
+Sep 06 20:29:37 ubuntu python[127807]: 2025-09-06 20:29:37,420 INFO sqlalchemy.engine.Engine [cached since 926.4s ago] (0, 7403788775, -1002570688884, "thx bro, I'm having a hard time focussing cause of my elek situation", 'text', '2025-09-06 20:29:37.420100')
+Sep 06 20:29:37 ubuntu python[127807]: [cached since 926.4s ago] (0, 7403788775, -1002570688884, "thx bro, I'm having a hard time focussing cause of my elek situation", 'text', '2025-09-06 20:29:37.420100')
+Sep 06 20:29:37 ubuntu python[127807]: 2025-09-06 20:29:37,420 INFO sqlalchemy.engine.Engine COMMIT
+Sep 06 20:29:37 ubuntu python[127807]: COMMIT
+Sep 06 20:29:48 ubuntu python[127807]: 2025-09-06T20:29:48.411493Z [info ] Message received [bot.handlers.messages] message_length=30 user_id=7403788775 username=FMLBeast
+Sep 06 20:29:48 ubuntu python[127807]: 2025-09-06 20:29:48,412 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+Sep 06 20:29:48 ubuntu python[127807]: BEGIN (implicit)
+Sep 06 20:29:48 ubuntu python[127807]: 2025-09-06 20:29:48,412 INFO sqlalchemy.engine.Engine SELECT users.id, users.telegram_id, users.username, users.first_name, users.last_name, users.is_active, users.is_admin, users.created_at, users.updated_at
+Sep 06 20:29:48 ubuntu python[127807]: FROM users
+Sep 06 20:29:48 ubuntu python[127807]: WHERE users.telegram_id = ?
+Sep 06 20:29:48 ubuntu python[127807]: SELECT users.id, users.telegram_id, users.username, users.first_name, users.last_name, users.is_active, users.is_admin, users.created_at, users.updated_at
+Sep 06 20:29:48 ubuntu python[127807]: FROM users
+Sep 06 20:29:48 ubuntu python[127807]: WHERE users.telegram_id = ?
+Sep 06 20:29:48 ubuntu python[127807]: 2025-09-06 20:29:48,412 INFO sqlalchemy.engine.Engine [cached since 945s ago] (7403788775,)
+Sep 06 20:29:48 ubuntu python[127807]: [cached since 945s ago] (7403788775,)
+Sep 06 20:29:48 ubuntu python[127807]: 2025-09-06T20:29:48.414187Z [info ] User updated [UserService] telegram_id=7403788775 user_id=1 username=FMLBeast
+Sep 06 20:29:48 ubuntu python[127807]: 2025-09-06 20:29:48,414 INFO sqlalchemy.engine.Engine UPDATE users SET updated_at=? WHERE users.id = ?
+Sep 06 20:29:48 ubuntu python[127807]: UPDATE users SET updated_at=? WHERE users.id = ?
+Sep 06 20:29:48 ubuntu python[127807]: 2025-09-06 20:29:48,414 INFO sqlalchemy.engine.Engine [cached since 945s ago] ('2025-09-06 20:29:48.414143', 1)
+Sep 06 20:29:48 ubuntu python[127807]: [cached since 945s ago] ('2025-09-06 20:29:48.414143', 1)
+Sep 06 20:29:48 ubuntu python[127807]: 2025-09-06 20:29:48,415 INFO sqlalchemy.engine.Engine COMMIT
+Sep 06 20:29:48 ubuntu python[127807]: COMMIT
+Sep 06 20:29:48 ubuntu python[127807]: 2025-09-06 20:29:48,417 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+Sep 06 20:29:48 ubuntu python[127807]: BEGIN (implicit)
+Sep 06 20:29:48 ubuntu python[127807]: 2025-09-06 20:29:48,418 INFO sqlalchemy.engine.Engine INSERT INTO messages (telegram_message_id, user_id, chat_id, text, message_type, created_at) VALUES (?, ?, ?, ?, ?, ?)
+Sep 06 20:29:48 ubuntu python[127807]: INSERT INTO messages (telegram_message_id, user_id, chat_id, text, message_type, created_at) VALUES (?, ?, ?, ?, ?, ?)
+Sep 06 20:29:48 ubuntu python[127807]: 2025-09-06 20:29:48,418 INFO sqlalchemy.engine.Engine [cached since 937.4s ago] (0, 7403788775, -1002570688884, 'appreciating all chances heaps', 'text', '2025-09-06 20:29:48.417986')
+Sep 06 20:29:48 ubuntu python[127807]: [cached since 937.4s ago] (0, 7403788775, -1002570688884, 'appreciating all chances heaps', 'text', '2025-09-06 20:29:48.417986')
+Sep 06 20:29:48 ubuntu python[127807]: 2025-09-06 20:29:48,418 INFO sqlalchemy.engine.Engine COMMIT
+Sep 06 20:29:48 ubuntu python[127807]: COMMIT
+Sep 06 20:30:02 ubuntu python[127807]: 2025-09-06T20:30:02.137512Z [info ] Message received [bot.handlers.messages] message_length=38 user_id=8078828412 username=MrBTC2025
+Sep 06 20:30:02 ubuntu python[127807]: 2025-09-06 20:30:02,138 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+Sep 06 20:30:02 ubuntu python[127807]: BEGIN (implicit)
+Sep 06 20:30:02 ubuntu python[127807]: 2025-09-06 20:30:02,138 INFO sqlalchemy.engine.Engine SELECT users.id, users.telegram_id, users.username, users.first_name, users.last_name, users.is_active, users.is_admin, users.created_at, users.updated_at
+Sep 06 20:30:02 ubuntu python[127807]: FROM users
+Sep 06 20:30:02 ubuntu python[127807]: WHERE users.telegram_id = ?
+Sep 06 20:30:02 ubuntu python[127807]: SELECT users.id, users.telegram_id, users.username, users.first_name, users.last_name, users.is_active, users.is_admin, users.created_at, users.updated_at
+Sep 06 20:30:02 ubuntu python[127807]: FROM users
+Sep 06 20:30:02 ubuntu python[127807]: WHERE users.telegram_id = ?
+Sep 06 20:30:02 ubuntu python[127807]: 2025-09-06 20:30:02,138 INFO sqlalchemy.engine.Engine [cached since 958.7s ago] (8078828412,)
+Sep 06 20:30:02 ubuntu python[127807]: [cached since 958.7s ago] (8078828412,)
+Sep 06 20:30:02 ubuntu python[127807]: 2025-09-06T20:30:02.140097Z [info ] User updated [UserService] telegram_id=8078828412 user_id=5 username=MrBTC2025
+Sep 06 20:30:02 ubuntu python[127807]: 2025-09-06 20:30:02,140 INFO sqlalchemy.engine.Engine UPDATE users SET updated_at=? WHERE users.id = ?
+Sep 06 20:30:02 ubuntu python[127807]: UPDATE users SET updated_at=? WHERE users.id = ?
+Sep 06 20:30:02 ubuntu python[127807]: 2025-09-06 20:30:02,140 INFO sqlalchemy.engine.Engine [cached since 958.7s ago] ('2025-09-06 20:30:02.140056', 5)
+Sep 06 20:30:02 ubuntu python[127807]: [cached since 958.7s ago] ('2025-09-06 20:30:02.140056', 5)
+Sep 06 20:30:02 ubuntu python[127807]: 2025-09-06 20:30:02,141 INFO sqlalchemy.engine.Engine COMMIT
+Sep 06 20:30:02 ubuntu python[127807]: COMMIT
+Sep 06 20:30:02 ubuntu python[127807]: 2025-09-06 20:30:02,143 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+Sep 06 20:30:02 ubuntu python[127807]: BEGIN (implicit)
+Sep 06 20:30:02 ubuntu python[127807]: 2025-09-06 20:30:02,143 INFO sqlalchemy.engine.Engine INSERT INTO messages (telegram_message_id, user_id, chat_id, text, message_type, created_at) VALUES (?, ?, ?, ?, ?, ?)
+Sep 06 20:30:02 ubuntu python[127807]: INSERT INTO messages (telegram_message_id, user_id, chat_id, text, message_type, created_at) VALUES (?, ?, ?, ?, ?, ?)
+Sep 06 20:30:02 ubuntu python[127807]: 2025-09-06 20:30:02,144 INFO sqlalchemy.engine.Engine [cached since 951.2s ago] (0, 8078828412, -1002570688884, 'we are staring 900 btc up the arsehole', 'text', '2025-09-06 20:30:02.143928')
+Sep 06 20:30:02 ubuntu python[127807]: [cached since 951.2s ago] (0, 8078828412, -1002570688884, 'we are staring 900 btc up the arsehole', 'text', '2025-09-06 20:30:02.143928')
+Sep 06 20:30:02 ubuntu python[127807]: 2025-09-06 20:30:02,144 INFO sqlalchemy.engine.Engine COMMIT
+Sep 06 20:30:02 ubuntu python[127807]: COMMIT
+Sep 06 20:30:10 ubuntu python[127807]: 2025-09-06T20:30:10.349723Z [info ] Message received [bot.handlers.messages] message_length=38 user_id=8078828412 username=MrBTC2025
+Sep 06 20:30:10 ubuntu python[127807]: 2025-09-06 20:30:10,350 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+Sep 06 20:30:10 ubuntu python[127807]: BEGIN (implicit)
+Sep 06 20:30:10 ubuntu python[127807]: 2025-09-06 20:30:10,350 INFO sqlalchemy.engine.Engine SELECT users.id, users.telegram_id, users.username, users.first_name, users.last_name, users.is_active, users.is_admin, users.created_at, users.updated_at
+Sep 06 20:30:10 ubuntu python[127807]: FROM users
+Sep 06 20:30:10 ubuntu python[127807]: WHERE users.telegram_id = ?
+Sep 06 20:30:10 ubuntu python[127807]: SELECT users.id, users.telegram_id, users.username, users.first_name, users.last_name, users.is_active, users.is_admin, users.created_at, users.updated_at
+Sep 06 20:30:10 ubuntu python[127807]: FROM users
+Sep 06 20:30:10 ubuntu python[127807]: WHERE users.telegram_id = ?
+Sep 06 20:30:10 ubuntu python[127807]: 2025-09-06 20:30:10,350 INFO sqlalchemy.engine.Engine [cached since 966.9s ago] (8078828412,)
+Sep 06 20:30:10 ubuntu python[127807]: [cached since 966.9s ago] (8078828412,)
+Sep 06 20:30:10 ubuntu python[127807]: 2025-09-06T20:30:10.352179Z [info ] User updated [UserService] telegram_id=8078828412 user_id=5 username=MrBTC2025
+Sep 06 20:30:10 ubuntu python[127807]: 2025-09-06 20:30:10,352 INFO sqlalchemy.engine.Engine UPDATE users SET updated_at=? WHERE users.id = ?
+Sep 06 20:30:10 ubuntu python[127807]: UPDATE users SET updated_at=? WHERE users.id = ?
+Sep 06 20:30:10 ubuntu python[127807]: 2025-09-06 20:30:10,352 INFO sqlalchemy.engine.Engine [cached since 966.9s ago] ('2025-09-06 20:30:10.352142', 5)
+Sep 06 20:30:10 ubuntu python[127807]: [cached since 966.9s ago] ('2025-09-06 20:30:10.352142', 5)
+Sep 06 20:30:10 ubuntu python[127807]: 2025-09-06 20:30:10,353 INFO sqlalchemy.engine.Engine COMMIT
+Sep 06 20:30:10 ubuntu python[127807]: COMMIT
+Sep 06 20:30:10 ubuntu python[127807]: 2025-09-06 20:30:10,355 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+Sep 06 20:30:10 ubuntu python[127807]: BEGIN (implicit)
+Sep 06 20:30:10 ubuntu python[127807]: 2025-09-06 20:30:10,356 INFO sqlalchemy.engine.Engine INSERT INTO messages (telegram_message_id, user_id, chat_id, text, message_type, created_at) VALUES (?, ?, ?, ?, ?, ?)
+Sep 06 20:30:10 ubuntu python[127807]: INSERT INTO messages (telegram_message_id, user_id, chat_id, text, message_type, created_at) VALUES (?, ?, ?, ?, ?, ?)
+Sep 06 20:30:10 ubuntu python[127807]: 2025-09-06 20:30:10,356 INFO sqlalchemy.engine.Engine [cached since 959.4s ago] (0, 8078828412, -1002570688884, 'we both running out of time hahahahaha', 'text', '2025-09-06 20:30:10.356117')
+Sep 06 20:30:10 ubuntu python[127807]: [cached since 959.4s ago] (0, 8078828412, -1002570688884, 'we both running out of time hahahahaha', 'text', '2025-09-06 20:30:10.356117')
+Sep 06 20:30:10 ubuntu python[127807]: 2025-09-06 20:30:10,356 INFO sqlalchemy.engine.Engine COMMIT
+Sep 06 20:30:10 ubuntu python[127807]: COMMIT
