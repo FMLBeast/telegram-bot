@@ -29,16 +29,15 @@ async def start_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
     )
     
     welcome_text = (
-        f"🤖 Welcome back {user.first_name or user.username}! 👋\n\n"
-        "I'm your comprehensive AI assistant with powerful features:\n\n"
-        "🌟 <b>Quick Actions:</b>\n"
-        "• 🧠 AI chat & image generation\n"
-        "• 💰 Crypto tools & calculators\n"
-        "• 📝 Todo & task management\n"
-        "• 🗳️ Polls & voting systems\n"
-        "• 🔞 NSFW content (18+)\n"
-        "• 📊 Stats & analytics\n\n"
-        "✨ Click the buttons below for instant access!"
+        f"🤖 **Welcome back {user.first_name or user.username}!** 👋\n\n"
+        "Choose what you'd like to do:\n\n"
+        "🧠 **AI Chat & Images** - Chat with AI, generate images\n"
+        "💰 **Crypto Tools** - Live prices, trading tools\n"
+        "📝 **Todo Management** - Organize your tasks\n"
+        "🎲 **Calculators** - Mines & B2B betting tools\n"
+        "🔞 **NSFW Content** - Adult content (18+)\n"
+        "🗳️ **Polls & Voting** - Create and participate in polls\n"
+        "📊 **Statistics** - Your activity stats"
     )
     
     keyboard = [
@@ -48,14 +47,14 @@ async def start_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
         ],
         [
             InlineKeyboardButton("📝 Todo List", callback_data="todo_menu"),
+            InlineKeyboardButton("🎲 Calculators", callback_data="calc_menu"),
+        ],
+        [
+            InlineKeyboardButton("🔞 NSFW (18+)", callback_data="nsfw_menu"),
             InlineKeyboardButton("🗳️ Polls", callback_data="voting_menu"),
         ],
         [
-            InlineKeyboardButton("🎲 Calculators", callback_data="calc_menu"),
-            InlineKeyboardButton("🔞 NSFW (18+)", callback_data="nsfw_menu"),
-        ],
-        [
-            InlineKeyboardButton("📊 Stats", callback_data="stats_menu"),
+            InlineKeyboardButton("📊 Statistics", callback_data="stats_menu"),
             InlineKeyboardButton("🆘 Help", callback_data="help"),
         ],
     ]
@@ -64,7 +63,7 @@ async def start_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
     await update.message.reply_text(
         welcome_text,
         reply_markup=reply_markup,
-        parse_mode="HTML",
+        parse_mode="Markdown",
     )
 
 
@@ -77,16 +76,15 @@ async def menu_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     logger.info("Menu command received", user_id=user.id, username=user.username)
     
     menu_text = (
-        f"📋 **Interactive Menu** - {user.first_name or user.username}\n\n"
-        "🎯 **All Features Available:**\n"
-        "• 🧠 AI Chat & Image Generation\n"
-        "• 💰 Crypto Trading & Tools (Real API)\n"
-        "• 🗳️ Polls & Voting System\n"
-        "• 📝 Todo & Task Management\n"
-        "• 📊 Activity & Stats Analytics\n"
-        "• 🔞 NSFW Content (18+)\n"
-        "• 🎲 Game Calculators (Mines, B2B)\n\n"
-        "Click any button for instant access:"
+        f"🤖 **Welcome {user.first_name or user.username}!**\n\n"
+        "Choose what you'd like to do:\n\n"
+        "🧠 **AI Chat & Images** - Chat with AI, generate images\n"
+        "💰 **Crypto Tools** - Live prices, trading tools\n"
+        "📝 **Todo Management** - Organize your tasks\n"
+        "🎲 **Calculators** - Mines & B2B betting tools\n"
+        "🔞 **NSFW Content** - Adult content (18+)\n"
+        "🗳️ **Polls & Voting** - Create and participate in polls\n"
+        "📊 **Statistics** - Your activity stats"
     )
     
     keyboard = [
@@ -96,14 +94,14 @@ async def menu_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
         ],
         [
             InlineKeyboardButton("📝 Todo List", callback_data="todo_menu"),
+            InlineKeyboardButton("🎲 Calculators", callback_data="calc_menu"),
+        ],
+        [
+            InlineKeyboardButton("🔞 NSFW (18+)", callback_data="nsfw_menu"),
             InlineKeyboardButton("🗳️ Polls", callback_data="voting_menu"),
         ],
         [
-            InlineKeyboardButton("🎲 Calculators", callback_data="calc_menu"),
-            InlineKeyboardButton("🔞 NSFW (18+)", callback_data="nsfw_menu"),
-        ],
-        [
-            InlineKeyboardButton("📊 Stats", callback_data="stats_menu"),
+            InlineKeyboardButton("📊 Statistics", callback_data="stats_menu"),
             InlineKeyboardButton("🆘 Help", callback_data="help"),
         ],
     ]
@@ -125,47 +123,39 @@ async def help_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     logger.info("Help command received", user_id=user.id, username=user.username)
     
     help_text = (
-        "🆘 <b>Interactive Bot Help</b>\n\n"
-        "Click the buttons below for instant access to features:\n\n"
-        
-        "🧠 <b>AI & Images:</b> Chat with AI, generate images\n"
-        "💰 <b>Crypto Tools:</b> Live prices, trading, conversions\n"
-        "📝 <b>Todo List:</b> Task management & productivity\n"
-        "🗳️ <b>Polls:</b> Create & participate in voting\n"
-        "🎲 <b>Calculators:</b> Mines & B2B betting tools\n"
-        "🔞 <b>NSFW (18+):</b> Adult content & features\n"
-        "📊 <b>Stats:</b> Analytics & bot performance\n\n"
-        
-        "💡 <b>Quick Tips:</b>\n"
-        "• Just send me any message for AI chat\n"
-        "• All features work with interactive buttons\n"
-        "• No need to remember commands!\n\n"
-        
-        "✨ <i>Choose a category below to get started!</i>"
+        "🆘 **Help & Commands**\n\n"
+        "**Basic Commands:**\n"
+        "• `/start` - Main menu\n"
+        "• `/menu` - Show menu\n"
+        "• `/help` - Show help\n\n"
+        "**AI Commands:**\n"
+        "• `/ask [question]` - Ask AI anything\n"
+        "• `/draw_me [prompt]` - Generate image\n\n"
+        "**Crypto Commands:**\n"
+        "• `/price [symbol]` - Get crypto price\n"
+        "• `/convert [amount] [from] [to]` - Convert currency\n\n"
+        "**Todo Commands:**\n"
+        "• `/add_todo [task]` - Add task\n"
+        "• `/list_todos` - Show tasks\n\n"
+        "**Calculator Commands:**\n"
+        "• `/mines [mines] [diamonds]` - Mines calculator\n"
+        "• `/b2b [base] [multiplier] [increase%]` - B2B calculator\n\n"
+        "**NSFW Commands (18+):**\n"
+        "• `/random_boobs` - Random content\n"
+        "• `/gimme [type]` - Specific content\n\n"
+        "**Poll Commands:**\n"
+        "• `/poll \"Question\" \"Option1\" \"Option2\"` - Create poll\n"
+        "• `/polls` - List active polls\n\n"
+        "💡 *Use the menu buttons for easier access!*"
     )
     
     keyboard = [
-        [
-            InlineKeyboardButton("🧠 AI & Images", callback_data="ai_menu"),
-            InlineKeyboardButton("💰 Crypto Tools", callback_data="crypto_menu"),
-        ],
-        [
-            InlineKeyboardButton("📝 Todo List", callback_data="todo_menu"),
-            InlineKeyboardButton("🗳️ Polls", callback_data="voting_menu"),
-        ],
-        [
-            InlineKeyboardButton("🎲 Calculators", callback_data="calc_menu"),
-            InlineKeyboardButton("🔞 NSFW (18+)", callback_data="nsfw_menu"),
-        ],
-        [
-            InlineKeyboardButton("📊 Stats", callback_data="stats_menu"),
-            InlineKeyboardButton("🏠 Back to Start", callback_data="start"),
-        ]
+        [InlineKeyboardButton("🏠 Back to Main Menu", callback_data="start")]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     
     await update.message.reply_text(
         help_text,
         reply_markup=reply_markup,
-        parse_mode="HTML",
+        parse_mode="Markdown",
     )
