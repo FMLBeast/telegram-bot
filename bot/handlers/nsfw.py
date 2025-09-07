@@ -524,47 +524,88 @@ async def get_random_adult_images(query: str = "boobs") -> Optional[List[Dict[st
 
 
 async def search_adult_content(query: str) -> Dict[str, Any]:
-    """Search for adult content across videos, images, and GIFs."""
+    """Search for adult content using working RapidAPI endpoints."""
     results = {
         "videos": [],
         "images": [],
         "gifs": []
     }
     
+    if not settings.rapidapi_key:
+        logger.warning("No RapidAPI key configured for adult content search")
+        return results
+    
     try:
         async with aiohttp.ClientSession() as session:
-            # Search videos (using eporner)
+            # Search videos using quality-porn API
             try:
-                video_url = "https://api.adultdatalink.com/eporner/search"
-                video_params = {"query": query, "per_page": 5}
-                async with session.get(video_url, params=video_params, timeout=15) as response:
+                video_url = "https://quality-porn.p.rapidapi.com/search"
+                video_headers = {
+                    "X-RapidAPI-Key": settings.rapidapi_key,
+                    "X-RapidAPI-Host": "quality-porn.p.rapidapi.com"
+                }
+                video_params = {"query": query}
+                
+                async with session.get(video_url, headers=video_headers, params=video_params, timeout=15) as response:
                     if response.status == 200:
                         video_data = await response.json()
-                        results["videos"] = video_data
-            except Exception:
-                pass
+                        if isinstance(video_data, dict) and 'data' in video_data:
+                            all_videos = []
+                            for site in video_data['data']:
+                                if isinstance(site, dict) and 'links' in site:
+                                    for video in site['links']:
+                                        if isinstance(video, dict) and video.get('url'):
+                                            all_videos.append({
+                                                'title': video.get('title', 'Video'),
+                                                'url': video.get('url'),
+                                                'video_link': video.get('url'),  # For compatibility with gimme handler
+                                                'thumbnail': video.get('image', '').replace('//', 'https://'),
+                                                'duration': video.get('duration'),
+                                                'views': video.get('views'),
+                                                'site': site.get('site', {}).get('name', 'Unknown')
+                                            })
+                            results["videos"] = all_videos[:10]  # Limit to 10 videos
+                    elif response.status == 403:
+                        logger.error("Video search API authentication failed (403)")
+            except Exception as e:
+                logger.warning(f"Video search failed: {str(e)}")
             
-            # Search images (using pornpics)
+            # Search images using girls-nude-image API (multiple requests for variety)
             try:
-                image_url = "https://api.adultdatalink.com/pornpics/search"
-                image_params = {"query": query}
-                async with session.get(image_url, params=image_params, timeout=15) as response:
-                    if response.status == 200:
-                        image_data = await response.json()
-                        results["images"] = image_data
-            except Exception:
-                pass
+                image_headers = {
+                    "x-rapidapi-key": settings.rapidapi_key,
+                    "x-rapidapi-host": "girls-nude-image.p.rapidapi.com"
+                }
+                image_url = "https://girls-nude-image.p.rapidapi.com/"
+                
+                # Make multiple requests for different types to get variety
+                image_types = ["boobs", "ass"]
+                all_images = []
+                
+                for img_type in image_types:
+                    try:
+                        image_params = {"type": img_type}
+                        async with session.get(image_url, headers=image_headers, params=image_params, timeout=10) as response:
+                            if response.status == 200:
+                                image_data = await response.json()
+                                if image_data.get('success') and image_data.get('url'):
+                                    all_images.append({
+                                        'title': f'{img_type.title()} Image',
+                                        'url': image_data['url'],
+                                        'thumbnail': image_data['url'],
+                                        'type': img_type
+                                    })
+                    except Exception:
+                        continue
+                
+                results["images"] = all_images
+                
+            except Exception as e:
+                logger.warning(f"Image search failed: {str(e)}")
             
-            # Search GIFs (using redgifs)
-            try:
-                gif_url = "https://api.adultdatalink.com/redgifs/search"
-                gif_params = {"media_type": "gif", "search_text": query, "count": 5}
-                async with session.get(gif_url, params=gif_params, timeout=15) as response:
-                    if response.status == 200:
-                        gif_data = await response.json()
-                        results["gifs"] = gif_data
-            except Exception:
-                pass
+            # For GIFs, we can use the same images for now (many image APIs include animated content)
+            # or we could make additional image requests
+            results["gifs"] = results["images"][:2] if results["images"] else []
         
         logger.info(f"Adult content search completed for: {query}")
         return results
