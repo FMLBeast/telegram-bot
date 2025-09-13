@@ -83,7 +83,7 @@ async def b2b_calculator_handler(update: Update, context: ContextTypes.DEFAULT_T
             f"📈 **Initial Bet:** `{base_bet}`\n"
             f"📊 **Multiplier:** `{multiplier:.1f}x`\n"
             f"📋 **Increase:** `{increase_percentage:.1f}%`\n\n"
-            f"💰 **Total After 20 Rounds:** `{b2b_service.format_number(current_total)}`"
+            f"💰 **Total After 15 Rounds:** `{b2b_service.format_number(current_total)}`"
         )
         
         # Send message

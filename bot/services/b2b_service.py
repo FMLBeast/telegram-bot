@@ -12,21 +12,30 @@ class B2BService(LoggerMixin):
         pass
     
     def format_number(self, n: float) -> str:
-        """Format number with appropriate suffixes."""
+        """Format number with appropriate suffixes and decimal precision."""
         if abs(n) >= 1e9:
             return f"{n/1e9:.2f}B"
         if abs(n) >= 1e6:
             return f"{n/1e6:.2f}M"
         if abs(n) >= 1e3:
             return f"{n/1e3:.2f}K"
-        return f"{n:.2f}"
+
+        # Handle very small numbers with more precision
+        if abs(n) < 0.001:
+            return f"{n:.8f}"
+        elif abs(n) < 0.01:
+            return f"{n:.6f}"
+        elif abs(n) < 0.1:
+            return f"{n:.4f}"
+        else:
+            return f"{n:.2f}"
     
     async def calculate_bets(
-        self, 
-        base_bet: float, 
-        multiplier: float, 
-        increase_percentage: float, 
-        iterations: int = 20
+        self,
+        base_bet: float,
+        multiplier: float,
+        increase_percentage: float,
+        iterations: int = 15
     ) -> Tuple[List[float], List[float], float]:
         """Calculate betting progression for gambling strategy."""
         try:
